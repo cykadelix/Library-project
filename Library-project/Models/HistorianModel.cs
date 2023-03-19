@@ -1,4 +1,3 @@
-using eTickets.Data.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,10 +13,11 @@ public class HistorianModel{
     public string education { get; set; }
     public short age { get; set; }
 
+    /*
     //Historian Availability
     public string[] availableDaysOfWeek { get; set; }       //how are we structuring this?
     public string[] availableTimesOfDays { get; set; }      //how are we structuring this?
-
+    */
 
     //Constructor
     public HistorianModel() { }
