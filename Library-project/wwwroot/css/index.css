@@ -1,0 +1,44 @@
+﻿#index-header {
+    margin: 5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#index-header-text {
+    display: flex;
+    flex-direction: column;
+}
+
+#index-header-img {
+    width: 50%;
+}
+
+
+
+.btn-expand {
+    position: relative;
+    display: inline-block;
+    background-color: #2550d2;
+    text-align: center;
+    vertical-align:middle;
+    color: white;
+    font-size: 1.25rem;
+    font-weight: bold;
+    
+    margin: 1rem 0;
+    width: 20%;
+    height: 3rem;
+    border-radius:10px;
+    outline: none;
+    border: 0;
+
+    cursor: pointer;
+
+    transition: all 0.5s;
+    transition-timing-function: cubic-bezier(0.65,-0.25,0.25, 1.95);
+}
+
+    .btn-expand:hover {
+        letter-spacing: 0.125rem;
+    }
