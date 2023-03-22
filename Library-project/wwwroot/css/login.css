@@ -1,12 +1,12 @@
-﻿#login-container {
-    margin: 0;
+﻿.login-container {
+    margin: 0 0 3rem 0;
     width: 80vw;
     height: 100vh;
     display: flex;
-    box-shadow: 3px 3px 10px #c0c0c0;
+    box-shadow: 3px 3px 7px #d9d9d9;
 }
 
-#login-form-container {
+.login-form-container {
     flex: 1;
     display: flex;
     justify-content: center;
@@ -22,8 +22,14 @@
     }
 
     #login-form h2 {
-        color: gray;
-        font-size: 1.25rem;
+        color: #b3b3b3;
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    #login-form h3 {
+        color: #999999;
+        font-size: 1rem;
         margin-bottom: 2rem;
     }
 
@@ -70,7 +76,7 @@
         background-color: #2147B8;
     }
 
-#login-img-container {
+.login-img-container {
     display: flex;
     align-items: center;
     justify-content: center;

@@ -68,9 +68,8 @@ nav {
     justify-content: center;
     color: black;
     font-weight: 500;
-    border-radius: 10px;
-    padding: 0.5rem 1rem;
     margin: 0 0.5rem;
+    border-radius: 10px;
     height: 70%;
     border: 2px solid #E6E6E6;
 }
@@ -80,7 +79,11 @@ nav {
     }
 
     .nav-btn a {
+        height: 100%;
+        margin: 0 0.5rem;
         text-decoration: none;
+        display: flex;
+        align-items: center;
     }
 
 
@@ -95,8 +98,10 @@ nav {
 
 #signup-list-item {
     background-color: #2550d2;
-    color: white;
 }
+    #signup-list-item a {
+        color: white;
+    }
 
     #signup-list-item:hover {
         background-color: #2147B8;
