@@ -1,0 +1,161 @@
+﻿.account-container {
+    background-image: linear-gradient(to right, #7c96e4, #d8e0f7);
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/*Account Controls*/
+.account-controls-panel {
+    height: 100%;
+    min-width: 15vw;
+    padding: 0.5rem;
+    position: relative;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 5vh 0 10vh 0;
+}
+
+    .user-info h1 {
+        font-weight: 400;
+        margin-top: 1vh;
+        font-size: 1.2rem;
+        color: white;
+    }
+
+.user-pfp-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 7vw;
+    height: 7vw;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: 1px 1px 5px #4a5a89;
+}
+
+#user-pfp-img {
+    height: 90%;
+    width: 90%;
+}
+
+.account-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 1vh 0vw 3vh 1vw;
+}
+
+    .account-nav h2 {
+        color: white;
+        font-size: 1rem;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .account-nav i {
+        color: white;
+        margin: 0 0.75vw 0 0.25vw;
+    }
+
+#account-signout-btn {
+    position: absolute;
+    bottom: 3rem;
+    text-decoration: none;
+    color: black;
+}
+
+/*Events*/
+.events-panel {
+    min-width: 30vw;
+    flex-grow: 1;
+    background-color: white;
+    height: 96%;
+    width: 96%;
+    border-radius: 5px;
+    box-shadow: 2px 2px 6px #babec9;
+}
+
+.events-panel-header {
+    margin: 2rem 0 0.5rem 2rem;
+}
+
+    .events-panel-header h1 {
+        font-size: 3rem;
+        margin: 0;
+    }
+
+    .events-panel-header h2 {
+        font-size: 1rem;
+        color: #808080;
+    }
+
+.events-gallery {
+    display: flex;
+    flex-direction: row;
+}
+
+.event-container {
+    position: relative;
+    background-color: #7c96e4;
+    border-radius: 5px;
+    background-image: linear-gradient(to bottom right, #7c96e4, #e47c96);
+    margin: 1rem;
+    width: 200px;
+    transition: all 0.5s;
+
+}
+
+    .event-container h1 {
+        font-size: 1.25rem;
+        font-weight: 400;
+        color: white;
+        margin: 0;
+    }
+
+    .event-container h2 {
+        font-size: .85rem;
+        color: white;
+    }
+
+    .event-container a {
+        position: absolute;
+        bottom: 0.5rem;
+        right: 0.5rem;
+        margin: 0;
+        font-size: .75rem;
+        font-weight: bold;
+        background-color: white;
+        padding: 0.4rem; 
+        border-radius: 5px;
+        color: #2550d2;
+    }
+
+    .event-container img {
+        position: relative;
+        width: 90%;
+        left: 5%;
+        margin-bottom: 2.5rem;
+    }
+
+    .event-container:hover {
+        transform: translate(-5px, -5px);
+        box-shadow: 3px 3px 6px #babec9;
+    }
+
+.event-header {
+    margin: 1rem 0.5rem 1rem 0.5rem;
+}
+
+/*Agenda*/
+.agenda-panel {
+    min-width: 30vw;
+    height: 100%;
+}
