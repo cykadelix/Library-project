@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Library_project.Models;
 
-namespace Library_project.Models
+namespace Library_project.Data
 {
-    //startup.cs add DbContext ???
     public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
@@ -16,8 +16,8 @@ namespace Library_project.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Employee>().HasKey(e => new { e.employeeID});
-            modelBuilder.Entity<Employee>().HasKey(e => new { e.supervisorID});   //foreign key setup??
+            modelBuilder.Entity<Employee>().HasKey(e => new { e.employeeID });
+            modelBuilder.Entity<Employee>().HasKey(e => new { e.supervisorID });   //foreign key setup??
 
             modelBuilder.Entity<Historian>().HasKey(h => new { h.historianID});
 
