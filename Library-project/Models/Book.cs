@@ -7,14 +7,19 @@ namespace Library_project.Models
 {
     public class Book
     {
-        [Key, ForeignKey("Media")]
-        public int Id { get; set; }
+
+
+        [Key, ForeignKey("Media.id")]
+        public Media Media { get; set; }
+        public int BookId { get; set; }
+
+
         public string Title { get; set; }
         public string[] Author { get; set; }
         public Genres[] Genres { get; set; }
         public DateOnly PublicDate { get; set; }
 
-        public Location location { get; set; }
+        
         public int PageCount { get; set; }
 
         public int ISBN { get; set; }
