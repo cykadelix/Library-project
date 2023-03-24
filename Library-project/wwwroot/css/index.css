@@ -1,0 +1,108 @@
+﻿header {
+    height: 8vh;
+}
+
+nav {
+    height: 100%;
+    padding: 0 0.5rem;
+    margin: 0;
+}
+
+    nav li {
+        align-self: center;
+    }
+
+.container-center {
+    display:flex;
+    justify-content: center;
+}
+
+#index-header-container {
+    margin: 5rem 0;
+    width: 80vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#index-header-text {
+    display: flex;
+    flex-direction: column;
+}
+
+#index-header-img {
+    width: 50%;
+}
+
+.btn-expand {
+    position: relative;
+    display: inline-block;
+    background-color: #2550d2;
+    text-align: center;
+    vertical-align: middle;
+    color: white;
+    font-size: 1.25rem;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.5s;
+    transition-timing-function: cubic-bezier(0.65,-0.25,0.25, 1.95);
+    box-shadow: 2px 2px 2px #808080;
+}
+
+    .btn-expand:hover {
+        letter-spacing: 0.125rem;
+    }
+
+#explore-btn {
+    margin: 1rem 0;
+    width: 20%;
+    height: 3rem;
+    outline: none;
+    border: 0;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    font-weight: 500;
+    margin: 0 0.5rem;
+    border-radius: 10px;
+    height: 70%;
+    border: 2px solid #E6E6E6;
+}
+
+    .nav-btn:hover {
+        box-shadow: 0px 0px 5px #BFBFBF;
+    }
+
+    .nav-btn a {
+        height: 100%;
+        margin: 0 0.5rem;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
+
+
+#login-list-item {
+    background-color: white;
+}
+
+    #login-list-item:hover {
+        background-color: #E6E6E6;
+    }
+
+
+#signup-list-item {
+    background-color: #2550d2;
+}
+    #signup-list-item a {
+        color: white;
+    }
+
+    #signup-list-item:hover {
+        background-color: #2147B8;
+    }
