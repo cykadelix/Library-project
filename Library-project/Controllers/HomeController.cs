@@ -1,12 +1,23 @@
 ﻿using Library_project.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Text;
+using Npgsql;
+using System;
+using System.IO;
 using System.Diagnostics;
+using System.Xml.Linq;
 
 namespace Library_project.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+
+        private static string Host = "azurelibrarydatabase.postgres.database.azure.com";
+        private static string UserN = "richard";
+        private static string DBname = "Library";
+        private static string Password = "richard";
+        private static string Port = "5432";
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -28,12 +39,17 @@ namespace Library_project.Controllers
             return View();
         }
 
-        public IActionResult Register() 
+        public IActionResult Register()
         {
             return View();
         }
 
-        public IActionResult AdminPage()
+        public IActionResult AdminDashboard()
+        {
+            return View();
+        }
+
+        public IActionResult AddMediaForm()
         {
             return View();
         }
@@ -45,3 +61,4 @@ namespace Library_project.Controllers
         }
     }
 }
+
