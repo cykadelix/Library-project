@@ -9,14 +9,14 @@ namespace Library_project.Models
     public class Historian
     {
         //Historian Name
-        public string fName { get; set; }
-        public string mName { get; set; }
-        public string lName { get; set; }
+        public string fName { get; set; } = string.Empty;
+        public string mName { get; set; } = string.Empty;
+        public string lName { get; set; } = string.Empty;
 
         //Historian Data
         [Key] public int historianID { get; set; }
-        public string expertise { get; set; }
-        public string education { get; set; }
+        public string expertise { get; set; } = string.Empty;
+        public string education { get; set; } = string.Empty;
         public short age { get; set; }
 
         //Relationships

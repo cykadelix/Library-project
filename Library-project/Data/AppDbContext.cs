@@ -16,10 +16,15 @@ namespace Library_project.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //employee
             modelBuilder.Entity<Employee>().HasKey(e => new { e.employeeID });
             modelBuilder.Entity<Employee>().HasKey(e => new { e.supervisorID });   //foreign key setup??
-
+            //historian
             modelBuilder.Entity<Historian>().HasKey(h => new { h.historianID});
+            //review
+            modelBuilder.Entity<Review>().HasKey(r => new { r.reviewID});
+            //checkout
+            modelBuilder.Entity<Checkout>().HasKey(c => new { c.checkoutID});
 
 
             base.OnModelCreating(modelBuilder);

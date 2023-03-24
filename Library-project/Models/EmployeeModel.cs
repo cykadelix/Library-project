@@ -10,23 +10,23 @@ namespace Library_project.Models
     public class Employee
     {
         //Employee Name
-        public string fName { get; set; }
-        public string mName { get; set; }
-        public string lName { get; set; }
+        public string fName { get; set; } = string.Empty;
+        public string mName { get; set; } = string.Empty;
+        public string lName { get; set; } = string.Empty;
 
         //Employee Data
         [Key] public int employeeID { get; set; }
         public int supervisorID { get; set; }
         [ForeignKey("supervisorID")]
-        public string position { get; set; }
+        public string position { get; set; } = string.Empty;
         public float salary { get; set; }
         public short age { get; set; }
 
         //Personal Info
-        public string eMail { get; set; }
-        public string password { get; set; }
-        public string homeAddress { get; set; }
-        public string phoneNumber { get; set; }
+        public string eMail { get; set; } = string.Empty;
+        public string password { get; set; } = string.Empty;
+        public string homeAddress { get; set; } = string.Empty;
+        public string phoneNumber { get; set; } = string.Empty;
 
         //Relationships
         public Student studentToSignUp { get; set; }
