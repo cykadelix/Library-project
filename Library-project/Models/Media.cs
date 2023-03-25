@@ -11,5 +11,8 @@ namespace Library_project.Models
         [NotMapped]
         public Location location { get; set; }
 
+        ICollection<review>? reviews { get; set; }
+
+
     }
 }

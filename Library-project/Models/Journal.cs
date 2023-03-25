@@ -20,6 +20,7 @@ namespace Library_project.Models
         
         public int length { get; set; }
         public DateOnly dateReleased { get; set; }
+        
 
 
     }
