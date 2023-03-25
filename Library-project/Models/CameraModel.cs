@@ -10,7 +10,7 @@ namespace Library_project.Models
         public string brand { get; set; }
         public string description { get; set; }
         public int lumens { get; set; }
-        public bool Availibility { get; set; }
+        public bool availibility { get; set; }
 
         public CameraModel()
         {

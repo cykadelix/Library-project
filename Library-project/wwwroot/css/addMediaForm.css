@@ -1,0 +1,47 @@
+﻿.media-entry-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.media-entry-form {
+    margin: 0 3vw;
+}
+
+.media-form-header {
+    margin-bottom: 1rem;
+    margin: 3vw;
+}
+
+    .media-form-header h1 {
+        font-size: 3rem;
+    }
+
+#media-type {
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+
+.media-recent-transactions-panel {
+    height: 100%;
+    width: 35vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.media-recent-transactions {
+    background-color: #F3F6FB;
+    width: 100%;
+    height: 100%;
+}
+
+.recent-transactions-header {
+    margin: 3vw;
+}
+
+.recent-transactions-header h1{
+    font-size: 3rem;
+}

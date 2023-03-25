@@ -1,6 +1,11 @@
 ﻿using Library_project.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Text;
+using Npgsql;
+using System;
+using System.IO;
 using System.Diagnostics;
+using System.Xml.Linq;
 
 namespace Library_project.Controllers
 {
@@ -28,7 +33,17 @@ namespace Library_project.Controllers
             return View();
         }
 
-        public IActionResult Register() 
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        public IActionResult AdminDashboard()
+        {
+            return View();
+        }
+
+        public IActionResult AddMediaForm()
         {
             return View();
         }
@@ -40,3 +55,4 @@ namespace Library_project.Controllers
         }
     }
 }
+
