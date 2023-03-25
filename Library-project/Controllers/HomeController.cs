@@ -13,12 +13,6 @@ namespace Library_project.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        private static string Host = "azurelibrarydatabase.postgres.database.azure.com";
-        private static string UserN = "richard";
-        private static string DBname = "Library";
-        private static string Password = "richard";
-        private static string Port = "5432";
-
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
