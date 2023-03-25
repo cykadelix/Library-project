@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Library_project.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230323030136_all")]
-    partial class all
+    [Migration("20230325000735_ElijahMigs")]
+    partial class ElijahMigs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,23 +25,7 @@ namespace Library_project.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Library_project.Data.Objects.Location", b =>
-                {
-                    b.Property<int>("Floor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Floor"));
-
-                    b.Property<int>("Asile")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Floor");
-
-                    b.ToTable("Location");
-                });
-
-            modelBuilder.Entity("Library_project.Models.AudioBook", b =>
+            modelBuilder.Entity("Library_project.Models.audiobook", b =>
                 {
                     b.Property<int>("AudioBookId")
                         .ValueGeneratedOnAdd()
@@ -49,116 +33,116 @@ namespace Library_project.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AudioBookId"));
 
-                    b.Property<string>("Author")
+                    b.Property<string>("author")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("Availability")
+                    b.Property<bool>("availability")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("Genre")
+                    b.Property<int>("genre")
                         .HasColumnType("integer");
 
-                    b.Property<TimeOnly>("Length")
+                    b.Property<TimeOnly>("length")
                         .HasColumnType("time without time zone");
 
-                    b.Property<int>("Media.id")
+                    b.Property<int>("mediaId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Narrrator")
+                    b.Property<string>("narrator")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("title")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("AudioBookId");
 
-                    b.HasIndex("Media.id");
+                    b.HasIndex("mediaId");
 
-                    b.ToTable("AudioBook");
+                    b.ToTable("audioBooks");
                 });
 
-            modelBuilder.Entity("Library_project.Models.Book", b =>
+            modelBuilder.Entity("Library_project.Models.book", b =>
                 {
-                    b.Property<int>("BookId")
+                    b.Property<int>("bookId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BookId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("bookId"));
 
-                    b.Property<string[]>("Author")
+                    b.Property<string[]>("author")
                         .IsRequired()
                         .HasColumnType("text[]");
 
-                    b.Property<int[]>("Genres")
+                    b.Property<int[]>("genres")
                         .IsRequired()
                         .HasColumnType("integer[]");
-
-                    b.Property<int>("ISBN")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Media.id")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("PageCount")
-                        .HasColumnType("integer");
-
-                    b.Property<DateOnly>("PublicDate")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<bool>("isAvailable")
                         .HasColumnType("boolean");
 
-                    b.HasKey("BookId");
+                    b.Property<int>("isbn")
+                        .HasColumnType("integer");
 
-                    b.HasIndex("Media.id");
+                    b.Property<int>("mediaId")
+                        .HasColumnType("integer");
 
-                    b.ToTable("Book");
+                    b.Property<int>("pageCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateOnly>("publicDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("bookId");
+
+                    b.HasIndex("mediaId");
+
+                    b.ToTable("books");
                 });
 
-            modelBuilder.Entity("Library_project.Models.Journal", b =>
+            modelBuilder.Entity("Library_project.Models.journal", b =>
                 {
-                    b.Property<int>("JournalId")
+                    b.Property<int>("jouranalId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("JournalId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("jouranalId"));
 
-                    b.Property<DateOnly>("DateReleased")
+                    b.Property<DateOnly>("dateReleased")
                         .HasColumnType("date");
 
-                    b.Property<int>("Length")
+                    b.Property<int>("length")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Media.id")
+                    b.Property<int>("mediaId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Researchers")
+                    b.Property<string>("researchers")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Subject")
+                    b.Property<string>("subject")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("title")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("JournalId");
+                    b.HasKey("jouranalId");
 
-                    b.HasIndex("Media.id");
+                    b.HasIndex("mediaId");
 
-                    b.ToTable("Journal");
+                    b.ToTable("journals");
                 });
 
-            modelBuilder.Entity("Library_project.Models.Media", b =>
+            modelBuilder.Entity("Library_project.Models.media", b =>
                 {
                     b.Property<int>("mediaId")
                         .ValueGeneratedOnAdd()
@@ -168,92 +152,92 @@ namespace Library_project.Migrations
 
                     b.HasKey("mediaId");
 
-                    b.ToTable("Media");
+                    b.ToTable("medias");
                 });
 
-            modelBuilder.Entity("Library_project.Models.Movie", b =>
+            modelBuilder.Entity("Library_project.Models.movie", b =>
                 {
-                    b.Property<int>("MovieId")
+                    b.Property<int>("movieId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MovieId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("movieId"));
 
-                    b.Property<bool>("Availability")
+                    b.Property<bool>("availability")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Director")
+                    b.Property<string>("director")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Genres")
+                    b.Property<int>("genres")
                         .HasColumnType("integer");
 
-                    b.Property<TimeOnly>("Length")
+                    b.Property<TimeOnly>("length")
                         .HasColumnType("time without time zone");
 
-                    b.Property<int>("Media.id")
+                    b.Property<int>("mediaId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Rating")
+                    b.Property<int>("rating")
                         .HasColumnType("integer");
 
-                    b.Property<DateOnly>("ReleasDate")
+                    b.Property<DateOnly>("releaseDate")
                         .HasColumnType("date");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("title")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("MovieId");
+                    b.HasKey("movieId");
 
-                    b.HasIndex("Media.id");
+                    b.HasIndex("mediaId");
 
-                    b.ToTable("Movie");
+                    b.ToTable("movie");
                 });
 
-            modelBuilder.Entity("Library_project.Models.AudioBook", b =>
+            modelBuilder.Entity("Library_project.Models.audiobook", b =>
                 {
-                    b.HasOne("Library_project.Models.Media", "Media")
+                    b.HasOne("Library_project.Models.media", "Media")
                         .WithMany()
-                        .HasForeignKey("Media.id")
+                        .HasForeignKey("mediaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Media");
                 });
 
-            modelBuilder.Entity("Library_project.Models.Book", b =>
+            modelBuilder.Entity("Library_project.Models.book", b =>
                 {
-                    b.HasOne("Library_project.Models.Media", "Media")
+                    b.HasOne("Library_project.Models.media", "media")
                         .WithMany()
-                        .HasForeignKey("Media.id")
+                        .HasForeignKey("mediaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Media");
+                    b.Navigation("media");
                 });
 
-            modelBuilder.Entity("Library_project.Models.Journal", b =>
+            modelBuilder.Entity("Library_project.Models.journal", b =>
                 {
-                    b.HasOne("Library_project.Models.Media", "Media")
+                    b.HasOne("Library_project.Models.media", "media")
                         .WithMany()
-                        .HasForeignKey("Media.id")
+                        .HasForeignKey("mediaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Media");
+                    b.Navigation("media");
                 });
 
-            modelBuilder.Entity("Library_project.Models.Movie", b =>
+            modelBuilder.Entity("Library_project.Models.movie", b =>
                 {
-                    b.HasOne("Library_project.Models.Media", "Media")
+                    b.HasOne("Library_project.Models.media", "media")
                         .WithMany()
-                        .HasForeignKey("Media.id")
+                        .HasForeignKey("mediaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Media");
+                    b.Navigation("media");
                 });
 #pragma warning restore 612, 618
         }

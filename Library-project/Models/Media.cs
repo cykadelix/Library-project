@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library_project.Models
 {
-    public class Media
+    public class media
     {
         [Key]
         public int mediaId { get; set; }
