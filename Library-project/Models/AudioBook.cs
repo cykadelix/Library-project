@@ -4,19 +4,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library_project.Models
 {
-    public class AudioBook
+    public class audiobook
     {
-        [Key, ForeignKey("Media.id")]
-        public Media Media { get; set; }
+        [ForeignKey("media")]
+        public int mediaId { get; set; }
+        public media Media { get; set; }
+
+        [Key]
         public int AudioBookId { get; set; }
 
 
-        public Genres Genre { get; set; }
-        public string Title { get; set; }
-        public string Narrrator { get; set; }
-        public string Author { get; set; }
-        public TimeOnly Length { get; set; }
-        public Boolean Availability { get; set; }
+        public Genres genre { get; set; }
+        public string title { get; set; }
+        public string narrator { get; set; }
+        public string author { get; set; }
+        public TimeOnly length { get; set; }
+        public Boolean availability { get; set; }
 
     }
 }
