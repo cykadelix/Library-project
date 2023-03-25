@@ -10,16 +10,21 @@ namespace Library_project.Models
         [ForeignKey("media")]
         public int mediaId { get; set; }
         public media media { get; set; }
+
+        [Key]
         public int movieId { get; set; }
 
         public int rating { get; set; }
         public string title { get; set; }
         public string director { get; set; }
-        public Genres genres { get; set; }
+        public genres genres { get; set; }
         public TimeOnly length { get; set; }
         public DateOnly releaseDate { get; set; }
 
         public Boolean availability { get; set;}
+
+       
+        
 
 
     }
