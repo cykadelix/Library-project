@@ -5,19 +5,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library_project.Models
 {
-    public class Movie
+    public class movie
     {
-        [Key, ForeignKey("Media.id")]
-        public Media Media { get; set; }
-        public int MovieId { get; set; }
-        public int Rating { get; set; }
-        public string Title { get; set; }
-        public string Director { get; set; }
-        public Genres Genres { get; set; }
-        public TimeOnly Length { get; set; }
-        public DateOnly ReleasDate { get; set; }
+        [ForeignKey("media")]
+        public int mediaId { get; set; }
+        public media media { get; set; }
+        public int movieId { get; set; }
 
-        public Boolean Availability { get; set;}
+        public int rating { get; set; }
+        public string title { get; set; }
+        public string director { get; set; }
+        public Genres genres { get; set; }
+        public TimeOnly length { get; set; }
+        public DateOnly releaseDate { get; set; }
+
+        public Boolean availability { get; set;}
 
 
     }

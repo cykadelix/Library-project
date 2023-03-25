@@ -4,17 +4,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library_project.Models
 {
-    public class Journal
+    public class journal
     {
-        [Key, ForeignKey("Media.id")]
-        public Media Media { get; set; }
-        public int JournalId { get; set; }
-        public string Title { get; set; }
-        public string Researchers { get; set; }
-        public string Subject { get; set; }
         
-        public int Length { get; set; }
-        public DateOnly DateReleased { get; set; }
+        [ForeignKey("media")]
+        public int mediaId { get; set; }
+        public media media { get; set; }
+        
+
+        [Key]
+        public int jouranalId { get; set; }
+        public string title { get; set; }
+        public string researchers { get; set; }
+        public string subject { get; set; }
+        
+        public int length { get; set; }
+        public DateOnly dateReleased { get; set; }
 
 
     }
