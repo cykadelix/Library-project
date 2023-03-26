@@ -29,7 +29,7 @@ namespace Library_project.Models
         public string phoneNumber { get; set; } = string.Empty;
 
         //Relationships
-        public Student studentToSignUp { get; set; }
+        //public Student studentToSignUp { get; set; }
     }
 
 }

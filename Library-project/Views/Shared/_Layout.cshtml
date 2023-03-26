@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="~/css/register.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/adminDashboard.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/addMediaForm.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/explore.css" asp-append-version="true" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 </head>
 <body>
@@ -30,6 +31,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Explore">Explore</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AdminDashboard">Admin</a>
@@ -60,6 +64,8 @@
     </footer>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/explore.js" asp-append-version="true"></script>
+    <script src="~/js/adminDashboard.js" asp-append-version="true"></script>
     <script src="~/js/addMediaForm.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

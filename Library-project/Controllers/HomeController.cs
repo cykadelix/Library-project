@@ -48,6 +48,11 @@ namespace Library_project.Controllers
             return View();
         }
 
+        public IActionResult Explore() 
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

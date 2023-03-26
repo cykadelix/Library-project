@@ -80,7 +80,7 @@
 
     .account-nav i {
         color: white;
-        margin: 0 1.5vw 0 0.25vw;
+        margin: 0 0.5vw 0 1.5vw;
     }
 
 #account-signout-btn {
@@ -88,6 +88,10 @@
     bottom: 3rem;
     text-decoration: none;
     color: black;
+}
+
+.active-l {
+    border-left: 3px solid white;
 }
 
 /*Events*/

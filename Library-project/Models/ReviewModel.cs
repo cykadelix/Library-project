@@ -18,7 +18,7 @@ namespace Library_project.Models
 
         //Relationships
         public object obj { get; set; }         //object?? is this a media?
-        public Student reviewing_student { get; set; } // We should only have foreign keys to the IDs of these the relationships
+        //public Student reviewing_student { get; set; } // We should only have foreign keys to the IDs of these the relationships
     }
 
 }
