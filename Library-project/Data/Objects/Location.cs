@@ -4,7 +4,8 @@ namespace Library_project.Data.Objects
 {
     public class Location
     {
-        public int Floor { get; set; }
-        public int Asile { get; set; }
+        [NotMapped]
+        public int f { get; set; }
+        public int r { get; set; }
     }
 }
