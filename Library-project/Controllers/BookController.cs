@@ -10,7 +10,7 @@ namespace Library_project.Controllers
 {
     public class BookController : Controller
     {
-        private readonly string connString = "Host=127.0.0.1;Server=localhost;Port=5432;Database=my_library;UserID=postgres;Password=--;Pooling=true";
+        private readonly string connString = "Host=127.0.0.1;Server=localhost;Port=5432;Database=my_library;UserID=postgres;Password=killer89;Pooling=true";
        
 
         

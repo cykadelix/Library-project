@@ -1,0 +1,31 @@
+﻿@model Library_project.ViewModels.JournalListViewModel;
+@{
+    ViewBag.Title = "Index";
+}
+<div>
+    @foreach(var item in Model.allJournals)
+    {
+
+        <div>
+            <p>@item.jouranalId</p>
+        </div
+        <div>
+            <p>@item.title</p>
+        </div>
+        <div>
+            <p>@item.researchers</p>
+        </div>
+        <div>
+            <p>@item.subject</p>
+        </div>
+        <div>
+            <p>@item.length</p>
+        </div
+        <div>
+            <p>@item.releasedate</p>
+        </div>
+        
+    
+    
+    }
+</div>
