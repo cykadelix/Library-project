@@ -15,11 +15,19 @@ namespace Library_project.Models
         [Key]
         public int jouranalid { get; set; }
         public string title { get; set; }
-        public string researchers { get; set; }
-        public string subject { get; set; }
         
-        public int length { get; set; }
-        public DateOnly datereleased { get; set; }
+        
+
+        [NotMapped]
+        public Location? location { get; set; }
+
+        
+        public string[]   researchers { get; set; }
+        public string[]   subject { get; set; }
+        
+        public int      length { get; set; }
+        public DateOnly releasedate { get; set; }
+        
         
 
 

@@ -35,13 +35,13 @@ namespace Library_project.Controllers
             {
                 LocalList.Add(  new book()
                 {
-                    bookId = (int)reader["bookId"],
+                    bookid = (int)reader["bookId"],
                     title = reader["title"] as string,
-                    mediaId = (int)reader["bookId"],
+                    mediaid = (int)reader["bookId"],
                     isavailable = (bool)reader["isAvailable"],
                     isbn = (long)reader["isbn"],
-                    pageCount = (int)reader["pageCount"],
-                    publicDate = reader.GetFieldValue<DateOnly>(3),
+                    pagecount = (int)reader["pageCount"],
+                    publicdate = reader.GetFieldValue<DateOnly>(3),
                     author = reader.GetFieldValue <string[]>(2),
                     genres = reader.GetFieldValue<int>(8),
                     location = reader.GetFieldValue<Location>(10)
@@ -54,10 +54,7 @@ namespace Library_project.Controllers
             return View(bookList);
 
         }
-        public IActionResult BookForm()
-        {
-            return View();
-        }
+        
         [HttpGet]
         public IActionResult CreateBookView()
         {
