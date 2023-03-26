@@ -9,19 +9,19 @@ namespace Library_project.Models
     public class historian
     {
         //Historian Name
-        public string fName { get; set; }
-        public string mName { get; set; }
-        public string lName { get; set; }
+        public string fname { get; set; }
+        public string mname { get; set; }
+        public string lname { get; set; }
 
         //Historian Data
         [Key] 
-        public int historianID { get; set; }
+        public int historianid { get; set; }
         public string expertise { get; set; }
         public string education { get; set; } 
         public short age { get; set; }
 
         //Relationships
-        public List<student> studentsToSee { get; set; }
+        public List<student> studentstosee { get; set; }
     }
 
 }

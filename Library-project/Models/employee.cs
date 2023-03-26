@@ -10,12 +10,12 @@ namespace Library_project.Models
     public class employee
     {
         //Employee Name
-        public string fName { get; set; }
-        public string mName { get; set; }
-        public string lName { get; set; }
+        public string fname { get; set; }
+        public string mname { get; set; }
+        public string lname { get; set; }
 
         //Employee Data
-        [Key] public int employeeID { get; set; }
+        [Key] public int employeeid { get; set; }
 
        
         
@@ -24,15 +24,15 @@ namespace Library_project.Models
         public short age { get; set; }
 
         //Personal Info
-        public string eMail { get; set; }
+        public string email { get; set; }
         public string password { get; set; }
-        public string homeAddress { get; set; }
-        public string phoneNumber { get; set; }
+        public string homeaddress { get; set; }
+        public string phonenumber { get; set; }
 
 
         [ForeignKey("employee")]
         public employee supervisor { get; set; }
-        public int supervisorID { get; set; }
+        public int supervisorid { get; set; }
 
         
     }

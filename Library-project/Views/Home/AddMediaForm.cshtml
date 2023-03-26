@@ -17,7 +17,7 @@
             <i class="fa-solid fa-chart-bar"></i>
             <h2 class="display-2">Dashboard</h2>
         </a>
-        <a class="account-nav" asp-area="" asp-controller="Home" asp-action="AddMediaForm">
+        <a class="account-nav active-l" asp-area="" asp-controller="Home" asp-action="AddMediaForm">
             <i class="fa-solid fa-boxes-stacked"></i>
             <h2 class="display-2">Inventory</h2>
         </a>
@@ -47,40 +47,41 @@
         </div>
         <form class="media-entry-form" id="computer-entry-form">
             <div class="input-wrapper">
-                <label for="Brand">Brand</label>
-                <input type="text" id="computer-brand" name="Brand" />
+                <label for="brand">Brand</label>
+                <input type="text" id="computer-brand" name="brand" />
             </div>
             <div class="input-wrapper">
-                <label for="SerialNumber">Serial Number</label>
-                <input type="text" id="computer-serialNumber" name="SerialNumber" />
+                <label for="serialnumber">Serial Number</label>
+                <input type="text" id="computer-serialNumber" name="serialnumber" />
             </div>
             <div class="input-wrapper">
-                <label for="Description">Description</label>
-                <input type="text" id="computer-description" name="Description" />
+                <label for="description">Description</label>
+                <input type="text" id="computer-description" name="description" />
             </div>
-            <label for="Availibility">Availibility</label>
-            <input type="checkbox" id="computer-availibility" name="Availibility" />
+            <label for="availibility">Availibility</label>
+            <input type="checkbox" id="computer-availibility" name="availibility" />
         </form>
 
-        <form class="media-entry-form" id="camera-entry-form">
+        <form class="media-entry-form" id="camera-entry-form" method="post" asp-controller="explore" asp-action="AddCamera">
             <div class="input-wrapper">
-                <label for="Brand">Brand</label>
-                <input type="text" id="camera-brand" name="Brand" />
+                <label for="brand">Brand</label>
+                <input type="text" id="camera-brand" name="brand" />
             </div>
             <div class="input-wrapper">
-                <label for="SerialNumber">Serial Number</label>
-                <input type="text" id="camera-serialNumber" name="SerialNumber" />
+                <label for="serialnumber">Serial Number</label>
+                <input type="text" id="camera-serialNumber" name="serialnumber" />
             </div>
             <div class="input-wrapper">
-                <label for="Description">Description</label>
-                <input type="text" id="camera-description" name="Description" />
+                <label for="description">Description</label>
+                <input type="text" id="camera-description" name="description" />
             </div>
             <div class="input-wrapper">
-                <label for="Lumens">Lumens</label>
-                <input type="text" id="camera-lumens" name="Lumens" />
+                <label for="lumens">Lumens</label>
+                <input type="text" id="camera-lumens" name="lumens" />
             </div>
-            <label for="Availibility">Availibility</label>
-            <input type="checkbox" id="camera-availibility" name="Availibility" />
+            <label for="availibility">Availibility</label>
+            <input type="checkbox" id="camera-availibility" name="availibility" />
+            <input type="submit" value="Submit" />
         </form>
 
         <form class="media-entry-form" id="projector-entry-form">

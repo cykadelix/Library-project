@@ -10,14 +10,19 @@ namespace Library_project.Controllers
 {
     public class BookController : Controller
     {
-        private readonly string connString = "Host=127.0.0.1;Server=localhost;Port=5432;Database=my_library;UserID=postgres;Password=--;Pooling=true";
-       
+        private readonly ILogger<HomeController> _logger;
+        private readonly IConfiguration _config;
 
-        
+        public BookController(ILogger<HomeController> logger, IConfiguration config)
+        {
+            _logger = logger;
+            _config = config;
+        }
+
         public async Task<IActionResult> Index()
         {
 
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
             dataSourceBuilder.MapEnum<genres>();
             dataSourceBuilder.MapComposite<Location>();
             await using var dataSource = dataSourceBuilder.Build();
@@ -33,7 +38,7 @@ namespace Library_project.Controllers
                     bookId = (int)reader["bookId"],
                     title = reader["title"] as string,
                     mediaId = (int)reader["bookId"],
-                    isAvailable = (bool)reader["isAvailable"],
+                    isavailable = (bool)reader["isAvailable"],
                     isbn = (long)reader["isbn"],
                     pageCount = (int)reader["pageCount"],
                     publicDate = reader.GetFieldValue<DateOnly>(3),
@@ -74,14 +79,7 @@ namespace Library_project.Controllers
 
             if (ModelState.IsValid)
             {
-
-
-                
-
-                
-
-                await using NpgsqlConnection conn = new NpgsqlConnection("Host=127.0.0.1;Server=localhost;Port=5432;Database=my_library;UserID=postgres;Password=killer89;Pooling=true;Include Error Detail=true;");
-               
+                await using NpgsqlConnection conn = new NpgsqlConnection(_config["ConnectionString"]);
 
                 // Connect to the database
                 await conn.OpenAsync();
@@ -105,14 +103,6 @@ namespace Library_project.Controllers
                         }
                 };
                 await using var reader = await command.ExecuteReaderAsync();
-
-
-
-
-
-
-                
-
             }
             else
             {
@@ -121,41 +111,11 @@ namespace Library_project.Controllers
 
             }
             return View(example);
-
-            /*
-            await conn.OpenAsync();
-            await using var cmd = new NpgsqlCommand("WITH local_id AS (INSERT INTO media VALUES (DEFAULT, 1, 1) RETURNING mediaid) INSERT INTO book VALUES((SELECT mediaId from local_id)," +
-                " (@title),(@author),(@genres),(@publicDate),(@pageCount),(@isbn),(@isAvailable), (SELECT media_id from local_id))", conn)
-            {
-                Parameters =
-                {
-
-                    new("title", book.title),
-                    new("author", book.author),
-
-                    new("genres", book.genres),
-                    new("publicDate", book.publicDate),
-                    new("pageCount", book.pageCount),
-                    new("isbn", book.isbn),
-                    new("isAvailable", book.isAvailable),
-
-
-
-                }
-            };
-            await using var reader = await cmd.ExecuteReaderAsync();
-            */
-
-
         }  
             
-            
-
-        
-
         public async Task<IActionResult> Edit(int book_id)
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
 
             await using var dataSource = dataSourceBuilder.Build();
             await using var command = dataSource.CreateCommand("SELECT * FROM books");

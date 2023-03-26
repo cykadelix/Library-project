@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Library_project.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230325172834_isbnLong")]
-    partial class isbnLong
+    [Migration("20230326223801_updateBooks")]
+    partial class updateBooks
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,13 +25,21 @@ namespace Library_project.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Library_project.Data.Objects.Location", b =>
+                {
+                    b.Property<int>("r")
+                        .HasColumnType("integer");
+
+                    b.ToTable("Location");
+                });
+
             modelBuilder.Entity("Library_project.Models.audiobook", b =>
                 {
-                    b.Property<int>("AudioBookId")
+                    b.Property<int>("audiobookid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AudioBookId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("audiobookid"));
 
                     b.Property<string>("author")
                         .IsRequired()
@@ -46,7 +54,7 @@ namespace Library_project.Migrations
                     b.Property<TimeOnly>("length")
                         .HasColumnType("time without time zone");
 
-                    b.Property<int>("mediaId")
+                    b.Property<int>("mediaid")
                         .HasColumnType("integer");
 
                     b.Property<string>("narrator")
@@ -57,9 +65,9 @@ namespace Library_project.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("AudioBookId");
+                    b.HasKey("audiobookid");
 
-                    b.HasIndex("mediaId");
+                    b.HasIndex("mediaid");
 
                     b.ToTable("audiobook");
                 });
@@ -76,11 +84,10 @@ namespace Library_project.Migrations
                         .IsRequired()
                         .HasColumnType("text[]");
 
-                    b.Property<int[]>("genres")
-                        .IsRequired()
-                        .HasColumnType("integer[]");
+                    b.Property<int>("genres")
+                        .HasColumnType("integer");
 
-                    b.Property<bool>("isAvailable")
+                    b.Property<bool>("isavailable")
                         .HasColumnType("boolean");
 
                     b.Property<long>("isbn")
@@ -108,64 +115,64 @@ namespace Library_project.Migrations
 
             modelBuilder.Entity("Library_project.Models.computer", b =>
                 {
-                    b.Property<int>("SerialNumber")
+                    b.Property<int>("serialnumber")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SerialNumber"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("serialnumber"));
 
-                    b.Property<bool>("Availibility")
+                    b.Property<bool>("availibility")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Brand")
+                    b.Property<string>("brand")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("description")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("mediaId")
+                    b.Property<int>("mediaid")
                         .HasColumnType("integer");
 
-                    b.HasKey("SerialNumber");
+                    b.HasKey("serialnumber");
 
-                    b.HasIndex("mediaId");
+                    b.HasIndex("mediaid");
 
                     b.ToTable("computers");
                 });
 
             modelBuilder.Entity("Library_project.Models.employee", b =>
                 {
-                    b.Property<int>("employeeID")
+                    b.Property<int>("employeeid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("employeeID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("employeeid"));
 
                     b.Property<short>("age")
                         .HasColumnType("smallint");
 
-                    b.Property<string>("eMail")
+                    b.Property<string>("email")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("employee")
                         .HasColumnType("integer");
 
-                    b.Property<string>("fName")
+                    b.Property<string>("fname")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("homeAddress")
+                    b.Property<string>("homeaddress")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("lName")
+                    b.Property<string>("lname")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("mName")
+                    b.Property<string>("mname")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -173,7 +180,7 @@ namespace Library_project.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("phoneNumber")
+                    b.Property<string>("phonenumber")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -184,10 +191,10 @@ namespace Library_project.Migrations
                     b.Property<float>("salary")
                         .HasColumnType("real");
 
-                    b.Property<int>("supervisorID")
+                    b.Property<int>("supervisorid")
                         .HasColumnType("integer");
 
-                    b.HasKey("employeeID");
+                    b.HasKey("employeeid");
 
                     b.HasIndex("employee");
 
@@ -196,11 +203,11 @@ namespace Library_project.Migrations
 
             modelBuilder.Entity("Library_project.Models.historian", b =>
                 {
-                    b.Property<int>("historianID")
+                    b.Property<int>("historianid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("historianID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("historianid"));
 
                     b.Property<short>("age")
                         .HasColumnType("smallint");
@@ -213,38 +220,38 @@ namespace Library_project.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("fName")
+                    b.Property<string>("fname")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("lName")
+                    b.Property<string>("lname")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("mName")
+                    b.Property<string>("mname")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("historianID");
+                    b.HasKey("historianid");
 
                     b.ToTable("historians");
                 });
 
             modelBuilder.Entity("Library_project.Models.journal", b =>
                 {
-                    b.Property<int>("jouranalId")
+                    b.Property<int>("jouranalid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("jouranalId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("jouranalid"));
 
-                    b.Property<DateOnly>("dateReleased")
+                    b.Property<DateOnly>("datereleased")
                         .HasColumnType("date");
 
                     b.Property<int>("length")
                         .HasColumnType("integer");
 
-                    b.Property<int>("mediaId")
+                    b.Property<int>("mediaid")
                         .HasColumnType("integer");
 
                     b.Property<string>("researchers")
@@ -259,9 +266,9 @@ namespace Library_project.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("jouranalId");
+                    b.HasKey("jouranalid");
 
-                    b.HasIndex("mediaId");
+                    b.HasIndex("mediaid");
 
                     b.ToTable("journals");
                 });
@@ -300,13 +307,13 @@ namespace Library_project.Migrations
                     b.Property<TimeOnly>("length")
                         .HasColumnType("time without time zone");
 
-                    b.Property<int>("mediaId")
+                    b.Property<int>("mediaid")
                         .HasColumnType("integer");
 
                     b.Property<int>("rating")
                         .HasColumnType("integer");
 
-                    b.Property<DateOnly>("releaseDate")
+                    b.Property<DateOnly>("releasedate")
                         .HasColumnType("date");
 
                     b.Property<string>("title")
@@ -315,18 +322,18 @@ namespace Library_project.Migrations
 
                     b.HasKey("movieId");
 
-                    b.HasIndex("mediaId");
+                    b.HasIndex("mediaid");
 
                     b.ToTable("movies");
                 });
 
             modelBuilder.Entity("Library_project.Models.projector", b =>
                 {
-                    b.Property<int>("serialNumber")
+                    b.Property<int>("serialnumber")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("serialNumber"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("serialnumber"));
 
                     b.Property<bool>("availibility")
                         .HasColumnType("boolean");
@@ -342,60 +349,60 @@ namespace Library_project.Migrations
                     b.Property<int>("lumens")
                         .HasColumnType("integer");
 
-                    b.Property<int>("mediaId")
+                    b.Property<int>("mediaid")
                         .HasColumnType("integer");
 
-                    b.HasKey("serialNumber");
+                    b.HasKey("serialnumber");
 
-                    b.HasIndex("mediaId");
+                    b.HasIndex("mediaid");
 
                     b.ToTable("projectors");
                 });
 
             modelBuilder.Entity("Library_project.Models.review", b =>
                 {
-                    b.Property<int>("reviewID")
+                    b.Property<int>("reviewid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("reviewID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("reviewid"));
 
                     b.Property<string>("evaluation")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("mediaId")
+                    b.Property<int>("mediaid")
                         .HasColumnType("integer");
 
                     b.Property<short>("rating")
                         .HasColumnType("smallint");
 
-                    b.Property<int>("studentId")
+                    b.Property<int>("studentid")
                         .HasColumnType("integer");
 
-                    b.HasKey("reviewID");
+                    b.HasKey("reviewid");
 
-                    b.HasIndex("mediaId");
+                    b.HasIndex("mediaid");
 
-                    b.HasIndex("studentId");
+                    b.HasIndex("studentid");
 
                     b.ToTable("reviews");
                 });
 
             modelBuilder.Entity("Library_project.Models.student", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<int?>("historianID")
+                    b.Property<int?>("historianid")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
-                    b.HasIndex("historianID");
+                    b.HasIndex("historianid");
 
                     b.ToTable("students");
                 });
@@ -404,7 +411,7 @@ namespace Library_project.Migrations
                 {
                     b.HasOne("Library_project.Models.media", "media")
                         .WithMany()
-                        .HasForeignKey("mediaId")
+                        .HasForeignKey("mediaid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -426,7 +433,7 @@ namespace Library_project.Migrations
                 {
                     b.HasOne("Library_project.Models.media", "media")
                         .WithMany()
-                        .HasForeignKey("mediaId")
+                        .HasForeignKey("mediaid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -448,7 +455,7 @@ namespace Library_project.Migrations
                 {
                     b.HasOne("Library_project.Models.media", "media")
                         .WithMany()
-                        .HasForeignKey("mediaId")
+                        .HasForeignKey("mediaid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -459,7 +466,7 @@ namespace Library_project.Migrations
                 {
                     b.HasOne("Library_project.Models.media", "media")
                         .WithMany()
-                        .HasForeignKey("mediaId")
+                        .HasForeignKey("mediaid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -470,7 +477,7 @@ namespace Library_project.Migrations
                 {
                     b.HasOne("Library_project.Models.media", "media")
                         .WithMany()
-                        .HasForeignKey("mediaId")
+                        .HasForeignKey("mediaid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -481,13 +488,13 @@ namespace Library_project.Migrations
                 {
                     b.HasOne("Library_project.Models.media", "media")
                         .WithMany()
-                        .HasForeignKey("mediaId")
+                        .HasForeignKey("mediaid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Library_project.Models.student", "student")
                         .WithMany()
-                        .HasForeignKey("studentId")
+                        .HasForeignKey("studentid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -499,13 +506,13 @@ namespace Library_project.Migrations
             modelBuilder.Entity("Library_project.Models.student", b =>
                 {
                     b.HasOne("Library_project.Models.historian", null)
-                        .WithMany("studentsToSee")
-                        .HasForeignKey("historianID");
+                        .WithMany("studentstosee")
+                        .HasForeignKey("historianid");
                 });
 
             modelBuilder.Entity("Library_project.Models.historian", b =>
                 {
-                    b.Navigation("studentsToSee");
+                    b.Navigation("studentstosee");
                 });
 #pragma warning restore 612, 618
         }

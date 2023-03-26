@@ -1,0 +1,15 @@
+﻿@using Library_project.ViewModels
+@model ListCameraViewModel
+
+<div>
+    @foreach (var items in Model.Cameras)
+    {
+        <div class="media-display-item">
+            <h1>@items.brand</h1>
+            <h1>@items.serialnumber</h1>
+            <h1>@items.description</h1>
+            <h1>@items.lumens</h1>
+            <h1>@items.availibility</h1>
+        </div>
+    }
+</div>

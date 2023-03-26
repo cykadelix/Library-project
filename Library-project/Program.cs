@@ -2,12 +2,13 @@ using Library_project.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration["ConnectionString"];
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
-        opt.UseNpgsql(builder.Configuration.GetConnectionString("my_library")));
+        opt.UseNpgsql(builder.Configuration.GetConnectionString(builder.Configuration["ConnectionString"])));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

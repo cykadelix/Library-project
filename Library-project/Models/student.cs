@@ -5,6 +5,6 @@ namespace Library_project.Models
     public class student
     {
         [Key]
-        public int Id { get; set; }
+        public int id { get; set; }
     }
 }
