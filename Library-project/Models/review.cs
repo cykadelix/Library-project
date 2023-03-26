@@ -11,7 +11,7 @@ namespace Library_project.Models
     {
         //Review info
         [Key] 
-        public int reviewID { get; set; }
+        public int reviewid { get; set; }
         
         public string evaluation { get; set; }
         public short rating { get; set; }
@@ -19,12 +19,12 @@ namespace Library_project.Models
 
 
         [ForeignKey("media")]
-        public int mediaId { get; set; }
+        public int mediaid { get; set; }
         public media media { get; set; }
 
 
         [ForeignKey("student")]
-        public int studentId { get; set; }
+        public int studentid { get; set; }
         public student student { get; set; }
 
 

@@ -8,22 +8,26 @@ namespace Library_project.Models
     {
         
         [ForeignKey("media")]
-        public int mediaId { get; set; }
+        public int mediaid { get; set; }
         public media media { get; set; }
         
 
         [Key]
-        public int      jouranalId { get; set; }
+        public int jouranalid { get; set; }
+        public string title { get; set; }
+        
+        
 
         [NotMapped]
         public Location? location { get; set; }
 
-        public string   title { get; set; }
+        
         public string[]   researchers { get; set; }
         public string[]   subject { get; set; }
         
         public int      length { get; set; }
         public DateOnly releasedate { get; set; }
+        
         
 
 

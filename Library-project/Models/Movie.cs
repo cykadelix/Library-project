@@ -8,7 +8,7 @@ namespace Library_project.Models
     public class movie
     {
         [ForeignKey("media")]
-        public int mediaId { get; set; }
+        public int mediaid { get; set; }
         public media media { get; set; }
 
         [Key]
@@ -19,7 +19,7 @@ namespace Library_project.Models
         public string director { get; set; }
         public genres genres { get; set; }
         public TimeOnly length { get; set; }
-        public DateOnly releaseDate { get; set; }
+        public DateOnly releasedate { get; set; }
 
         public Boolean availability { get; set;}
 

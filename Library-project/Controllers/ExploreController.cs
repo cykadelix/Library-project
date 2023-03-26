@@ -1,27 +1,66 @@
-﻿using Library_project.Data.Enums;
-using Library_project.Data.Objects;
+﻿using Microsoft.AspNetCore.Mvc;
 using Library_project.Models;
-using Library_project.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Npgsql;
+using Library_project.ViewModels;
+using Library_project.Data.Enums;
+using Library_project.Data.Objects;
 
 namespace Library_project.Controllers
 {
-    public class BookController : Controller
+    public class ExploreController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly IConfiguration _config;
 
-        public BookController(ILogger<HomeController> logger, IConfiguration config)
+        public ExploreController(IConfiguration config)
         {
-            _logger = logger;
             _config = config;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public PartialViewResult GetCameras()
+        {
+            ListCameraViewModel cameraList = new ListCameraViewModel();
+            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            {
+
+                Console.Out.WriteLine("Opening connection");
+                conn.Open();
+
+
+                using (var command = new NpgsqlCommand("SELECT * FROM camera", conn))
+                {
+
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        camera cam = new camera();
+                        cam.brand = reader.GetString(0);
+                        cam.serialnumber = reader.GetInt32(1);
+                        cam.description = reader.GetString(2);
+                        cam.lumens = reader.GetInt32(3);
+                        cam.availibility = reader.GetBoolean(4);
+                        cameraList.Cameras.Add(cam);
+                    }
+                    reader.Close();
+                }
+            }
+            return PartialView("~/Views/Explore/_CameraView.cshtml", cameraList);
+        }
+
+        [HttpPost]
+        public IActionResult AddCamera(camera camera)
         {
 
+            return RedirectToAction("AddMediaForm", "Home");
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetBooks()
+        {
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
             dataSourceBuilder.MapEnum<genres>();
             dataSourceBuilder.MapComposite<Location>();
@@ -33,7 +72,7 @@ namespace Library_project.Controllers
             var LocalList = new List<book>();
             while (await reader.ReadAsync())
             {
-                LocalList.Add(  new book()
+                LocalList.Add(new book()
                 {
                     bookid = (int)reader["bookId"],
                     title = reader["title"] as string,
@@ -42,20 +81,16 @@ namespace Library_project.Controllers
                     isbn = (long)reader["isbn"],
                     pagecount = (int)reader["pageCount"],
                     publicdate = reader.GetFieldValue<DateOnly>(3),
-                    author = reader.GetFieldValue <string[]>(2),
+                    author = reader.GetFieldValue<string[]>(2),
                     genres = reader.GetFieldValue<int>(8),
                     location = reader.GetFieldValue<Location>(10)
                 });
 
                 bookList.allBooks = LocalList;
             }
-
-
             return View(bookList);
-
         }
-        
-        [HttpGet]
+
         public IActionResult CreateBookView()
         {
             var newBook = new CreateBookViewModel();
@@ -104,46 +139,10 @@ namespace Library_project.Controllers
             else
             {
 
-                example.title="fake";
+                example.title = "fake";
 
             }
             return View(example);
-        }  
-            
-        public async Task<IActionResult> Edit(int book_id)
-        {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
-
-            await using var dataSource = dataSourceBuilder.Build();
-            await using var command = dataSource.CreateCommand("SELECT * FROM books");
-            await using var reader = await command.ExecuteReaderAsync();
-
-
-
-
-            var localBook = new EditBookViewModel();
-            reader.Read();
-            using var innerRead = reader.GetData(0);
-
-            while(innerRead.Read())
-            {
-                localBook.title = innerRead.GetFieldValue<string>(1);
-                localBook.author = innerRead.GetFieldValue<string[]>(2);
-                localBook.genres = innerRead.GetFieldValue<genres[]>(3);
-                localBook.publicDate = innerRead.GetFieldValue<DateOnly>(4);
-                localBook.pageCount = innerRead.GetFieldValue<int>(4);
-                localBook.isbn = innerRead.GetFieldValue<int>(6);
-                localBook.isAvailable = innerRead.GetFieldValue<bool>(7);
-            }
-
-            return View(localBook);
-            
-            
-        }
-        public async Task<IActionResult> Edit(EditBookViewModel editBookvm)
-        {
-
-            return RedirectToAction("Index");
         }
     }
 }

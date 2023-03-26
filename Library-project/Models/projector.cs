@@ -6,7 +6,7 @@ namespace Library_project.Models
     public class projector
     {
         [Key]
-        public int serialNumber { get; set; }
+        public int serialnumber { get; set; }
 
         public string brand { get; set; }
         public string description { get; set; }
@@ -14,7 +14,7 @@ namespace Library_project.Models
         public bool availibility { get; set; }
 
         [ForeignKey("media")]
-        public int mediaId { get; set; }
+        public int mediaid { get; set; }
         public media media { get; set; }
 
 

@@ -6,14 +6,14 @@ namespace Library_project.Models
     public class computer
     {
         [Key]
-        public int SerialNumber { get; set; }
+        public int serialnumber { get; set; }
 
-        public string Brand { get; set; }
-        public string Description { get; set; }
-        public bool Availibility { get; set; }
+        public string brand { get; set; }
+        public string description { get; set; }
+        public bool availibility { get; set; }
 
         [ForeignKey("media")]
-        public int mediaId { get; set; }
+        public int mediaid { get; set; }
         public media media { get; set; }
 
 

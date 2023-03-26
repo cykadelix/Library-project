@@ -1,0 +1,40 @@
+﻿#explore-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#explore-header {
+    align-self: center;
+}
+
+#explore-navbar {
+    box-shadow: 2px 2px 2px lightgray;
+    margin-bottom: 5vh;
+    height: 60%;
+}
+
+    #explore-navbar li {
+        margin: 0.3rem;
+    }
+
+    #explore-navbar a {
+        color: white;
+        padding: 0;
+        margin: 0.5rem;
+        font-size: 1rem;
+    }
+
+    #explore-navbar a:hover {
+        font-weight: bold;
+    }
+
+.active-b {
+    border-bottom: 2px solid white;
+}
+
+.media-display-container {
+    width: 200px;
+    height: 300px;
+    background-color: gray;
+}

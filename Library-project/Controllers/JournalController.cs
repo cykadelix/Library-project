@@ -25,7 +25,7 @@ namespace Library_project.Controllers
             {
                 local_list.Add(new journal()
                 {
-                    jouranalId = (int)reader["journalid"],
+                    jouranalid = (int)reader["journalid"],
                     title = (string)reader["title"],
                     researchers = reader.GetFieldValue<string[]>(5),
                     subject = reader.GetFieldValue<string[]>(6),
