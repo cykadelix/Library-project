@@ -1,32 +1,35 @@
 ﻿using Library_project.Data.Enums;
-using Library_project.Data.Objects;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Library_project.Models
+namespace Library_project.ViewModels
 {
-    public class book
+    public class CreateBookViewModel
     {
+
+        
+        /*
         [Key]
         public int bookId { get; set; }
+        */
 
-        
         public string title { get; set; }
         public string[] author { get; set; }
-        public List<genres> genres { get; set; }
-        public DateTime publicDate { get; set; }
+        public genres[] genres { get; set; }
+        public DateOnly publicDate { get; set; }
 
-        
+
         public int pageCount { get; set; }
 
-        public long isbn { get; set; }
+        public int isbn { get; set; }
         public Boolean isAvailable { get; set; }
 
+
+        /*
         [ForeignKey("media")]
         public int mediaId { get; set; }
         public media media { get; set; }
+        */
 
-       
+
 
     }
 }

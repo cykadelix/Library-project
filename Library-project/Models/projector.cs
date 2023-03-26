@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library_project.Models
 {
-    public class CameraModel
+    public class projector
     {
         [Key]
         public int serialNumber { get; set; }
@@ -12,7 +13,12 @@ namespace Library_project.Models
         public int lumens { get; set; }
         public bool availibility { get; set; }
 
-        public CameraModel()
+        [ForeignKey("media")]
+        public int mediaId { get; set; }
+        public media media { get; set; }
+
+
+        public projector()
         {
 
         }

@@ -12,13 +12,26 @@ namespace Library_project.Data
 {
     public class AppDbContext : DbContext
     {
+        public DbSet<media> cameras { get; set; }
+        public DbSet<employee> employees { get; set; }
+        public DbSet<historian> historians { get; set; }
+        public DbSet<student> students { get; set; }
+
+
         public DbSet<media> medias { get; set; }
         public DbSet<audiobook> audioBooks { get; set; }
         public DbSet<book> books { get; set; }
         public DbSet<journal> journals { get; set; }
-        public DbSet<movie> movie { get; set; }
-        public DbSet<Employee> employees { get; set; }
-        public DbSet<Historian> historians { get; set; }
+        public DbSet<movie> movies { get; set; }
+
+        public DbSet<projector> projectors { get; set;}
+        
+        public DbSet<computer> computers { get; set; }
+
+
+        public DbSet<audiobook> checkouts { get; set; }
+        public DbSet<review> reviews { get; set; }
+       
 
 
         protected readonly IConfiguration configuration;
