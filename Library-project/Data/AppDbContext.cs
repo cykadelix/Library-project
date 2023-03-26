@@ -45,7 +45,11 @@ namespace Library_project.Data
         }
 
 
-
+        protected override void OnModelCreating(ModelBuilder mb)
+        {
+            base.OnModelCreating(mb);
+            mb.Entity<Location>().HasNoKey();
+        }
 
         
         
