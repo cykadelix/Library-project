@@ -13,15 +13,16 @@ namespace Library_project.Models
         
         public string title { get; set; }
         public string[] author { get; set; }
-        public List<genres> genres { get; set; }
-        public DateTime publicDate { get; set; }
+        public int genres { get; set; }
+        public DateOnly publicDate { get; set; }
 
-        
+        [NotMapped]
+        public Location? location { get; set; }
         public int pageCount { get; set; }
 
         public long isbn { get; set; }
         public Boolean isAvailable { get; set; }
-
+        
         [ForeignKey("media")]
         public int mediaId { get; set; }
         public media media { get; set; }

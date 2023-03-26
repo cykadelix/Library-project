@@ -1,15 +1,16 @@
 ﻿using Library_project.Data.Enums;
-
+using Library_project.Data.Objects;
 using Library_project.Models;
 using Library_project.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Npgsql;
 
 namespace Library_project.Controllers
 {
     public class BookController : Controller
     {
-        private readonly string connString = "Host=127.0.0.1;Server=localhost;Port=5432;Database=my_library;UserID=postgres;Password=killer89;Pooling=true";
+        private readonly string connString = "Host=127.0.0.1;Server=localhost;Port=5432;Database=my_library;UserID=postgres;Password=--;Pooling=true";
        
 
         
@@ -18,9 +19,9 @@ namespace Library_project.Controllers
 
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
             dataSourceBuilder.MapEnum<genres>();
-
+            dataSourceBuilder.MapComposite<Location>();
             await using var dataSource = dataSourceBuilder.Build();
-            await using var command = dataSource.CreateCommand("SELECT * FROM book");
+            await using var command = dataSource.CreateCommand("SELECT * FROM book ,media WHERE bookId=media.mediaId");
             await using var reader = await command.ExecuteReaderAsync();
 
             var bookList = new ListBookViewModel();
@@ -35,9 +36,10 @@ namespace Library_project.Controllers
                     isAvailable = (bool)reader["isAvailable"],
                     isbn = (long)reader["isbn"],
                     pageCount = (int)reader["pageCount"],
-                    publicDate = (DateTime)reader["publicDate"],
+                    publicDate = reader.GetFieldValue<DateOnly>(3),
                     author = reader.GetFieldValue <string[]>(2),
-                    genres = reader.GetFieldValue<List<genres>>(8),
+                    genres = reader.GetFieldValue<int>(8),
+                    location = reader.GetFieldValue<Location>(10)
                 });
 
                 bookList.allBooks = LocalList;
@@ -52,55 +54,105 @@ namespace Library_project.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult CreateBookView()
         {
-            var newBook = new ListBookViewModel();
+            var newBook = new CreateBookViewModel();
 
             return View(newBook);
         }
         [HttpPost]
-        public async Task<IActionResult> Create(CreateBookViewModel newBook)
+        public async Task<IActionResult> CreateBookLandingPage(CreateBookViewModel newBook)
         {
-            var book = new CreateBookViewModel();
-            if (!ModelState.IsValid)
+            CreateBookViewModel example = new CreateBookViewModel();
+            example.title = newBook.title;
+            example.author = newBook.author;
+            example.pageCount = newBook.pageCount;
+            example.isbn = newBook.isbn;
+            example.isAvailable = newBook.isAvailable;
+            example.publishDate = newBook.publishDate;
+            example.genre = newBook.genre;
+
+            if (ModelState.IsValid)
             {
-                book.title = "fake";
+
+
+                
+
+                
+
+                await using NpgsqlConnection conn = new NpgsqlConnection("Host=127.0.0.1;Server=localhost;Port=5432;Database=my_library;UserID=postgres;Password=killer89;Pooling=true;Include Error Detail=true;");
+               
+
+                // Connect to the database
+                await conn.OpenAsync();
+
+                await using var command = new NpgsqlCommand("WITH local_id AS (INSERT INTO media VALUES (DEFAULT,(1,1)) RETURNING mediaid)" +
+                    "INSERT INTO book " +
+                    "(bookid," +
+                    "title,author,publicdate,pagecount,isbn,isavailable,genre,mediaid)" +
+                    " VALUES((SELECT mediaid from local_id) , @title, @author, @publicDate, " +
+                    "@pageCount,@isbn,@isAvailable,@genre,(SELECT mediaid from local_id))", conn)
+                {
+                    Parameters =
+                        {
+                            new("title", newBook.title),
+                            new("author", newBook.author.Split(',')),
+                            new("genre", newBook.genre),
+                            new("publicDate", newBook.publishDate),
+                            new("pageCount", newBook.pageCount),
+                            new("isbn", newBook.isbn),
+                            new("isAvailable", newBook.isAvailable),
+                        }
+                };
+                await using var reader = await command.ExecuteReaderAsync();
+
+
+
+
+
+
+                
+
             }
             else
             {
-                book.title = newBook.title;
 
-                await using var conn = new NpgsqlConnection("Host=127.0.0.1;Server=localhost;Port=5432;Database=myWorker;UserID=postgres;Password=killer89;Pooling=true");
-
-                await conn.OpenAsync();
-                await using var cmd = new NpgsqlCommand("WITH local_id AS (INSERT INTO media VALUES (DEFAULT, 1, 1) RETURNING media_id) INSERT INTO books VALUES((SELECT mediaId from local_id)," +
-                    " (@title),(@author),(@genres),(@publicDate),(@pageCount),(@isbn),(@isAvailable), (SELECT media_id from local_id))", conn)
-                {
-                    Parameters =
-                    {
-                        
-                        new("title", book.title),
-                        new("author", book.author),
-
-                        new("genres", book.title),
-                        new("publicDate", book.title),
-                        new("pageCount", book.title),
-                        new("isbn", book.title),
-                        new("isAvailable", book.title),
-                        
-
-
-                    }
-                };
-                await using var reader = await cmd.ExecuteReaderAsync();
-
-
+                example.title="fake";
 
             }
+            return View(example);
 
-            return RedirectToAction("Index");
+            /*
+            await conn.OpenAsync();
+            await using var cmd = new NpgsqlCommand("WITH local_id AS (INSERT INTO media VALUES (DEFAULT, 1, 1) RETURNING mediaid) INSERT INTO book VALUES((SELECT mediaId from local_id)," +
+                " (@title),(@author),(@genres),(@publicDate),(@pageCount),(@isbn),(@isAvailable), (SELECT media_id from local_id))", conn)
+            {
+                Parameters =
+                {
 
-        }
+                    new("title", book.title),
+                    new("author", book.author),
+
+                    new("genres", book.genres),
+                    new("publicDate", book.publicDate),
+                    new("pageCount", book.pageCount),
+                    new("isbn", book.isbn),
+                    new("isAvailable", book.isAvailable),
+
+
+
+                }
+            };
+            await using var reader = await cmd.ExecuteReaderAsync();
+            */
+
+
+        }  
+            
+            
+
+        
+
         public async Task<IActionResult> Edit(int book_id)
         {
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
