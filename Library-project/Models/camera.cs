@@ -6,7 +6,7 @@ namespace Library_project.Models
     public class camera
     {
         [Key]
-        public int serialNumber { get; set; }
+        public int serialnumber { get; set; }
 
 
         
@@ -16,13 +16,8 @@ namespace Library_project.Models
         public bool availibility { get; set; }
 
         [ForeignKey("media")]
-        public int mediaId { get; set; }
-        public int media { get; set; }
+        public int? mediaid { get; set; }
+        public int? media { get; set; }
 
-        
-        public camera()
-        {
-
-        }
     }
 }

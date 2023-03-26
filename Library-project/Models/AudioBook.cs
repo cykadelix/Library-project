@@ -7,11 +7,11 @@ namespace Library_project.Models
     public class audiobook
     {
         [ForeignKey("media")]
-        public int mediaId { get; set; }
+        public int mediaid { get; set; }
         public media media { get; set; }
 
         [Key]
-        public int AudioBookId { get; set; }
+        public int audiobookid { get; set; }
 
 
         public genres genre { get; set; }
