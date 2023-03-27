@@ -17,11 +17,11 @@ namespace Library_project.Models
         public int rating { get; set; }
         public string title { get; set; }
         public string director { get; set; }
-        public genres genres { get; set; }
-        public TimeOnly length { get; set; }
+        public int genres { get; set; }
+        public int length { get; set; }
         public DateOnly releasedate { get; set; }
 
-        public Boolean availability { get; set;}
+        public bool availability { get; set;}
 
        
         

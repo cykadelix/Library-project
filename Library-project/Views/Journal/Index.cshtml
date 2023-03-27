@@ -1,4 +1,6 @@
-﻿@model Library_project.ViewModels.JournalListViewModel;
+﻿@using Library_project.Data.Enums
+@using Library_project.ViewModels.Journal
+@model JournalListViewModel;
 @{
     ViewBag.Title = "Index";
 }
@@ -6,26 +8,18 @@
     @foreach(var item in Model.allJournals)
     {
 
-        <div>
-            <p>@item.jouranalId</p>
-        </div
-        <div>
-            <p>@item.title</p>
-        </div>
-        <div>
-            <p>@item.researchers</p>
-        </div>
-        <div>
-            <p>@item.subject</p>
-        </div>
-        <div>
-            <p>@item.length</p>
-        </div
-        <div>
-            <p>@item.releasedate</p>
-        </div>
-        
-    
-    
+        <div class="media-display-card">
+			<h1>@item.title</h1>
+			<h2>Written by @item.researchers</h2>
+            <h2>@item.subject</h2>
+            <h2>@item.length</h2>
+            <h2>@item.releasedate</h2>
+			
+			<img src="~/images/book-cover-placeholder.png"/>
+            <h3>@item.jouranalid</h3>
+		</div>
     }
+</div>
+<div>
+    <a href="/Journal/CreateJournalView">Create a Journal</a>
 </div>
