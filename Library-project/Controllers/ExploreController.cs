@@ -4,6 +4,8 @@ using Npgsql;
 using Library_project.ViewModels;
 using Library_project.Data.Enums;
 using Library_project.Data.Objects;
+using Library_project.ViewModels.Book;
+using Library_project.ViewModels.Journal;
 
 namespace Library_project.Controllers
 {
@@ -68,7 +70,7 @@ namespace Library_project.Controllers
             await using var command = dataSource.CreateCommand("SELECT * FROM book ,media WHERE bookId=media.mediaId");
             await using var reader = await command.ExecuteReaderAsync();
 
-            var bookList = new ListBookViewModel();
+            var bookList = new BookListViewModel();
             var LocalList = new List<book>();
             while (await reader.ReadAsync())
             {
@@ -91,12 +93,7 @@ namespace Library_project.Controllers
             return View(bookList);
         }
 
-        public IActionResult CreateBookView()
-        {
-            var newBook = new CreateBookViewModel();
-
-            return View(newBook);
-        }
+       
         [HttpPost]
         public async Task<IActionResult> CreateBookLandingPage(CreateBookViewModel newBook)
         {
@@ -126,7 +123,7 @@ namespace Library_project.Controllers
                     Parameters =
                         {
                             new("title", newBook.title),
-                            new("author", newBook.author.Split(',')),
+                            new("author", newBook.author),
                             new("genre", newBook.genre),
                             new("publicDate", newBook.publishDate),
                             new("pageCount", newBook.pageCount),
@@ -143,6 +140,34 @@ namespace Library_project.Controllers
 
             }
             return View(example);
+        }
+        public async Task<IActionResult> GetJournal()
+        {
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+
+            dataSourceBuilder.MapComposite<Location>();
+            await using var dataSource = dataSourceBuilder.Build();
+            await using var command = dataSource.CreateCommand("SELECT * FROM journal ,media WHERE journalid=media.mediaId");
+            await using var reader = await command.ExecuteReaderAsync();
+
+            var journalList = new JournalListViewModel();
+            List<journal> local_list = new List<journal>();
+
+            while (await reader.ReadAsync())
+            {
+                local_list.Add(new journal()
+                {
+                    jouranalid = (int)reader["journalid"],
+                    title = (string)reader["title"],
+                    researchers = reader.GetFieldValue<string[]>(5),
+                    subject = reader.GetFieldValue<string[]>(6),
+                    length = (int)reader["length"],
+                    releasedate = reader.GetFieldValue<DateOnly>(4)
+                }); ;
+            }
+            journalList.allJournals = local_list;
+            return View(journalList);
+
         }
     }
 }

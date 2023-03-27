@@ -2,6 +2,7 @@
 using Library_project.Data.Objects;
 using Library_project.Models;
 using Library_project.ViewModels;
+using Library_project.ViewModels.Book;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Npgsql;
@@ -29,7 +30,7 @@ namespace Library_project.Controllers
             await using var command = dataSource.CreateCommand("SELECT * FROM book ,media WHERE bookId=media.mediaId");
             await using var reader = await command.ExecuteReaderAsync();
 
-            var bookList = new ListBookViewModel();
+            var bookList = new BookListViewModel();
             var LocalList = new List<book>();
             while (await reader.ReadAsync())
             {
@@ -65,14 +66,7 @@ namespace Library_project.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateBookLandingPage(CreateBookViewModel newBook)
         {
-            CreateBookViewModel example = new CreateBookViewModel();
-            example.title = newBook.title;
-            example.author = newBook.author;
-            example.pageCount = newBook.pageCount;
-            example.isbn = newBook.isbn;
-            example.isAvailable = newBook.isAvailable;
-            example.publishDate = newBook.publishDate;
-            example.genre = newBook.genre;
+            
 
             if (ModelState.IsValid)
             {
@@ -91,7 +85,7 @@ namespace Library_project.Controllers
                     Parameters =
                         {
                             new("title", newBook.title),
-                            new("author", newBook.author.Split(',')),
+                            new("author", newBook.author),
                             new("genre", newBook.genre),
                             new("publicDate", newBook.publishDate),
                             new("pageCount", newBook.pageCount),
@@ -104,10 +98,10 @@ namespace Library_project.Controllers
             else
             {
 
-                example.title="fake";
+                newBook.title="fake";
 
             }
-            return View(example);
+            return View(newBook);
         }  
             
         public async Task<IActionResult> Edit(int book_id)
