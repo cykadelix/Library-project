@@ -2,6 +2,7 @@
 using Library_project.Models;
 using Npgsql;
 using Library_project.ViewModels;
+using System.Diagnostics;
 
 namespace Library_project.Controllers
 {
@@ -19,10 +20,9 @@ namespace Library_project.Controllers
             return View();
         }
 
-        [HttpGet]
-        public PartialViewResult GetCameras()
+        public List<camera> CameraToList()
         {
-            ListCameraViewModel cameraList = new ListCameraViewModel();
+            List<camera> cameraList = new List<camera>();
             using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
             {
 
@@ -41,19 +41,26 @@ namespace Library_project.Controllers
                         cam.serialnumber = reader.GetInt32(1);
                         cam.description = reader.GetString(2);
                         cam.lumens = reader.GetInt32(3);
-                        cam.availibility = reader.GetBoolean(4);
-                        cameraList.Cameras.Add(cam);
+                        cam.availability = reader.GetBoolean(4);
+                        cameraList.Add(cam);
                     }
                     reader.Close();
                 }
             }
-            return PartialView("~/Views/Explore/_CameraView.cshtml", cameraList);
+            return cameraList; 
         }
-        [HttpPost]
-        public IActionResult AddCamera(camera camera)
-        {
 
-            return RedirectToAction("AddMediaForm", "Home");
+        [HttpGet]
+        public PartialViewResult GetCameras()
+        {
+            return PartialView("~/Views/Explore/_CameraView.cshtml", CameraToList());
         }
+
+        public IActionResult GetCameraList()
+        {
+            return Json(CameraToList());
+        }
+
     }
+
 }

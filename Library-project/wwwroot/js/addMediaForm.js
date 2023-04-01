@@ -5,9 +5,7 @@
         $('.media-entry-form').not('#computer-entry-form').hide();
         $('#computer-entry-form').show();
     } else if (selectedType == "Camera") {
-        $('.media-entry-form').not('#camera-entry-form').hide();
-        $('#camera-entry-form').show();
-
+            window.location.href = '../AddMedia/AddCamera'
     } else if (selectedType == "Projector") {
         $('.media-entry-form').not('#projector-entry-form').hide();
         $('#projector-entry-form').show();
@@ -29,4 +27,7 @@
         $('#audiobook-entry-form').show();
 
     }
+});
+
+$(function () {
 });
