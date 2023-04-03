@@ -1,5 +1,10 @@
-﻿@{
+﻿@model Library_project.Models.camera
+
+@{
     ViewData["Title"] = "Admin account";
+}
+@section scripts {
+    <script src="~/js/addMediaForm.js" asp-append-version="true"></script>
 }
 
 <div class="account-container">
@@ -45,44 +50,14 @@
                 <option>Audiobook</option>
             </select>
         </div>
-        <form class="media-entry-form" id="computer-entry-form">
-            <div class="input-wrapper">
-                <label for="brand">Brand</label>
-                <input type="text" id="computer-brand" name="brand" />
-            </div>
-            <div class="input-wrapper">
-                <label for="serialnumber">Serial Number</label>
-                <input type="text" id="computer-serialNumber" name="serialnumber" />
-            </div>
-            <div class="input-wrapper">
-                <label for="description">Description</label>
-                <input type="text" id="computer-description" name="description" />
-            </div>
-            <label for="availibility">Availibility</label>
-            <input type="checkbox" id="computer-availibility" name="availibility" />
-        </form>
 
-        <form class="media-entry-form" id="camera-entry-form" method="post" asp-controller="explore" asp-action="AddCamera">
-            <div class="input-wrapper">
-                <label for="brand">Brand</label>
-                <input type="text" id="camera-brand" name="brand" />
-            </div>
-            <div class="input-wrapper">
-                <label for="serialnumber">Serial Number</label>
-                <input type="text" id="camera-serialNumber" name="serialnumber" />
-            </div>
-            <div class="input-wrapper">
-                <label for="description">Description</label>
-                <input type="text" id="camera-description" name="description" />
-            </div>
-            <div class="input-wrapper">
-                <label for="lumens">Lumens</label>
-                <input type="text" id="camera-lumens" name="lumens" />
-            </div>
-            <label for="availibility">Availibility</label>
-            <input type="checkbox" id="camera-availibility" name="availibility" />
-            <input type="submit" value="Submit" />
-        </form>
+        <div id="media-add-form-placeholder">
+
+        </div>
+        
+        @*
+
+        
 
         <form class="media-entry-form" id="projector-entry-form">
             <div class="input-wrapper">
@@ -213,9 +188,9 @@
                 <label for="Length">Length</label>
                 <input type="text" id="audiobook-length" name="Length" />
             </div>
-                <label for="Availibility">Availibility</label>
+            <label for="Availibility">Availibility</label>
             <input type="checkbox" id="audiobook-availibility" name="Availibility" />
-        </form>
+        </form>*@
     </div>
     <div class="media-recent-transactions-panel">
         <div class="media-recent-transactions">
@@ -231,3 +206,4 @@
     $('.media-entry-form').hide();
     $('#computer-entry-form').show();
 </script>
+

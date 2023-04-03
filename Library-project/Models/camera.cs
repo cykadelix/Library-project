@@ -8,16 +8,19 @@ namespace Library_project.Models
         [Key]
         public int serialnumber { get; set; }
 
+        [Required(ErrorMessage = "Please enter the brand!")]
+        public string? brand { get; set; }
 
-        
-        public string brand { get; set; }
-        public string description { get; set; }
-        public int lumens { get; set; }
-        public bool availibility { get; set; }
+        public string? description { get; set; }
+
+        [Required(ErrorMessage = "Please enter the lumens!")]
+        public int? lumens { get; set; }
+
+        public bool? availability { get; set; }
 
         [ForeignKey("media")]
-        public int? mediaid { get; set; }
-        public int? media { get; set; }
+        public int mediaid { get; set; }
+        public int media { get; set; }
 
     }
 }

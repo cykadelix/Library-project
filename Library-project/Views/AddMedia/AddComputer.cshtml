@@ -1,0 +1,75 @@
+﻿@model Library_project.Models.camera
+
+@{
+    ViewData["Title"] = "Add camera";
+}
+<div class="account-container">
+    <div class="account-controls-panel">
+        <div class="library-logo">
+            Library Logo
+        </div>
+        <div class="user-info">
+            <div class="user-pfp-container">
+                <img src="~/images/pfp_male.svg" id="user-pfp-img" />
+            </div>
+            <h1 class="display-1">Name</h1>
+        </div>
+        <a class="account-nav" asp-area="" asp-controller="Home" asp-action="AdminDashboard">
+            <i class="fa-solid fa-chart-bar"></i>
+            <h2 class="display-2">Dashboard</h2>
+        </a>
+        <a class="account-nav active-l" asp-area="" asp-controller="Home" asp-action="AddMediaForm">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <h2 class="display-2">Inventory</h2>
+        </a>
+        <a class="account-nav">
+            <i class="fa-solid fa-gear"></i>
+            <h2 class="display-2">Settings</h2>
+        </a>
+        <a class="account-nav" id="account-signout-btn">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <h2 class="display-2">Sign out</h2>
+        </a>
+    </div>
+    <div class="media-entry-container">
+        <div class="media-form-header">
+            <h1 class="display-1">Choose an entry type</h1>
+            <h2 class="display-2" id="media-form-subheader"></h2>
+            <label for="media-type"></label>
+            <select name="media-type" id="media-type">
+                <option><a>Computer</a></option>
+                <option>Camera</option>
+                <option>Projector</option>
+                <option>Book</option>
+                <option>Journal</option>
+                <option>Movie</option>
+                <option>Audiobook</option>
+            </select>
+        </div>
+
+        <form class="media-entry-form" id="computer-entry-form" method="post" asp-action="AddComputer" asp-controller="AddMedia">
+            <div class="input-wrapper">
+                <label asp-for="brand">Brand</label>
+                <input type="text" id="computer-brand" name="brand" />
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="serialnumber">Serial Number</label>
+                <input type="text" id="computer-serialNumber" name="serialnumber" />
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="description">Description</label>
+                <input type="text" id="computer-description" name="description" />
+            </div>
+            <label asp-for="availability">Availability</label>
+            <input type="checkbox" id="computer-availability" name="availability" />
+        </form>
+    </div>
+    <div class="media-recent-transactions-panel">
+        <div class="media-recent-transactions">
+            <div class="recent-transactions-header">
+                <h1 class="display-1">Current Inventory</h1>
+                <h2 class="display-2" id="recent-transactions-subheader"></h2>
+            </div>
+        </div>
+    </div>
+</div>
