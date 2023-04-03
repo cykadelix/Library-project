@@ -12,7 +12,7 @@ namespace Library_project.Models
         public Location location { get; set; }
 
         ICollection<review>? reviews { get; set; }
-
+        
 
     }
 }

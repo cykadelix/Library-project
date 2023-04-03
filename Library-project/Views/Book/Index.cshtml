@@ -1,14 +1,20 @@
-﻿@model Library_project.ViewModels.ListBookViewModel;
+﻿@using Library_project.Data.Enums
+@using Library_project.ViewModels.Book
+@model BookListViewModel;
 @{
     ViewBag.Title = "Index";
 }
-@foreach(var item in Model.allBooks)
-{
-    <p>@item.bookid</p>
-    <br />
-    <br/>
-    <p>@item.title<br/>&nbsp;</p>
-    
-    
-    
-}
+<div class="media-display-container">
+	@foreach (var item in Model.allBooks)
+	{
+		<div class="media-display-card">
+			<h1>@item.title</h1>
+			<h2>Written by @item.author</h2>
+			<h2>Genre - @item.genres</h2>
+			<img src="~/images/book-cover-placeholder.png"/>
+		</div>
+	}
+</div>
+<div>
+    <a href="/Book/CreateBookView">Create a Book</a>
+</div>
