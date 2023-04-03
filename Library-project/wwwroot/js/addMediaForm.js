@@ -5,7 +5,7 @@
         $('.media-entry-form').not('#computer-entry-form').hide();
         $('#computer-entry-form').show();
     } else if (selectedType == "Camera") {
-            window.location.href = '../AddMedia/AddCamera'
+        window.location.href = '../AddMedia/AddCamera'
     } else if (selectedType == "Projector") {
         $('.media-entry-form').not('#projector-entry-form').hide();
         $('#projector-entry-form').show();
@@ -30,4 +30,14 @@
 });
 
 $(function () {
+    $('#transactions-table').DataTable({
+        data: mediaList,
+        "columns": [
+            { "data": "brand" },
+            { "data": "description" },
+            { "data": "lumens" },
+            { "data": "availability" },
+
+        ]
+    });
 });

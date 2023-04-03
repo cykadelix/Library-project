@@ -55,11 +55,6 @@
                 <span asp-validation-for="brand" class="text-danger"></span>
             </div>
             <div class="input-wrapper">
-                <label asp-for="serialnumber">Serial Number</label>
-                <input type="text" id="camera-serialNumber" name="serialnumber" />
-                <span asp-validation-for="serialnumber" class="text-danger"></span>
-            </div>
-            <div class="input-wrapper">
                 <label asp-for="description">Description</label>
                 <input type="text" id="camera-description" name="description" />
             </div>
@@ -69,7 +64,7 @@
                 <span asp-validation-for="lumens" class="text-danger"></span>
             </div>
             <label asp-for="availability">Availibility</label>
-            <input type="checkbox" id="camera-availability" name="availability" />
+            <input type="checkbox" value=true id="camera-availability" name="availability" checked/>
             <button type="submit" id="camera-save-form">Submit</button>
         </form>
     </div>
@@ -79,21 +74,37 @@
                 <h1 class="display-1">Current Inventory</h1>
                 <h2 class="display-2" id="recent-transactions-subheader"></h2>
             </div>
+            <div class="table-container">
+                <table id="transactions-table" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Brand</th>
+                            <th>Description</th>
+                            <th>Lumens</th>
+                            <th>Availability</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    let cameraList;
+    let mediaList;
     $(document).ready(function () {
         $.ajax({
             type: 'GET',
             url: '/Explore/GetCameraList',
+            async: false,
             datatype: 'json',
             success: function (result) {
-                console.log(result);
+                mediaList = result;
             },
         });
+    });
+    $('#camera-availability').on('change', function () {
+        this.value = this.checked ? val(true) : val(false);
     });
 </script>
 

@@ -1,7 +1,5 @@
 using Library_project.Data;
 using Microsoft.EntityFrameworkCore;
-using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration["ConnectionString"];

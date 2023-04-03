@@ -32,23 +32,25 @@ namespace Library_project.Controllers
 
                 {
                     conn.Open();
-
-                    using (var command = new NpgsqlCommand("INSERT INTO camera (brand, serialnumber, description, lumens, availability) VALUES (@b1, @s1, @d1, @l1, @a1)", conn))
+                    var insertCommand = "WITH newid AS (INSERT INTO media (mediaid) VALUES (default) RETURNING mediaid)" +
+                        "INSERT INTO camera (brand, serialnumber, description, lumens, availability)";
+                    using (var command = new NpgsqlCommand(insertCommand + " VALUES (@b1, (SELECT mediaid from newid), @d1, @l1, @a1)", conn))
                     {
                         command.Parameters.AddWithValue("b1", model.brand);
-                        command.Parameters.AddWithValue("s1", model.serialnumber);
                         if (model.description != null)
                             command.Parameters.AddWithValue("d1", model.description);
                         else
                             command.Parameters.AddWithValue("d1", "No description provided");
                         command.Parameters.AddWithValue("l1", model.lumens);
-                        command.Parameters.AddWithValue("a1", model.availability);
+                        if(model.availability == null)
+                            command.Parameters.AddWithValue("a1", false);
+                        else
+                            command.Parameters.AddWithValue("a1", true);
 
                         int nRows = command.ExecuteNonQuery();
                     }
                 }
             }
-            ModelState.Clear();
             return View();
         }
 
