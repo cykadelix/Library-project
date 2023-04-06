@@ -9,12 +9,12 @@ namespace Library_project.Models
 {
     public class employee
     {
-        //Employee Name
+        //employee Name
         public string fname { get; set; }
         public string mname { get; set; }
         public string lname { get; set; }
 
-        //Employee Data
+        //employee Data
         [Key] public int employeeid { get; set; }
 
        

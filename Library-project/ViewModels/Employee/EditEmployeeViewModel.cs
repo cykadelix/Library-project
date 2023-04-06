@@ -4,19 +4,19 @@ namespace Library_project.ViewModels
 {
     public class EditEmployeeViewModel
     {
-        public string? fName { get; set; } = string.Empty;
-        public string? mName { get; set; } = string.Empty;
-        public string? lName { get; set; } = string.Empty;
+        public string? fname { get; set; } = string.Empty;
+        public string? mname { get; set; } = string.Empty;
+        public string? lname { get; set; } = string.Empty;
        // public int? employeeID { get; set; }
        // public int? supervisorID { get; set; }
         public string? position { get; set; } = string.Empty;
         public float? salary { get; set; }
         public short? age { get; set; }
-        public string? eMail { get; set; } = string.Empty;
+        public string? email { get; set; } = string.Empty;
         public string? password { get; set; } = string.Empty;
-        public string? homeAddress { get; set; } = string.Empty;
-        public string? phoneNumber { get; set; } = string.Empty;
-        public Employee? supervisor { get; set; }
+        public string? homeaddress { get; set; } = string.Empty;
+        public string? phonenumber { get; set; } = string.Empty;
+        public employee? supervisor { get; set; }
     }
 
 }

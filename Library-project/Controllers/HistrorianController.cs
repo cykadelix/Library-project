@@ -28,9 +28,9 @@ namespace Library_project.Controllers
             {
                 LocalList.Add(new historian()
                 {
-                    fname = (string)reader["fName"],
-                    mname = (string)reader["mName"],
-                    lname = (string)reader["lName"],
+                    fname = (string)reader["fname"],
+                    mname = (string)reader["mname"],
+                    lname = (string)reader["lname"],
                     historianid = (int)reader["historianID"],
                     expertise = (string)reader["expertise"],
                     education = (string)reader["education"],
@@ -60,14 +60,13 @@ namespace Library_project.Controllers
         public async Task<IActionResult> CreateHistorianLandingPage(CreateHistorianViewModel newHistorian)
         {
             CreateHistorianViewModel example = new CreateHistorianViewModel();
-            example.fName = newHistorian.fName;
-            example.mName = newHistorian.mName;
-            example.lName = newHistorian.lName;
-            example.historianID = newHistorian.historianID;
+            example.fname = newHistorian.fname;
+            example.mname = newHistorian.mname;
+            example.lname = newHistorian.lname;
             example.expertise = newHistorian.expertise;
             example.education = newHistorian.education;
             example.age = newHistorian.age;
-            example.studentsToSee = newHistorian.studentsToSee;
+            example.studentstosee = newHistorian.studentstosee;
 
             if (ModelState.IsValid)
             {
@@ -84,14 +83,13 @@ namespace Library_project.Controllers
                 await conn.OpenAsync();
 
                 await using var command = new NpgsqlCommand("INSERT INTO historian(VALUES(" +
-                    "@fName, @mName, @lName, DEFAULT, @expertise, @education, @age))", conn)
+                    "@fname, @mname, @lname, DEFAULT, @expertise, @education, @age))", conn)
                 {
                     Parameters =
                         {
                             new("fname", newHistorian.fname),
                             new("mname", newHistorian.mname),
                             new("lname", newHistorian.lname),
-                            new("historianid", newHistorian.historianid),
                             new("expertise", newHistorian.expertise),
                             new("education", newHistorian.education),
                             new("age", newHistorian.age),
@@ -110,7 +108,7 @@ namespace Library_project.Controllers
             else
             {
 
-                example.fName = "invalid";
+                example.fname = "invalid";
 
             }
             return View(example);
@@ -139,10 +137,9 @@ namespace Library_project.Controllers
 
             while (innerRead.Read())
             {
-                localHistorian.fName = innerRead.GetFieldValue<string>(1);
-                localHistorian.mName = innerRead.GetFieldValue<string>(2);
-                localHistorian.lName = innerRead.GetFieldValue<string>(3);
-                localHistorian.historianID = innerRead.GetFieldValue<int>(4);
+                localHistorian.fname = innerRead.GetFieldValue<string>(1);
+                localHistorian.mname = innerRead.GetFieldValue<string>(2);
+                localHistorian.lname = innerRead.GetFieldValue<string>(3);
                 localHistorian.expertise = innerRead.GetFieldValue<string>(5);
                 localHistorian.education = innerRead.GetFieldValue<string>(6);
                 localHistorian.age = innerRead.GetFieldValue<short>(7);
