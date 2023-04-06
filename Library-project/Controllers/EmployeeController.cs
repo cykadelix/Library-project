@@ -23,24 +23,24 @@ namespace Library_project.Controllers
             await using var reader = await command.ExecuteReaderAsync();
 
             var employeeList = new listEmployeeViewModel();
-            var LocalList = new List<Employee>();
+            var LocalList = new List<employee>();
             while (await reader.ReadAsync())
             {
-                LocalList.Add(new Employee()
+                LocalList.Add(new employee()
                 {
-                    fName = (string)reader["fname"],
-                    mName = (string)reader["mname"],
-                    lName = (string)reader["lName"],
-                    employeeID = (int)reader["employeeID"],
-                    supervisorID = (int)reader["supervisorID"],
+                    fname = (string)reader["fname"],
+                    mname = (string)reader["mname"],
+                    lname = (string)reader["lname"],
+                    employeeid = (int)reader["employeeID"],
+                    supervisorid = (int)reader["supervisorID"],
                     position = (string)reader["position"],
                     salary = (float)reader["salary"],
                     age = (short)reader["age"],
-                    eMail = (string)reader["eMail"],
+                    email = (string)reader["eMail"],
                     password = (string)reader["password"],
-                    homeAddress = (string)reader["homeAddress"],
-                    phoneNumber = (string)reader["phoneNumber"],
-                    supervisor = (Employee)reader["supervisor"]
+                    homeaddress = (string)reader["homeaddress"],
+                    phonenumber = (string)reader["phoneNumber"],
+                    supervisor = (employee)reader["supervisor"]
                 });
 
                 employeeList.allEmployees = LocalList;
@@ -65,9 +65,9 @@ namespace Library_project.Controllers
         public async Task<IActionResult> CreateEmployeeLandingPage(CreateEmployeeViewModel newEmployee)
         {
             CreateEmployeeViewModel example = new CreateEmployeeViewModel();
-            example.fName = newEmployee.fName;
-            example.mName = newEmployee.mName;
-            example.lName = newEmployee.lName;
+            example.fname = newEmployee.fname;
+            example.mname = newEmployee.mname;
+            example.lname = newEmployee.lname;
             example.employeeID = newEmployee.employeeID;
             example.supervisorID = newEmployee.supervisorID;
             example.position = newEmployee.position;
@@ -75,7 +75,7 @@ namespace Library_project.Controllers
             example.age = newEmployee.age;
             example.eMail = newEmployee.eMail;
             example.password = newEmployee.password;
-            example.homeAddress = newEmployee.homeAddress;
+            example.homeaddress = newEmployee.homeaddress;
             example.phoneNumber = newEmployee.phoneNumber;
             example.supervisor = newEmployee.supervisor;
 
@@ -94,21 +94,21 @@ namespace Library_project.Controllers
                 await conn.OpenAsync();
 
                 await using var command = new NpgsqlCommand("INSERT INTO employee(VALUES(" +
-                    "@fName, @mName, @lName, DEFAULT, DEFAULT, @phoneNumber, @email, @homeAddress, @position, @salary, @age, @password))", conn)
+                    "@fname, @mname, @lname, DEFAULT, DEFAULT, @phoneNumber, @email, @homeaddress, @position, @salary, @age, @password))", conn)
                 {
                     Parameters =
                         {
-                            new("fName", newEmployee.fName),
-                            new("mName", newEmployee.mName),
-                            new("lName", newEmployee.lName),
-                            new("employeeID", newEmployee.employeeID),
-                            new("supervisorID", newEmployee.supervisorID),
+                            new("fname", newEmployee.fname),
+                            new("mname", newEmployee.mname),
+                            new("lname", newEmployee.lname),
+                            new("employeeid", newEmployee.employeeID),
+                            new("supervisorid", newEmployee.supervisorID),
                             new("position", newEmployee.position),
                             new("salary", newEmployee.salary),
                             new("age", newEmployee.age),
                             new("eMail", newEmployee.eMail),
                             new("password", newEmployee.password),
-                            new("homeAddress", newEmployee.homeAddress),
+                            new("homeaddress", newEmployee.homeaddress),
                             new("phoneNumber", newEmployee.phoneNumber),
                             new("supervisor", newEmployee.supervisor),
                         }
@@ -126,7 +126,7 @@ namespace Library_project.Controllers
             else
             {
 
-                example.fName = "invalid";
+                example.fname = "invalid";
 
             }
             return View(example);
@@ -155,9 +155,9 @@ namespace Library_project.Controllers
 
             while (innerRead.Read())
             {
-                localEmployee.fName = innerRead.GetFieldValue<string>(1);
-                localEmployee.mName = innerRead.GetFieldValue<string>(2);
-                localEmployee.lName = innerRead.GetFieldValue<string>(3);
+                localEmployee.fname = innerRead.GetFieldValue<string>(1);
+                localEmployee.mname = innerRead.GetFieldValue<string>(2);
+                localEmployee.lname = innerRead.GetFieldValue<string>(3);
                 localEmployee.employeeID = innerRead.GetFieldValue<int>(4);
                 localEmployee.supervisorID = innerRead.GetFieldValue<int>(5);
                 localEmployee.position = innerRead.GetFieldValue<string>(6);
@@ -165,7 +165,7 @@ namespace Library_project.Controllers
                 localEmployee.age = innerRead.GetFieldValue<short>(7);
                 localEmployee.eMail = innerRead.GetFieldValue<string>(7);
                 localEmployee.password = innerRead.GetFieldValue<string>(7);
-                localEmployee.homeAddress = innerRead.GetFieldValue<string>(7);
+                localEmployee.homeaddress = innerRead.GetFieldValue<string>(7);
                 localEmployee.phoneNumber = innerRead.GetFieldValue<string>(7);
                 localEmployee.supervisor = innerRead.GetFieldValue<Employee>(7);
             }
