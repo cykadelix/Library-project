@@ -143,6 +143,14 @@
         background-color: white;
     }
 
+    #transactions-table a {
+        margin: 0 0.4rem;
+    }
+
 .edit-row-btn {
+    cursor: pointer;
+}
+
+.delete-row-btn {
     cursor: pointer;
 }

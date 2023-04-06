@@ -88,14 +88,14 @@
                 <h2 class="display-2" id="recent-transactions-subheader"></h2>
             </div>
             <div class="table-container" style="display:none">
-                <table id="transactions-table" class="display cell-border" style="width:100%">
+                <table id="transactions-table" class="display cell-border" style="width:100%" >
                     <thead>
                         <tr>
                             <th>Brand</th>
                             <th>Description</th>
                             <th>Lumens</th>
                             <th>Availability</th>
-                            <th></th>
+                            <th>Edit</th>
                         </tr>
                     </thead>
                 </table>
@@ -128,7 +128,8 @@
                 { "data": "availability" },
                 {
                     "data": null,
-                    "defaultContent": "<a class='edit-row-btn'><i class='fa-solid fa-pen-to-square'></i></a>"
+                    "defaultContent": "<a class='edit-row-btn'><i class='fa-solid fa-pen-to-square'></i></a>" +
+                        "<a class='delete-row-btn'><i class='fa-solid fa-trash'></i></a>"
                 }
             ]
         });
@@ -141,14 +142,25 @@
 
         window.location.href = "/AddMedia/EditCameraForm?serialNo=" + serialNo;
     });
+    //Delete
+    $('#transactions-table').on('click', '.delete-row-btn', function () {
+        let tr = $(this).closest('tr');
+        let serialNo = table.row(tr).data().serialnumber;
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/AddMedia/DeleteCamera?serialNo=' + serialNo,
+            async: false,
+            success: function (result) {
+                window.location.href = result.redirectToUrl;
+            },
+        });
+    });
     //Cancel
     $('.media-entry-form').on('click', '.media-cancel-btn', function () {
         window.location.href = "/AddMedia/AddCamera";
     });
-    //Save
-    $('.media-entry-form').on('click', '.media-save-btn', function () {
-        
-    });
+    
     $("#media-type").val("Camera");
     $('#camera-availability').on('change', function () {
         this.value = this.checked ? val(true) : val(false);

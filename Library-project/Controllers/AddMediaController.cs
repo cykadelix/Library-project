@@ -115,6 +115,25 @@ namespace Library_project.Controllers
             return View("~/Views/AddMedia/AddCamera.cshtml");
         }
 
+        [HttpDelete]
+        public IActionResult DeleteCamera(int serialNo)
+        {
+            camera cam = new camera();
+            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            {
+
+                Console.Out.WriteLine("Opening connection");
+                conn.Open();
+
+                var sqlCommand = "DELETE FROM camera WHERE serialnumber='" + serialNo.ToString() + "'";
+                using (var command = new NpgsqlCommand(sqlCommand, conn))
+                {
+                    int nRows = command.ExecuteNonQuery();
+                }
+            }
+            return new JsonResult(new { redirectToUrl = Url.Action("AddCamera", "AddMedia") });
+        }
+
         public IActionResult AddComputer()
         {
             return View();
