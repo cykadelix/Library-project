@@ -28,16 +28,3 @@
 
     }
 });
-
-$(function () {
-    $('#transactions-table').DataTable({
-        data: mediaList,
-        "columns": [
-            { "data": "brand" },
-            { "data": "description" },
-            { "data": "lumens" },
-            { "data": "availability" },
-
-        ]
-    });
-});

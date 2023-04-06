@@ -50,7 +50,7 @@ namespace Library_project.Controllers
                     reader.Close();
                 }
             }
-            return cameraList; 
+            return cameraList;
         }
 
         [HttpGet]
