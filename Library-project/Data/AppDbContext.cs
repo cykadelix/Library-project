@@ -34,14 +34,14 @@ namespace Library_project.Data
        
 
 
-        protected readonly IConfiguration configuration;
+        public readonly IConfiguration configuration;
         public AppDbContext(IConfiguration _config)
         {
             configuration = _config;
         }
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseNpgsql(configuration.GetConnectionString("my_library"));
+            options.UseNpgsql(configuration.GetConnectionString("local_lib"));
         }
 
 
@@ -51,7 +51,7 @@ namespace Library_project.Data
             mb.Entity<Location>().HasNoKey();
         }
 
-        
+        public AppDbContext() { }
         
       
         
