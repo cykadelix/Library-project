@@ -8,7 +8,7 @@ $('#camera-explore-btn').on('click', function () {
         type: 'GET',
         url: '/Explore/GetCameras',
         success: function (result) {
-            $('#partial-placeholder').html(result);
+            $('#media-partial-placeholder').html(result);
         }
     });
 })

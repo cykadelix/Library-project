@@ -1,15 +1,16 @@
 ﻿@using Library_project.ViewModels
 @model List<camera>
 
-<div>
-    @foreach (var items in Model)
+@foreach (var items in Model)
+{
+    @if (items.availability == true)
     {
         <div class="media-display-item">
-            <h1>@items.brand</h1>
-            <h1>@items.serialnumber</h1>
-            <h1>@items.description</h1>
-            <h1>@items.lumens</h1>
-            <h1>@items.availability</h1>
+            <h1 class="display-1">@items.brand</h1>
+            <h2 class="display-2">@items.description</h2>
+            <h2 class="display-2">Megapixels: @items.megapixels</h2>
+            <h3 class="display-3 media-checkout-btn"><a>Checkout<i class="fa-solid fa-arrow-right"></i></a></h3>
         </div>
     }
-</div>
+
+}
