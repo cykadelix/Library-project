@@ -43,7 +43,7 @@ namespace Library_project.Controllers
                         cam.brand = reader.GetString(0);
                         cam.serialnumber = reader.GetInt32(1);
                         cam.description = reader.GetString(2);
-                        cam.lumens = reader.GetInt32(3);
+                        cam.megapixels = reader.GetDouble(3);
                         cam.availability = reader.GetBoolean(4);
                         cameraList.Add(cam);
                     }

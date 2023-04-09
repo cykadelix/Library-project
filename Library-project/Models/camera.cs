@@ -13,8 +13,8 @@ namespace Library_project.Models
 
         public string? description { get; set; }
 
-        [Required(ErrorMessage = "Please enter the lumens!")]
-        public int? lumens { get; set; }
+        [Required(ErrorMessage = "Please enter the megapixels!")]
+        public double? megapixels { get; set; }
 
         public bool? availability { get; set; }
 

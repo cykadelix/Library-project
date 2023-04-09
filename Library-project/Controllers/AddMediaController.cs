@@ -33,7 +33,7 @@ namespace Library_project.Controllers
                 {
                     conn.Open();
                     var insertCommand = "WITH newid AS (INSERT INTO media (mediaid) VALUES (default) RETURNING mediaid)" +
-                        "INSERT INTO camera (brand, serialnumber, description, lumens, availability)";
+                        "INSERT INTO camera (brand, serialnumber, description, megapixels, availability)";
                     using (var command = new NpgsqlCommand(insertCommand + " VALUES (@b1, (SELECT mediaid from newid), @d1, @l1, @a1)", conn))
                     {
                         command.Parameters.AddWithValue("b1", model.brand);
@@ -41,7 +41,7 @@ namespace Library_project.Controllers
                             command.Parameters.AddWithValue("d1", model.description);
                         else
                             command.Parameters.AddWithValue("d1", "No description provided");
-                        command.Parameters.AddWithValue("l1", model.lumens);
+                        command.Parameters.AddWithValue("l1", model.megapixels);
                         if (model.availability == null)
                             command.Parameters.AddWithValue("a1", false);
                         else
@@ -74,7 +74,7 @@ namespace Library_project.Controllers
                         cam.brand = reader.GetString(0);
                         cam.serialnumber = reader.GetInt32(1);
                         cam.description = reader.GetString(2);
-                        cam.lumens = reader.GetInt32(3);
+                        cam.megapixels = reader.GetDouble(3);
                         cam.availability = reader.GetBoolean(4);
                     }
                     reader.Close();
@@ -92,7 +92,7 @@ namespace Library_project.Controllers
 
                 {
                     conn.Open();
-                    var updateCommand = "UPDATE camera SET brand=@b1, description=@d1, lumens=@l1, availability=@a1 " + 
+                    var updateCommand = "UPDATE camera SET brand=@b1, description=@d1, megapixels=@l1, availability=@a1 " + 
                         "WHERE serialnumber='" + model.serialnumber + "'";
                     using (var command = new NpgsqlCommand(updateCommand, conn))
                     {
@@ -101,7 +101,7 @@ namespace Library_project.Controllers
                             command.Parameters.AddWithValue("d1", model.description);
                         else
                             command.Parameters.AddWithValue("d1", "No description provided");
-                        command.Parameters.AddWithValue("l1", model.lumens);
+                        command.Parameters.AddWithValue("l1", model.megapixels);
                         if (model.availability == null)
                             command.Parameters.AddWithValue("a1", false);
                         else

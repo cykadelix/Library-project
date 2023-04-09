@@ -3,6 +3,9 @@
 @{
     ViewData["Title"] = "Add camera";
 }
+@section scripts {
+    <script src="~/js/addMediaForm.js" asp-append-version="true"></script>
+}
 
 <div class="account-container">
     <div class="account-controls-panel">
@@ -58,9 +61,9 @@
                 <input type="text" id="camera-description" name="description" value="@(Model is null ? "" : Model.description)" />
             </div>
             <div class="input-wrapper">
-                <label asp-for="lumens">Lumens</label>
-                <input type="text" id="camera-lumens" name="lumens" value="@(Model is null ? "" : Model.lumens)" />
-                <span asp-validation-for="lumens" class="text-danger"></span>
+                <label asp-for="megapixels">Megapixels</label>
+                <input type="text" id="camera-megapixels" name="megapixels" value="@(Model is null ? "" : Model.megapixels)" />
+                <span asp-validation-for="megapixels" class="text-danger"></span>
             </div>
             <div class="checkbox-wrapper">
                 <input type="checkbox" value=true id="camera-availability" name="availability" @(Model is null ? "checked" : (Model.availability.Value ? "checked" : "")) />
@@ -93,7 +96,7 @@
                         <tr>
                             <th>Brand</th>
                             <th>Description</th>
-                            <th>Lumens</th>
+                            <th>Megapixels</th>
                             <th>Availability</th>
                             <th>Edit</th>
                         </tr>
@@ -121,17 +124,30 @@
         //Creating datatable
         table = $('#transactions-table').DataTable({
             data: mediaList,
+            columnDefs: [{
+                targets: 1,
+                render: function (data, type, row) {
+                    if(data.length > 30) {
+                        return data.substr(0, 50) + "...";
+
+                    }
+                    else 
+                        return data;
+                }
+            }],
             "columns": [
                 { "data": "brand" },
                 { "data": "description" },
-                { "data": "lumens" },
+                { "data": "megapixels" },
                 { "data": "availability" },
                 {
                     "data": null,
                     "defaultContent": "<a class='edit-row-btn'><i class='fa-solid fa-pen-to-square'></i></a>" +
                         "<a class='delete-row-btn'><i class='fa-solid fa-trash'></i></a>"
                 }
-            ]
+            ],
+            "bLengthChange": false,
+            "pageLength": 5
         });
         $('.table-container').show();
     });
@@ -167,6 +183,3 @@
     });
 </script>
 
-@section scripts {
-    <script src="~/js/addMediaForm.js" asp-append-version="true"></script>
-}
