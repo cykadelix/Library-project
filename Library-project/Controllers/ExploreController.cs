@@ -6,6 +6,9 @@ using Library_project.Data.Enums;
 using Library_project.Data.Objects;
 using Library_project.ViewModels.Book;
 using Library_project.ViewModels.Journal;
+using Library_project.ViewModels.Camera;
+using Library_project.ViewModels.Computer;
+using Library_project.ViewModels.Projector;
 
 namespace Library_project.Controllers
 {
@@ -23,31 +26,34 @@ namespace Library_project.Controllers
             return View();
         }
 
-        public List<camera> CameraToList()
+        //Cameras
+        public List<CameraViewModel>? CameraToList()
         {
-            List<camera> cameraList = new List<camera>();
+            List<CameraViewModel> cameraList = new List<CameraViewModel>();
             using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
             {
-
-                Console.Out.WriteLine("Opening connection");
                 conn.Open();
 
-
-                using (var command = new NpgsqlCommand("SELECT * FROM camera", conn))
+                using (var command = new NpgsqlCommand("SELECT * FROM cameras", conn))
                 {
 
                     var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-                        camera cam = new camera();
-                        cam.brand = reader.GetString(0);
-                        cam.serialnumber = reader.GetInt32(1);
-                        cam.description = reader.GetString(2);
-                        cam.megapixels = reader.GetDouble(3);
-                        cam.availability = reader.GetBoolean(4);
+                        CameraViewModel cam = new CameraViewModel();
+                        cam.cameraid = reader.GetInt32(0);
+                        cam.serialnumber = reader.GetString(1);
+                        cam.brand = reader.GetString(2);
+                        cam.description = reader.GetString(3);
+                        cam.megapixels = reader.GetDouble(4);
+                        cam.availability = reader.GetBoolean(5);
                         cameraList.Add(cam);
                     }
                     reader.Close();
+                    if (cameraList.Count == 0)
+                    {
+                        return null;
+                    }
                 }
             }
             return cameraList;
@@ -59,10 +65,102 @@ namespace Library_project.Controllers
             return PartialView("~/Views/Explore/_CameraView.cshtml", CameraToList());
         }
 
+        [HttpGet]
         public IActionResult GetCameraList()
         {
             return Json(CameraToList());
         }
+
+        //Computers
+        public List<ComputerViewModel>? ComputerToList()
+        {
+            List<ComputerViewModel> computerList = new List<ComputerViewModel>();
+            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            {
+                conn.Open();
+
+                using (var command = new NpgsqlCommand("SELECT * FROM computers", conn))
+                {
+
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        ComputerViewModel comp = new ComputerViewModel();
+                        comp.computerid = reader.GetInt32(0);
+                        comp.serialnumber = reader.GetString(1);
+                        comp.brand = reader.GetString(2);
+                        comp.description = reader.GetString(3);
+                        comp.availability = reader.GetBoolean(4);
+                        computerList.Add(comp);
+                    }
+                    reader.Close();
+                    if (computerList.Count == 0)
+                    {
+                        return null;
+                    }
+                }
+            }
+            return computerList;
+        }
+
+        [HttpGet]
+        public PartialViewResult GetComputers()
+        {
+            return PartialView("~/Views/Explore/_ComputerView.cshtml", ComputerToList());
+        }
+
+        [HttpGet]
+        public IActionResult GetComputerList()
+        {
+            return Json(ComputerToList());
+        }
+
+        //Projectors
+        public List<ProjectorViewModel>? ProjectorToList()
+        {
+            List<ProjectorViewModel> computerList = new List<ProjectorViewModel>();
+            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            {
+                conn.Open();
+
+                using (var command = new NpgsqlCommand("SELECT * FROM projectors", conn))
+                {
+
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        ProjectorViewModel comp = new ProjectorViewModel();
+                        comp.projectorid = reader.GetInt32(0);
+                        comp.serialnumber = reader.GetString(1);
+                        comp.brand = reader.GetString(2);
+                        comp.description = reader.GetString(3);
+                        comp.lumens = reader.GetInt32(4);
+                        comp.availability = reader.GetBoolean(5);
+                        computerList.Add(comp);
+                    }
+                    reader.Close();
+                    if (computerList.Count == 0)
+                    {
+                        return null;
+                    }
+                }
+            }
+            return computerList;
+        }
+
+        [HttpGet]
+        public PartialViewResult GetProjectors()
+        {
+            return PartialView("~/Views/Explore/_ProjectorView.cshtml", ProjectorToList());
+        }
+
+        [HttpGet]
+        public IActionResult GetProjectorList()
+        {
+            return Json(ProjectorToList());
+        }
+
+        //Computer
         [HttpGet]
         public async Task<IActionResult> GetBooks()
         {
