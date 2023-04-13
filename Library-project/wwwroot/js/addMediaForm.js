@@ -11,9 +11,8 @@
         mediaType = "Projector";
         window.location.href = '../AddMedia/AddProjector';
     } else if (selectedType == "Book") {
-        $('.media-entry-form').not('#book-entry-form').hide();
-        $('#book-entry-form').show();
-
+        mediaType = "Book";
+        window.location.href = '../AddMedia/AddBook';
     } else if (selectedType == "Journal") {
         $('.media-entry-form').not('#journal-entry-form').hide();
         $('#journal-entry-form').show();

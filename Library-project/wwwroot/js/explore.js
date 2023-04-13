@@ -53,6 +53,23 @@ $('#projector-explore-btn').on('click', function () {
     });
 });
 
+$('#book-explore-btn').on('click', function () {
+    $('.media-display-container').height('auto');
+    $.ajax({
+        type: 'GET',
+        url: '/Explore/GetBooks',
+        asyc: false,
+        success: function (result) {
+            console.log(result);
+            $('#media-partial-placeholder').html(result);
+            mediaType = "book";
+
+            loadRandomImages();
+            resizeExploreContainer();
+        }
+    });
+});
+
 function resizeExploreContainer() {
     let $images = $('.media-item-img');
     let loadedImagesCount = 0;

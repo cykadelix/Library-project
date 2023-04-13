@@ -160,88 +160,51 @@ namespace Library_project.Controllers
             return Json(ProjectorToList());
         }
 
-        //Computer
+        //Books
         [HttpGet]
-        public async Task<IActionResult> GetBooks()
+        public List<EditBookViewModel>? BookToList()
         {
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
             dataSourceBuilder.MapEnum<genres>();
             dataSourceBuilder.MapComposite<Location>();
-            await using var dataSource = dataSourceBuilder.Build();
-            await using var command = dataSource.CreateCommand("SELECT * FROM book ,media WHERE bookId=media.mediaId");
-            await using var reader = await command.ExecuteReaderAsync();
+            using var dataSource = dataSourceBuilder.Build();
+            using var command = dataSource.CreateCommand("SELECT * FROM books");
+            using var reader = command.ExecuteReader();
 
-            var bookList = new BookListViewModel();
-            var LocalList = new List<book>();
-            while (await reader.ReadAsync())
+            var bookList = new List<EditBookViewModel>();
+            while (reader.Read())
             {
-                LocalList.Add(new book()
+                bookList.Add(new EditBookViewModel()
                 {
-                    bookid = (int)reader["bookId"],
-                    title = reader["title"] as string,
-                    mediaid = (int)reader["bookId"],
-                    isavailable = (bool)reader["isAvailable"],
-                    isbn = (long)reader["isbn"],
-                    pagecount = (int)reader["pageCount"],
-                    publicdate = reader.GetFieldValue<DateOnly>(3),
-                    author = reader.GetFieldValue<string[]>(2),
-                    genres = reader.GetFieldValue<int>(8),
-                    location = reader.GetFieldValue<Location>(10)
+                    bookid = reader.GetInt32(0),
+                    title = reader.GetString(1),
+                    author = reader.GetString(2),
+                    genres = reader.GetInt32(3),
+                    publicDate = reader.GetFieldValue<DateOnly>(4).ToString(),
+                    pageCount = reader.GetInt32(5),
+                    isbn = reader.GetInt64(6),
+                    isAvailable = reader.GetBoolean(7)
                 });
-
-                bookList.allBooks = LocalList;
             }
-            return View(bookList);
+            if (bookList.Count == 0)
+            {
+                return null;
+            }
+            return bookList;
         }
 
-
-        [HttpPost]
-        public async Task<IActionResult> CreateBookLandingPage(CreateBookViewModel newBook)
+        [HttpGet]
+        public PartialViewResult GetBooks()
         {
-            CreateBookViewModel example = new CreateBookViewModel();
-            example.title = newBook.title;
-            example.author = newBook.author;
-            example.pageCount = newBook.pageCount;
-            example.isbn = newBook.isbn;
-            example.isAvailable = newBook.isAvailable;
-            example.publishDate = newBook.publishDate;
-            example.genre = newBook.genre;
-
-            if (ModelState.IsValid)
-            {
-                await using NpgsqlConnection conn = new NpgsqlConnection(_config["ConnectionString"]);
-
-                // Connect to the database
-                await conn.OpenAsync();
-
-                await using var command = new NpgsqlCommand("WITH local_id AS (INSERT INTO media VALUES (DEFAULT,(1,1)) RETURNING mediaid)" +
-                    "INSERT INTO book " +
-                    "(bookid," +
-                    "title,author,publicdate,pagecount,isbn,isavailable,genre,mediaid)" +
-                    " VALUES((SELECT mediaid from local_id) , @title, @author, @publicDate, " +
-                    "@pageCount,@isbn,@isAvailable,@genre,(SELECT mediaid from local_id))", conn)
-                {
-                    Parameters =
-                        {
-                            new("title", newBook.title),
-                            new("author", newBook.author),
-                            new("genre", newBook.genre),
-                            new("publicDate", newBook.publishDate),
-                            new("pageCount", newBook.pageCount),
-                            new("isbn", newBook.isbn),
-                            new("isAvailable", newBook.isAvailable),
-                        }
-                };
-                await using var reader = await command.ExecuteReaderAsync();
-            }
-            else
-            {
-
-                example.title = "fake";
-
-            }
-            return View(example);
+            return PartialView("~/Views/Explore/_BookView.cshtml", BookToList());
         }
+
+        [HttpGet]
+        public IActionResult GetBookList()
+        {
+            return Json(BookToList());
+        }
+
         public async Task<IActionResult> GetJournal()
         {
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);

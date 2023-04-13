@@ -122,9 +122,9 @@ namespace Library_project.Controllers
             while(innerRead.Read())
             {
                 localBook.title = innerRead.GetFieldValue<string>(1);
-                localBook.author = innerRead.GetFieldValue<string[]>(2);
-                localBook.genres = innerRead.GetFieldValue<genres[]>(3);
-                localBook.publicDate = innerRead.GetFieldValue<DateOnly>(4);
+                localBook.author = innerRead.GetFieldValue<string>(2);
+                localBook.genres = innerRead.GetFieldValue<int>(3);
+                localBook.publicDate = innerRead.GetFieldValue<string>(4);
                 localBook.pageCount = innerRead.GetFieldValue<int>(4);
                 localBook.isbn = innerRead.GetFieldValue<int>(6);
                 localBook.isAvailable = innerRead.GetFieldValue<bool>(7);
