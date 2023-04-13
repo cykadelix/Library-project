@@ -14,10 +14,10 @@ namespace Library_project.Models
         public DateTime returndate { get; set; }
         [Key] public int checkoutid { get; set; }
 
-        [ForeignKey("student")] 
-        public student student { get; set; }
+        [ForeignKey("student")]
         public int studentid { get; set; }
-
+        public student student { get; set; }
+        
         [ForeignKey("media")]
         public int mediaid { get; set; }
         public media media { get; set; }

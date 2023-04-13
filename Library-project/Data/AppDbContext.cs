@@ -6,8 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Library_project.Models;
 ﻿using Library_project.Data.Objects;
-using Microsoft.EntityFrameworkCore;
-
+using Microsoft.EntityFrameworkCore; 
 namespace Library_project.Data
 {
     public class AppDbContext : DbContext
@@ -29,7 +28,7 @@ namespace Library_project.Data
         public DbSet<computer> computers { get; set; }
 
 
-        public DbSet<audiobook> checkouts { get; set; }
+        public DbSet<checkout> checkouts { get; set; }
         public DbSet<review> reviews { get; set; }
        
 

@@ -1,0 +1,19 @@
+﻿@using Library_project.ViewModels.checkout
+@model checkoutViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+    <form action="CreateCheckoutLandingPage">
+        <div class="input-wrapper">
+            <label asp-for="studentid">student ID</label>
+            <input asp-for="studentid">
+        </div>
+        <div class="input-wrapper">
+            <label asp-for="mediaid">media ID</label>
+            <input asp-for="mediaid">
+        </div>
+        <div class="input-wrapper">
+            <input type ="submit" />
+        </div>
+    </form>
