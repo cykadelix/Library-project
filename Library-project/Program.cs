@@ -11,7 +11,7 @@ internal class Program
         builder.Services.AddControllersWithViews();
 
         builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
-        opt.UseNpgsql(builder.Configuration.GetConnectionString(builder.Configuration["local_lib"])));
+        opt.UseNpgsql(builder.Configuration.GetConnectionString("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;")));
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
