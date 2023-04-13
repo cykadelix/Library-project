@@ -1,0 +1,34 @@
+﻿@using Library_project.ViewModels.Book
+@model List<EditBookViewModel>
+
+@if (Model is null)
+{
+    <div class="empty-data-container">
+        <img src="~/images/empty-data.svg" />
+        <h1 clas="display-1">No items to show.</h1>
+    </div>
+}
+else
+{
+    @foreach (var items in Model)
+    {
+        @if (items.isAvailable == true)
+        {
+            <div class="media-display-item">
+                <img class="media-item-img">
+                <div class="media-display-text">
+                    <h1 class="display-1">@items.title</h1>
+                    <h2 class="display-2">@items.author</h2>
+                    <h2 class="display-2">@items.genres</h2>
+                    <h2 class="display-2">Publishing date: @items.publicDate</h2>
+                    <h2 class="display-2">Page count: @items.pageCount</h2>
+                    <h2 class="display-2">ISBN: @items.pageCount</h2>
+                    <h3 class="display-3 media-checkout-btn"><a>Checkout<i class="fa-solid fa-arrow-right"></i></a></h3>
+                </div>
+            </div>
+        }
+    }
+}
+
+
+

@@ -1,0 +1,201 @@
+﻿@model Library_project.ViewModels.Book.EditBookViewModel
+
+@{
+    ViewData["Title"] = "Add camera";
+}
+
+<div class="account-container">
+    <div class="account-controls-panel">
+        <div class="library-logo">
+            Library Logo
+        </div>
+        <div class="user-info">
+            <div class="user-pfp-container">
+                <img src="~/images/pfp_male.svg" id="user-pfp-img" />
+            </div>
+            <h1 class="display-1">Name</h1>
+        </div>
+        <a class="account-nav" asp-area="" asp-controller="Home" asp-action="AdminDashboard">
+            <i class="fa-solid fa-chart-bar"></i>
+            <h2 class="display-2">Dashboard</h2>
+        </a>
+        <a class="account-nav active-l" asp-area="" asp-controller="AddMedia" asp-action="AddComputer">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <h2 class="display-2">Inventory</h2>
+        </a>
+        <a class="account-nav">
+            <i class="fa-solid fa-gear"></i>
+            <h2 class="display-2">Settings</h2>
+        </a>
+        <a class="account-nav" id="account-signout-btn">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <h2 class="display-2">Sign out</h2>
+        </a>
+    </div>
+    <div class="media-entry-container">
+        <div class="media-form-header">
+            <h1 class="display-1">Choose an entry type</h1>
+            <h2 class="display-2" id="media-form-subheader"></h2>
+            <label for="media-type"></label>
+            <select name="media-type" id="media-type">
+                <option><a>Computer</a></option>
+                <option>Camera</option>
+                <option>Projector</option>
+                <option>Book</option>
+                <option>Journal</option>
+                <option>Movie</option>
+                <option>Audiobook</option>
+            </select>
+        </div>
+        <form class="media-entry-form" id="book-entry-form" method="post" asp-action="@(Model is null ? "AddBook" : "UpdateBook")" asp-controller="AddMedia">
+            <div class="input-wrapper">
+                <label asp-for="title">Title</label>
+                <input type="text" id="book-title" name="title" value="@(Model is null ? "" : Model.title)" />
+                <span asp-validation-for="title" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="author">Author</label>
+                <input type="text" id="book-author" name="author" value="@(Model is null ? "" : Model.author)" />
+                <span asp-validation-for="author" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="genres">Genres</label>
+                <input type="text" id="book-genres" name="genres" value="@(Model is null ? "" : Model.genres)" />
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="publicDate">Publishing date</label>
+                <input type="date" id="book-publicDate" name="publicDate" value="@(Model is null ? "" : Model.publicDate)" />
+                <span asp-validation-for="publicDate" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="pageCount">Page Count</label>
+                <input type="text" id="book-pageCount" name="pageCount" value="@(Model is null ? "" : Model.pageCount)" />
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="isbn">ISBN</label>
+                <input type="text" id="book-isbn" name="isbn" value="@(Model is null ? "" : Model.isbn)" />
+            </div>
+            <div class="checkbox-wrapper">
+                <input type="checkbox" value=true id="book-isAvailable" name="isAvailable" @(Model is null ? "checked" : (Model.isAvailable.Value ? "checked" : "")) />
+                <label asp-for="isAvailable">Availability</label>
+            </div>
+
+            @if (Model is null)
+            {
+                <button type="submit" class="media-submit-btn" id="book-submit-form">Submit</button>
+            }
+            else
+            {
+                <input asp-for="bookid" type="hidden" class="media-form-serialnumber" value="@Model.bookid" />
+                <div class="edit-form-controls">
+                    <button type="reset" class="media-cancel-btn" id="book-cancel-form">Cancel</button>
+                    <button type="submit" class="media-save-btn" id="book-save-form">Save</button>
+                </div>
+            }
+        </form>
+    </div>
+    <div class="media-recent-transactions-panel">
+        <div class="media-recent-transactions">
+            <div class="recent-transactions-header">
+                <h1 class="display-1">Current Inventory</h1>
+                <h2 class="display-2" id="recent-transactions-subheader"></h2>
+            </div>
+            <div class="table-container" style="display:none">
+                <table id="transactions-table" class="display cell-border" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Genres</th>
+                            <th>Publishing Date</th>
+                            <th>Page Count</th>
+                            <th>ISBN</th>
+                            <th>Availability</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let mediaList;
+    let table;
+    //Get list of books
+    $(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/Explore/GetBookList',
+            async: false,
+            datatype: 'json',
+            success: function (result) {
+                console.log(result);
+                mediaList = result;
+            },
+        });
+        //Creating datatable
+        table = $('#transactions-table').DataTable({
+            data: mediaList,
+            columnDefs: [{
+                targets: 2,
+                render: function (data, type, row) {
+                    if (data.length > 30) {
+                        return data.substr(0, 50) + "...";
+
+                    }
+                    else
+                        return data;
+                }
+            }],
+            "columns": [
+                { "data": "title" },
+                { "data": "author" },
+                { "data": "genres" },
+                { "data": "publicDate" },
+                { "data": "pageCount" },
+                { "data": "isbn" },
+                { "data": "isAvailable" },
+                {
+                    "data": null,
+                    "defaultContent": "<a class='edit-row-btn'><i class='fa-solid fa-pen-to-square'></i></a>" +
+                        "<a class='delete-row-btn'><i class='fa-solid fa-trash'></i></a>"
+                }
+            ],
+            "bLengthChange": false,
+            "pageLength": 5
+        });
+        $('.table-container').show();
+    });
+    //Edit button
+    $('#transactions-table').on('click', '.edit-row-btn', function () {
+        let tr = $(this).closest('tr');
+        let bookId = table.row(tr).data().bookid;
+
+        window.location.href = "/AddMedia/EditBookForm?bookId=" + bookId;
+    });
+    //Delete
+    $('#transactions-table').on('click', '.delete-row-btn', function () {
+        let tr = $(this).closest('tr');
+        let bookId = table.row(tr).data().bookid;
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/AddMedia/DeleteBook?bookId=' + bookId,
+            async: false,
+            success: function (result) {
+                window.location.href = result.redirectToUrl;
+            },
+        });
+    });
+    //Cancel
+    $('.media-entry-form').on('click', '.media-cancel-btn', function () {
+        window.location.href = "/AddMedia/AddBook";
+    });
+
+    $("#media-type").val("Book");
+    $('#camera-availability').on('change', function () {
+        this.value = this.checked ? val(true) : val(false);
+    });
+</script>

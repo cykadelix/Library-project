@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - Library</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
@@ -13,7 +14,6 @@
     <link rel="stylesheet" href="~/css/adminDashboard.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/addMediaForm.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/explore.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 </head>
 <body>
@@ -70,6 +70,6 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/explore.js" asp-append-version="true"></script>
     <script src="~/js/adminDashboard.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/js/addMediaForm.js" asp-append-version="true"></script>
 </body>
 </html>

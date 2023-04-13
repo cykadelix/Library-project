@@ -1,10 +1,7 @@
-﻿@model Library_project.Models.camera
+﻿@model Library_project.ViewModels.Camera.CameraViewModel
 
 @{
     ViewData["Title"] = "Add camera";
-}
-@section scripts {
-    <script src="~/js/addMediaForm.js" asp-append-version="true"></script>
 }
 
 <div class="account-container">
@@ -22,7 +19,7 @@
             <i class="fa-solid fa-chart-bar"></i>
             <h2 class="display-2">Dashboard</h2>
         </a>
-        <a class="account-nav active-l" asp-area="" asp-controller="Home" asp-action="AddMediaForm">
+        <a class="account-nav active-l" asp-area="" asp-controller="AddMedia" asp-action="AddComputer">
             <i class="fa-solid fa-boxes-stacked"></i>
             <h2 class="display-2">Inventory</h2>
         </a>
@@ -52,6 +49,11 @@
         </div>
         <form class="media-entry-form" id="camera-entry-form" method="post" asp-action="@(Model is null ? "AddCamera" : "UpdateCamera")" asp-controller="AddMedia">
             <div class="input-wrapper">
+                <label asp-for="serialnumber">Serial Number</label>
+                <input type="text" id="camera-serialnumber" name="serialnumber" value="@(Model is null ? "" : Model.serialnumber)" />
+                <span asp-validation-for="serialnumber" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
                 <label asp-for="brand">Brand</label>
                 <input type="text" id="camera-brand" name="brand" value="@(Model is null ? "" : Model.brand)" />
                 <span asp-validation-for="brand" class="text-danger"></span>
@@ -67,16 +69,16 @@
             </div>
             <div class="checkbox-wrapper">
                 <input type="checkbox" value=true id="camera-availability" name="availability" @(Model is null ? "checked" : (Model.availability.Value ? "checked" : "")) />
-                <label asp-for="availability">Availibility</label>
+                <label asp-for="availability">Availability</label>
             </div>
-            
+
             @if (Model is null)
             {
                 <button type="submit" class="media-submit-btn" id="camera-submit-form">Submit</button>
             }
             else
             {
-                <input asp-for="serialnumber" type="hidden" class="media-form-serialnumber" value="@Model.serialnumber"/>
+                <input asp-for="cameraid" type="hidden" class="media-form-serialnumber" value="@Model.cameraid" />
                 <div class="edit-form-controls">
                     <button type="reset" class="media-cancel-btn" id="camera-cancel-form">Cancel</button>
                     <button type="submit" class="media-save-btn" id="camera-save-form">Save</button>
@@ -91,9 +93,10 @@
                 <h2 class="display-2" id="recent-transactions-subheader"></h2>
             </div>
             <div class="table-container" style="display:none">
-                <table id="transactions-table" class="display cell-border" style="width:100%" >
+                <table id="transactions-table" class="display cell-border" style="width:100%">
                     <thead>
                         <tr>
+                            <th>Serial Number</th>
                             <th>Brand</th>
                             <th>Description</th>
                             <th>Megapixels</th>
@@ -111,7 +114,7 @@
     let mediaList;
     let table;
     //Get list of cameras
-    $(document).ready(function () {
+    $(function () {
         $.ajax({
             type: 'GET',
             url: '/Explore/GetCameraList',
@@ -125,17 +128,18 @@
         table = $('#transactions-table').DataTable({
             data: mediaList,
             columnDefs: [{
-                targets: 1,
+                targets: 2,
                 render: function (data, type, row) {
-                    if(data.length > 30) {
+                    if (data.length > 30) {
                         return data.substr(0, 50) + "...";
 
                     }
-                    else 
+                    else
                         return data;
                 }
             }],
             "columns": [
+                { "data": "serialnumber" },
                 { "data": "brand" },
                 { "data": "description" },
                 { "data": "megapixels" },
@@ -154,18 +158,18 @@
     //Edit button
     $('#transactions-table').on('click', '.edit-row-btn', function () {
         let tr = $(this).closest('tr');
-        let serialNo = table.row(tr).data().serialnumber;
+        let cameraId = table.row(tr).data().cameraid;
 
-        window.location.href = "/AddMedia/EditCameraForm?serialNo=" + serialNo;
+        window.location.href = "/AddMedia/EditCameraForm?CameraId=" + cameraId;
     });
     //Delete
     $('#transactions-table').on('click', '.delete-row-btn', function () {
         let tr = $(this).closest('tr');
-        let serialNo = table.row(tr).data().serialnumber;
+        let cameraid = table.row(tr).data().cameraid;
 
         $.ajax({
             type: 'DELETE',
-            url: '/AddMedia/DeleteCamera?serialNo=' + serialNo,
+            url: '/AddMedia/DeleteCamera?cameraId=' + cameraid,
             async: false,
             success: function (result) {
                 window.location.href = result.redirectToUrl;
@@ -176,10 +180,9 @@
     $('.media-entry-form').on('click', '.media-cancel-btn', function () {
         window.location.href = "/AddMedia/AddCamera";
     });
-    
+
     $("#media-type").val("Camera");
     $('#camera-availability').on('change', function () {
         this.value = this.checked ? val(true) : val(false);
     });
 </script>
-

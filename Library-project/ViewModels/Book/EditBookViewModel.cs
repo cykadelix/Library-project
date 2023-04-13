@@ -1,4 +1,4 @@
-﻿using Library_project.Data.Enums;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Library_project.ViewModels.Book
 {
@@ -6,18 +6,21 @@ namespace Library_project.ViewModels.Book
     {
         /*
         [Key]
-        public int bookId { get; set; }
         */
+        public int bookid { get; set; }
 
+        [Required(ErrorMessage = "Please enter the title!")]
         public string? title { get; set; }
-        public string[]? author { get; set; }
-        public genres[]? genres { get; set; }
-        public DateOnly? publicDate { get; set; }
-
-
+        [Required(ErrorMessage = "Please enter the author(s)!")]
+        public string? author { get; set; }
+        [Required(ErrorMessage = "Please enter the genre!")]
+        public int? genres { get; set; }
+        [Required(ErrorMessage = "Please enter the publishing date!")]
+        public string? publicDate { get; set; }
+        [Required(ErrorMessage = "Please enter the page count!")]
         public int? pageCount { get; set; }
-
-        public int? isbn { get; set; }
+        [Required(ErrorMessage = "Please enter the isbn!")]
+        public long? isbn { get; set; }
         public bool? isAvailable { get; set; }
 
 

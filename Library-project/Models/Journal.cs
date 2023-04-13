@@ -22,10 +22,10 @@ namespace Library_project.Models
         public Location? location { get; set; }
 
         
-        public string[]   researchers { get; set; }
-        public string[]   subject { get; set; }
+        public string researchers { get; set; }
+        public string subject { get; set; }
         
-        public int      length { get; set; }
+        public int length { get; set; }
         public DateOnly releasedate { get; set; }
         public bool isavailable { get; set; }
         

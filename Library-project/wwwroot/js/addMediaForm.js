@@ -2,18 +2,17 @@
     let selectedType = $(this).val();
 
     if (selectedType == "Computer") {
-        $('.media-entry-form').not('#computer-entry-form').hide();
-        $('#computer-entry-form').show();
+        mediaType = "Computer";
+        window.location.href = '../AddMedia/AddComputer';
     } else if (selectedType == "Camera") {
-        window.location.href = '../AddMedia/AddCamera'
+        mediaType = "Camera";
+        window.location.href = '../AddMedia/AddCamera';
     } else if (selectedType == "Projector") {
-        $('.media-entry-form').not('#projector-entry-form').hide();
-        $('#projector-entry-form').show();
-
+        mediaType = "Projector";
+        window.location.href = '../AddMedia/AddProjector';
     } else if (selectedType == "Book") {
-        $('.media-entry-form').not('#book-entry-form').hide();
-        $('#book-entry-form').show();
-
+        mediaType = "Book";
+        window.location.href = '../AddMedia/AddBook';
     } else if (selectedType == "Journal") {
         $('.media-entry-form').not('#journal-entry-form').hide();
         $('#journal-entry-form').show();
