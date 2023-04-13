@@ -1,0 +1,19 @@
+﻿@using Library_project.ViewModels.Employee
+@model EmployeeListViewModel;
+@{
+    ViewBag.Title = "Index";
+}
+<div class="employee-display-container">
+	@foreach (var item in Model.allEmployees)
+	{
+		<div class="employee-display-card">
+			<h1>@item.fname</h1>
+			<h2>Position: @item.position</h2>
+			<h2>Email: @item.email</h2>
+			<img src=""/>
+		</div>
+	}
+</div>
+<div>
+    <a href="/Employee/CreateEmployeeView">Add an Employee</a>
+</div>
