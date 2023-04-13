@@ -1,10 +1,20 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+﻿@using Library_project.ViewModels.Historian
+@model listHistorianViewModel;
+@{
+    ViewBag.Title = "Index";
+}
+<div class="Historian-display-container">
+	@foreach (var item in Model.allHistorians)
+	{
+		<div class="media-display-card">
+			<h1>@item.fname</h1>
+			<h2>Written by @item.expertise</h2>
+			<h2>Genre - @item.education</h2>
+			<img src=""/>
+		</div>
+	}
+</div>
+<div>
+    <a href="/Historian/CreateHistorianView">Add a Historian</a>
+    <a href="/Historian/EditHistorianView">Edit a Historian</a>
+</div>

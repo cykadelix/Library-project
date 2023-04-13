@@ -1,10 +1,37 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+﻿@using Library_project.ViewModels.Historian
+@model CreateHistorianViewModel
+@{
+    ViewData["Title"] = "CreateHistorianView";
+}
+    <form action="CreateHistorianLandingPage" method="post">
+            <div class="input-wrapper">
+                <label asp-for="fname">fname</label>
+                <input asp-for="fname">
+            </div>
+             <div class="input-wrapper">
+                <label asp-for="mname">mname</label>
+                <input asp-for="mname">
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="lname">lname</label>
+                <input asp-for="lname">
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="expertise">expertise</label>
+                <input asp-for="expertise">
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="education">education</label>
+                <input asp-for="education">
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="age">age Date</label>
+                <input asp-for="age">
+            </div>
+            <div>
+            </div>
+            <div class="input-wrapper">
+                <input type="submit">
+            </div>
+        </form>
 
-</body>
-</html>
