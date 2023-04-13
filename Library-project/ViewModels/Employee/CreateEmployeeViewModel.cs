@@ -1,6 +1,6 @@
 using Library_project.Models;
 
-namespace Library_project.ViewModels
+namespace Library_project.ViewModels.Employee
 {
     public class CreateEmployeeViewModel
     {
@@ -16,7 +16,7 @@ namespace Library_project.ViewModels
         public string password { get; set; } = string.Empty;
         public string homeaddress { get; set; } = string.Empty;
         public string phonenumber { get; set; } = string.Empty;
-        public employee supervisor { get; set; }
+        public employee supervisor { get; set; } = new employee();
     }
 
 }

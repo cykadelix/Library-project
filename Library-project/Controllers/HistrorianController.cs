@@ -1,7 +1,7 @@
 using Library_project.Data.Enums;
 using Library_project.Data.Objects;
 using Library_project.Models;
-using Library_project.ViewModels;
+using Library_project.ViewModels.Historian;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Npgsql;
@@ -66,7 +66,6 @@ namespace Library_project.Controllers
             example.expertise = newHistorian.expertise;
             example.education = newHistorian.education;
             example.age = newHistorian.age;
-            example.studentstosee = newHistorian.studentstosee;
 
             if (ModelState.IsValid)
             {

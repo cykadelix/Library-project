@@ -1,7 +1,7 @@
 using Library_project.Data.Enums;
 using Library_project.Data.Objects;
 using Library_project.Models;
-using Library_project.ViewModels;
+using Library_project.ViewModels.Employee;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Npgsql;
@@ -14,7 +14,7 @@ namespace Library_project.Controllers
 
 
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> EmployeeIndex()
         {
 
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
