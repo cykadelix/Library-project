@@ -62,7 +62,7 @@ namespace Library_project.Controllers
             return View(newemployee);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateemployeeLandingPage(CreateEmployeeViewModel newemployee)
+        public async Task<IActionResult> CreateEmployeeLandingPage(CreateEmployeeViewModel newemployee)
         {
             CreateEmployeeViewModel example = new CreateEmployeeViewModel();
             example.fname = newemployee.fname;

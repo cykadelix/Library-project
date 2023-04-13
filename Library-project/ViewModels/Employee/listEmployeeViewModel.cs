@@ -9,7 +9,7 @@ namespace Library_project.ViewModels.Employee
 {
     public class listEmployeeViewModel
     {
-        public List<employee> allEmployees;
+        public List<employee> allEmployees { get; set; } = new List<employee>();
     }
 
 }
