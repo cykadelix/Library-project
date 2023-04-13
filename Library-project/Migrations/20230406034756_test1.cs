@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Library_project.Migrations
 {
     /// <inheritdoc />
-    public partial class updateBooks : Migration
+    public partial class test1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -129,23 +129,23 @@ namespace Library_project.Migrations
                 name: "books",
                 columns: table => new
                 {
-                    bookId = table.Column<int>(type: "integer", nullable: false)
+                    bookid = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     title = table.Column<string>(type: "text", nullable: false),
                     author = table.Column<string[]>(type: "text[]", nullable: false),
                     genres = table.Column<int>(type: "integer", nullable: false),
-                    publicDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    pageCount = table.Column<int>(type: "integer", nullable: false),
+                    publicdate = table.Column<DateOnly>(type: "date", nullable: false),
+                    pagecount = table.Column<int>(type: "integer", nullable: false),
                     isbn = table.Column<long>(type: "bigint", nullable: false),
                     isavailable = table.Column<bool>(type: "boolean", nullable: false),
-                    mediaId = table.Column<int>(type: "integer", nullable: false)
+                    mediaid = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_books", x => x.bookId);
+                    table.PrimaryKey("PK_books", x => x.bookid);
                     table.ForeignKey(
-                        name: "FK_books_media_mediaId",
-                        column: x => x.mediaId,
+                        name: "FK_books_media_mediaid",
+                        column: x => x.mediaid,
                         principalTable: "media",
                         principalColumn: "mediaId",
                         onDelete: ReferentialAction.Cascade);
@@ -181,10 +181,11 @@ namespace Library_project.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     mediaid = table.Column<int>(type: "integer", nullable: false),
                     title = table.Column<string>(type: "text", nullable: false),
-                    researchers = table.Column<string>(type: "text", nullable: false),
-                    subject = table.Column<string>(type: "text", nullable: false),
+                    researchers = table.Column<string[]>(type: "text[]", nullable: false),
+                    subject = table.Column<string[]>(type: "text[]", nullable: false),
                     length = table.Column<int>(type: "integer", nullable: false),
-                    datereleased = table.Column<DateOnly>(type: "date", nullable: false)
+                    releasedate = table.Column<DateOnly>(type: "date", nullable: false),
+                    isavailable = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -208,7 +209,7 @@ namespace Library_project.Migrations
                     title = table.Column<string>(type: "text", nullable: false),
                     director = table.Column<string>(type: "text", nullable: false),
                     genres = table.Column<int>(type: "integer", nullable: false),
-                    length = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
+                    length = table.Column<int>(type: "integer", nullable: false),
                     releasedate = table.Column<DateOnly>(type: "date", nullable: false),
                     availability = table.Column<bool>(type: "boolean", nullable: false)
                 },
@@ -280,9 +281,9 @@ namespace Library_project.Migrations
                 column: "mediaid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_books_mediaId",
+                name: "IX_books_mediaid",
                 table: "books",
-                column: "mediaId");
+                column: "mediaid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_computers_mediaid",
