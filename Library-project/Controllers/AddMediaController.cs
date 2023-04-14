@@ -2,6 +2,7 @@
 using Library_project.ViewModels.Camera;
 using Library_project.ViewModels.Computer;
 using Library_project.ViewModels.Journal;
+using Library_project.ViewModels.Movie;
 using Library_project.ViewModels.Projector;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
@@ -33,7 +34,7 @@ namespace Library_project.Controllers
 
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;"))
+                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
 
                 {
                     conn.Open();
@@ -95,7 +96,7 @@ namespace Library_project.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;"))
+                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
 
                 {
                     conn.Open();
@@ -619,6 +620,123 @@ namespace Library_project.Controllers
                 }
             }
             return new JsonResult(new { redirectToUrl = Url.Action("AddJournal", "AddMedia") });
+        }
+
+        //Movies
+        public IActionResult AddMovie()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddMovie(MovieViewModel model)
+        {
+            if (model.title == null)
+            {
+                return View();
+            }
+
+            if (ModelState.IsValid)
+            {
+                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+
+                {
+                    conn.Open();
+                    var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid) VALUES (default) RETURNING mediaid)" +
+                        "INSERT INTO movies (movieid, mediaid, rating, title, director, genres, length, releasedate, availability)";
+                    using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), (SELECT mediaid from newid), @r1, @t1, @d1, @g1, @l1, @r2, @a1)", conn))
+                    {
+                        command.Parameters.AddWithValue("r1", model.rating);
+                        command.Parameters.AddWithValue("t1", model.title);
+                        command.Parameters.AddWithValue("d1", model.director);
+                        command.Parameters.AddWithValue("g1", model.genres);
+                        command.Parameters.AddWithValue("l1", model.length);
+                        command.Parameters.AddWithValue("r2", DateOnly.Parse(model.releasedate));
+                        if (model.availability == null)
+                            command.Parameters.AddWithValue("a1", false);
+                        else
+                            command.Parameters.AddWithValue("a1", true);
+
+                        int nRows = command.ExecuteNonQuery();
+                    }
+                }
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult EditMovieForm(int movieId)
+        {
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+
+            using var dataSource = dataSourceBuilder.Build();
+            using var command = dataSource.CreateCommand("SELECT * FROM movies WHERE movieid='" + movieId.ToString() + "'");
+            using var reader = command.ExecuteReader();
+
+            var movie = new MovieViewModel();
+            while (reader.Read())
+            {
+                movie.movieid = reader.GetInt32(0);
+                movie.rating = reader.GetFieldValue<int>(2);
+                movie.title = reader.GetFieldValue<string>(3);
+                movie.director = reader.GetFieldValue<string>(4);
+                movie.genres = reader.GetFieldValue<int>(5);
+                movie.length = reader.GetFieldValue<int>(6);
+                movie.releasedate = reader.GetFieldValue<DateOnly>(7).ToString("yyyy-MM-dd");
+                movie.availability = reader.GetFieldValue<bool>(8);
+            }
+
+            return View("~/Views/AddMedia/AddMovie.cshtml", movie);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateMovie(MovieViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+
+                {
+                    conn.Open();
+                    var updateCommand = "UPDATE movies SET title=@t1, rating=@r1, director=@d1, genres=@g1, length=@l1, releasedate=@r2, availability=@a1 " +
+                        "WHERE movieid='" + model.movieid + "'";
+                    using (var command = new NpgsqlCommand(updateCommand, conn))
+                    {
+                        command.Parameters.AddWithValue("t1", model.title);
+                        command.Parameters.AddWithValue("r1", model.rating);
+                        command.Parameters.AddWithValue("d1", model.director);
+                        command.Parameters.AddWithValue("g1", model.genres);
+                        command.Parameters.AddWithValue("l1", model.length);
+                        command.Parameters.AddWithValue("r2", DateOnly.Parse(model.releasedate));
+                        if (model.availability == null)
+                            command.Parameters.AddWithValue("a1", false);
+                        else
+                            command.Parameters.AddWithValue("a1", true);
+
+                        int nRows = command.ExecuteNonQuery();
+                    }
+                }
+            }
+            return View("~/Views/AddMedia/AddMovie.cshtml");
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteMovie(int movieId)
+        {
+            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            {
+
+                Console.Out.WriteLine("Opening connection");
+                conn.Open();
+
+                var sqlCommand = "DELETE FROM movies WHERE movieid='" + movieId.ToString() + "';";
+                sqlCommand += "DELETE FROM medias WHERE mediaid='" + movieId.ToString() + "'";
+                using (var command = new NpgsqlCommand(sqlCommand, conn))
+                {
+                    int nRows = command.ExecuteNonQuery();
+                }
+            }
+            return new JsonResult(new { redirectToUrl = Url.Action("AddMovie", "AddMedia") });
         }
     }
 }

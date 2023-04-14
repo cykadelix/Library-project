@@ -12,9 +12,7 @@
     } else if (selectedType == "Journal") {
         window.location.href = '../AddMedia/AddJournal';
     } else if (selectedType == "Movie") {
-        $('.media-entry-form').not('#movie-entry-form').hide();
-        $('#movie-entry-form').show();
-
+        window.location.href = '../AddMedia/AddMovie';
     } else if (selectedType == "Audiobook") {
         $('.media-entry-form').not('#audiobook-entry-form').hide();
         $('#audiobook-entry-form').show();

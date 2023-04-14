@@ -1,6 +1,6 @@
 ﻿@using Library_project.Data.Enums
-@using Library_project.ViewModels.Book
-@model List<EditBookViewModel>
+@using Library_project.ViewModels.Movie
+@model List<MovieViewModel>
 
 @if (Model is null)
 {
@@ -13,17 +13,17 @@ else
 {
     @foreach (var items in Model)
     {
-        @if (items.isAvailable == true)
+        @if (items.availability == true)
         {
             <div class="media-display-item">
                 <img class="media-item-img">
                 <div class="media-display-text">
                     <h1 class="display-1">@items.title</h1>
-                    <h2 class="display-2">Author(s): @items.author</h2>
+                    <h2 class="display-2">Rating: @items.rating</h2>
+                    <h2 class="display-2">Director: @items.director</h2>
                     <h2 class="display-2">Genre: @((genres)items.genres)</h2>
-                    <h2 class="display-2">Publishing date: @items.publicDate</h2>
-                    <h2 class="display-2">Page count: @items.pageCount</h2>
-                    <h2 class="display-2">ISBN: @items.pageCount</h2>
+                    <h2 class="display-2">Length(min): @items.length</h2>
+                    <h2 class="display-2">Release date: @items.releasedate</h2>
                     <h3 class="display-3 media-checkout-btn"><a>Checkout<i class="fa-solid fa-arrow-right"></i></a></h3>
                 </div>
             </div>

@@ -85,6 +85,22 @@ $('#journal-explore-btn').on('click', function () {
     });
 });
 
+$('#movie-explore-btn').on('click', function () {
+    $('.media-display-container').height('auto');
+    $.ajax({
+        type: 'GET',
+        url: '/Explore/GetMovies',
+        asyc: false,
+        success: function (result) {
+            $('#media-partial-placeholder').html(result);
+            mediaType = "movie";
+
+            loadRandomImages();
+            resizeExploreContainer();
+        }
+    });
+});
+
 function resizeExploreContainer() {
     let $images = $('.media-item-img');
     let loadedImagesCount = 0;

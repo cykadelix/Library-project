@@ -12,7 +12,7 @@ namespace Library_project.Models
         public media media { get; set; }
 
         [Key]
-        public int movieId { get; set; }
+        public int movieid { get; set; }
 
         public int rating { get; set; }
         public string title { get; set; }

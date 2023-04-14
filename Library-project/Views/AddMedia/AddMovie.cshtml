@@ -1,5 +1,5 @@
 ﻿@using Library_project.Data.Enums
-@model Library_project.ViewModels.Book.EditBookViewModel
+@model Library_project.ViewModels.Movie.MovieViewModel
 @{
     ViewData["Title"] = "Add camera";
 }
@@ -47,16 +47,21 @@
                 <option>Audiobook</option>
             </select>
         </div>
-        <form class="media-entry-form" id="book-entry-form" method="post" asp-action="@(Model is null ? "AddBook" : "UpdateBook")" asp-controller="AddMedia">
+        <form class="media-entry-form" id="movie-entry-form" method="post" asp-action="@(Model is null ? "AddMovie" : "UpdateMovie")" asp-controller="AddMedia">
             <div class="input-wrapper">
                 <label asp-for="title">Title</label>
-                <input type="text" id="book-title" name="title" value="@(Model is null ? "" : Model.title)" />
+                <input type="text" id="movie-title" name="title" value="@(Model is null ? "" : Model.title)" />
                 <span asp-validation-for="title" class="text-danger"></span>
             </div>
             <div class="input-wrapper">
-                <label asp-for="author">Author</label>
-                <input type="text" id="book-author" name="author" value="@(Model is null ? "" : Model.author)" />
-                <span asp-validation-for="author" class="text-danger"></span>
+                <label asp-for="rating">Rating</label>
+                <input type="text" placeholder="1-10" id="movie-rating" name="rating" value="@(Model is null ? "" : Model.rating)" />
+                <span asp-validation-for="rating" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="director">Director</label>
+                <input type="text" id="movie-director" name="director" value="@(Model is null ? "" : Model.director)" />
+                <span asp-validation-for="director" class="text-danger"></span>
             </div>
             <label asp-for="genres">Genres</label>
             <select asp-for="genres" asp-items="Html.GetEnumSelectList<genres>()" style="margin-bottom: 0.5rem;">
@@ -64,33 +69,30 @@
             </select>
             <span asp-validation-for="genres"></span>
             <div class="input-wrapper">
-                <label asp-for="publicDate">Publishing date</label>
-                <input type="date" id="book-publicDate" name="publicDate" value="@(Model is null ? "" : Model.publicDate)" />
-                <span asp-validation-for="publicDate" class="text-danger"></span>
+                <label asp-for="length">Length(min)</label>
+                <input type="text" id="movie-length" name="length" value="@(Model is null ? "" : Model.length)" />
+                <span asp-validation-for="length" class="text-danger"></span>
             </div>
             <div class="input-wrapper">
-                <label asp-for="pageCount">Page Count</label>
-                <input type="text" id="book-pageCount" name="pageCount" value="@(Model is null ? "" : Model.pageCount)" />
-            </div>
-            <div class="input-wrapper">
-                <label asp-for="isbn">ISBN</label>
-                <input type="text" id="book-isbn" name="isbn" value="@(Model is null ? "" : Model.isbn)" />
+                <label asp-for="releasedate">Release date</label>
+                <input type="date" id="movie-releasedate" name="releasedate" value="@(Model is null ? "" : Model.releasedate)" />
+                <span asp-validation-for="releasedate" class="text-danger"></span>
             </div>
             <div class="checkbox-wrapper">
-                <input type="checkbox" value=true id="book-isAvailable" name="isAvailable" @(Model is null ? "checked" : (Model.isAvailable.Value ? "checked" : "")) />
-                <label asp-for="isAvailable">Availability</label>
+                <input type="checkbox" value=true id="movie-availability" name="availability" @(Model is null ? "checked" : (Model.availability.Value ? "checked" : "")) />
+                <label asp-for="availability">Availability</label>
             </div>
 
             @if (Model is null)
             {
-                <button type="submit" class="media-submit-btn" id="book-submit-form">Submit</button>
+                <button type="submit" class="media-submit-btn" id="movie-submit-form">Submit</button>
             }
             else
             {
-                <input asp-for="bookid" type="hidden" class="media-form-serialnumber" value="@Model.bookid" />
+                <input asp-for="movieid" type="hidden" class="media-form-serialnumber" value="@Model.movieid" />
                 <div class="edit-form-controls">
-                    <button type="reset" class="media-cancel-btn" id="book-cancel-form">Cancel</button>
-                    <button type="submit" class="media-save-btn" id="book-save-form">Save</button>
+                    <button type="reset" class="media-cancel-btn" id="movie-cancel-form">Cancel</button>
+                    <button type="submit" class="media-save-btn" id="movie-save-form">Save</button>
                 </div>
             }
         </form>
@@ -106,11 +108,11 @@
                     <thead>
                         <tr>
                             <th>Title</th>
-                            <th>Author</th>
-                            <th>Genres</th>
-                            <th>Publishing Date</th>
-                            <th>Page Count</th>
-                            <th>ISBN</th>
+                            <th>Rating</th>
+                            <th>Director</th>
+                            <th>Genre</th>
+                            <th>Length(min)</th>
+                            <th>Release Date</th>
                             <th>Availability</th>
                             <th>Edit</th>
                         </tr>
@@ -137,11 +139,11 @@
         9: "Non_Fiction",
         10: "History",
     };
-    //Get list of books
+    //Get list of movies
     $(function () {
         $.ajax({
             type: 'GET',
-            url: '/Explore/GetBookList',
+            url: '/Explore/GetMovieList',
             async: false,
             datatype: 'json',
             success: function (result) {
@@ -153,17 +155,17 @@
             data: mediaList,
             "columns": [
                 { "data": "title" },
-                { "data": "author" },
+                { "data": "rating" },
+                { "data": "director" },
                 {
                     "data": "genres",
                     "render": function (data, type, row) {
                         return genreEnum[data];
                     }
                 },
-                { "data": "publicDate" },
-                { "data": "pageCount" },
-                { "data": "isbn" },
-                { "data": "isAvailable" },
+                { "data": "length" },
+                { "data": "releasedate" },
+                { "data": "availability" },
                 {
                     "data": null,
                     "defaultContent": "<a class='edit-row-btn'><i class='fa-solid fa-pen-to-square'></i></a>" +
@@ -178,18 +180,18 @@
     //Edit button
     $('#transactions-table').on('click', '.edit-row-btn', function () {
         let tr = $(this).closest('tr');
-        let bookId = table.row(tr).data().bookid;
+        let movieId = table.row(tr).data().movieid;
 
-        window.location.href = "/AddMedia/EditBookForm?bookId=" + bookId;
+        window.location.href = "/AddMedia/EditMovieForm?movieId=" + movieId;
     });
     //Delete
     $('#transactions-table').on('click', '.delete-row-btn', function () {
         let tr = $(this).closest('tr');
-        let bookId = table.row(tr).data().bookid;
+        let movieId = table.row(tr).data().movieid;
 
         $.ajax({
             type: 'DELETE',
-            url: '/AddMedia/DeleteBook?bookId=' + bookId,
+            url: '/AddMedia/DeleteMovie?movieId=' + movieId,
             async: false,
             success: function (result) {
                 window.location.href = result.redirectToUrl;
@@ -198,10 +200,10 @@
     });
     //Cancel
     $('.media-entry-form').on('click', '.media-cancel-btn', function () {
-        window.location.href = "/AddMedia/AddBook";
+        window.location.href = "/AddMedia/AddMovie";
     });
 
-    $("#media-type").val("Book");
+    $("#media-type").val("Movie");
     $('#camera-availability').on('change', function () {
         this.value = this.checked ? val(true) : val(false);
     });

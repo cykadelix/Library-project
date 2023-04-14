@@ -9,6 +9,7 @@ using Library_project.ViewModels.Journal;
 using Library_project.ViewModels.Camera;
 using Library_project.ViewModels.Computer;
 using Library_project.ViewModels.Projector;
+using Library_project.ViewModels.Movie;
 
 namespace Library_project.Controllers
 {
@@ -205,7 +206,7 @@ namespace Library_project.Controllers
             return Json(BookToList());
         }
 
-        //Books
+        //Journals
         [HttpGet]
         public List<CreateJournalViewModel>? JournalToList()
         {
@@ -248,6 +249,52 @@ namespace Library_project.Controllers
         public IActionResult GetJournalList()
         {
             return Json(JournalToList());
+        }
+
+        //Movies
+        [HttpGet]
+        public List<MovieViewModel>? MovieToList()
+        {
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+
+            dataSourceBuilder.MapComposite<Location>();
+            using var dataSource = dataSourceBuilder.Build();
+            using var command = dataSource.CreateCommand("SELECT * FROM movies");
+            using var reader = command.ExecuteReader();
+
+            List<MovieViewModel> local_list = new List<MovieViewModel>();
+
+            while (reader.Read())
+            {
+                local_list.Add(new MovieViewModel()
+                {
+                    movieid = reader.GetInt32(0),
+                    rating = reader.GetFieldValue<int>(2),
+                    title = reader.GetFieldValue<string>(3),
+                    director = reader.GetFieldValue<string>(4),
+                    genres = reader.GetFieldValue<int>(5),
+                    length = reader.GetFieldValue<int>(6),
+                    releasedate = reader.GetFieldValue<DateOnly>(7).ToString("yyyy-MM-dd"),
+                    availability = reader.GetFieldValue<bool>(8),
+                }); ;
+            }
+            if (local_list.Count == 0)
+            {
+                return null;
+            }
+            return local_list;
+        }
+
+        [HttpGet]
+        public PartialViewResult GetMovies()
+        {
+            return PartialView("~/Views/Explore/_MovieView.cshtml", MovieToList());
+        }
+
+        [HttpGet]
+        public IActionResult GetMovieList()
+        {
+            return Json(MovieToList());
         }
     }
 

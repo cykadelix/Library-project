@@ -32,7 +32,7 @@ namespace Library_project.Controllers
             {
                 local_list.Add(new movie()
                 {
-                    movieId = (int)reader["mediaid"],
+                    movieid = (int)reader["mediaid"],
                     rating = (int)reader["rating"],
                     title = (string)reader["title"],
                     director = (string)reader["director"],
