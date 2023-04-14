@@ -205,35 +205,50 @@ namespace Library_project.Controllers
             return Json(BookToList());
         }
 
-        public async Task<IActionResult> GetJournal()
+        //Books
+        [HttpGet]
+        public List<CreateJournalViewModel>? JournalToList()
         {
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
 
             dataSourceBuilder.MapComposite<Location>();
-            await using var dataSource = dataSourceBuilder.Build();
-            await using var command = dataSource.CreateCommand("SELECT * FROM journal ,media WHERE journalid=media.mediaId");
-            await using var reader = await command.ExecuteReaderAsync();
+            using var dataSource = dataSourceBuilder.Build();
+            using var command = dataSource.CreateCommand("SELECT * FROM journals");
+            using var reader = command.ExecuteReader();
 
-            var journalList = new JournalListViewModel();
-            List<journal> local_list = new List<journal>();
+            List<CreateJournalViewModel> local_list = new List<CreateJournalViewModel>();
 
-            while (await reader.ReadAsync())
+            while (reader.Read())
             {
-                local_list.Add(new journal()
+                local_list.Add(new CreateJournalViewModel()
                 {
-                    jouranalid = (int)reader["journalid"],
-                    title = (string)reader["title"],
-                    researchers = reader.GetFieldValue<string>(5),
-                    subject = reader.GetFieldValue<string>(6),
-                    length = (int)reader["length"],
-                    releasedate = reader.GetFieldValue<DateOnly>(4)
+                    journalid = reader.GetInt32(0),
+                    title = reader.GetFieldValue<string>(2),
+                    researchers = reader.GetFieldValue<string>(3),
+                    subject = reader.GetFieldValue<string>(4),
+                    length = reader.GetFieldValue<int>(5),
+                    releasedate = reader.GetFieldValue<DateOnly>(6).ToString("yyyy-MM-dd"),
+                    isavailable = reader.GetFieldValue<bool>(7),
                 }); ;
             }
-            journalList.allJournals = local_list;
-            return View(journalList);
-
+            if (local_list.Count == 0)
+            {
+                return null;
+            }
+            return local_list;
         }
 
+        [HttpGet]
+        public PartialViewResult GetJournals()
+        {
+            return PartialView("~/Views/Explore/_JournalView.cshtml", JournalToList());
+        }
+
+        [HttpGet]
+        public IActionResult GetJournalList()
+        {
+            return Json(JournalToList());
+        }
     }
 
 }

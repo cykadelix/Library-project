@@ -13,7 +13,7 @@ namespace Library_project.Models
         
 
         [Key]
-        public int jouranalid { get; set; }
+        public int journalid { get; set; }
         public string title { get; set; }
         
         

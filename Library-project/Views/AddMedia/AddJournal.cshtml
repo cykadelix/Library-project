@@ -1,1 +1,184 @@
-﻿
+﻿@model Library_project.ViewModels.Journal.CreateJournalViewModel
+
+@{
+    ViewData["Title"] = "Add journals";
+}
+
+<div class="account-container">
+    <div class="account-controls-panel">
+        <div class="library-logo">
+            Library Logo
+        </div>
+        <div class="user-info">
+            <div class="user-pfp-container">
+                <img src="~/images/pfp_male.svg" id="user-pfp-img" />
+            </div>
+            <h1 class="display-1">Name</h1>
+        </div>
+        <a class="account-nav" asp-area="" asp-controller="Home" asp-action="AdminDashboard">
+            <i class="fa-solid fa-chart-bar"></i>
+            <h2 class="display-2">Dashboard</h2>
+        </a>
+        <a class="account-nav active-l" asp-area="" asp-controller="AddMedia" asp-action="AddComputer">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <h2 class="display-2">Inventory</h2>
+        </a>
+        <a class="account-nav">
+            <i class="fa-solid fa-gear"></i>
+            <h2 class="display-2">Settings</h2>
+        </a>
+        <a class="account-nav" id="account-signout-btn">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <h2 class="display-2">Sign out</h2>
+        </a>
+    </div>
+    <div class="media-entry-container">
+        <div class="media-form-header">
+            <h1 class="display-1">Choose an entry type</h1>
+            <h2 class="display-2" id="media-form-subheader"></h2>
+            <label for="media-type"></label>
+            <select name="media-type" id="media-type">
+                <option><a>Computer</a></option>
+                <option>Camera</option>
+                <option>Projector</option>
+                <option>Book</option>
+                <option>Journal</option>
+                <option>Movie</option>
+                <option>Audiobook</option>
+            </select>
+        </div>
+        <form class="media-entry-form" id="journal-entry-form" method="post" asp-action="@(Model is null ? "AddJournal" : "UpdateJournal")" asp-controller="AddMedia">
+            <div class="input-wrapper">
+                <label asp-for="title">Title</label>
+                <input type="text" id="journal-title" name="title" value="@(Model is null ? "" : Model.title)" />
+                <span asp-validation-for="title" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="researchers">Researcher(s)</label>
+                <input type="text" id="journal-researchers" name="researchers" value="@(Model is null ? "" : Model.researchers)" />
+                <span asp-validation-for="researchers" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="subject">Subject(s)</label>
+                <input type="text" id="journal-subject" name="subject" value="@(Model is null ? "" : Model.subject)" />
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="length">Length</label>
+                <input type="text" id="journal-length" name="length" value="@(Model is null ? "" : Model.length)" />
+                <span asp-validation-for="length" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="releasedate">Publishing date</label>
+                <input type="date" id="book-releasedate" name="releasedate" value="@(Model is null ? "" : Model.releasedate)" />
+                <span asp-validation-for="releasedate" class="text-danger"></span>
+            </div>
+            <div class="checkbox-wrapper">
+                <input type="checkbox" value=true id="journal-isavailable" name="isavailable" @(Model is null ? "checked" : (Model.isavailable.Value ? "checked" : "")) />
+                <label asp-for="isavailable">Availability</label>
+            </div>
+
+            @if (Model is null)
+            {
+                <button type="submit" class="media-submit-btn" id="journal-submit-form">Submit</button>
+            }
+            else
+            {
+                <input asp-for="journalid" type="hidden" class="media-form-serialnumber" value="@Model.journalid" />
+                <div class="edit-form-controls">
+                    <button type="reset" class="media-cancel-btn" id="journal-cancel-form">Cancel</button>
+                    <button type="submit" class="media-save-btn" id="journal-save-form">Save</button>
+                </div>
+            }
+        </form>
+    </div>
+    <div class="media-recent-transactions-panel">
+        <div class="media-recent-transactions">
+            <div class="recent-transactions-header">
+                <h1 class="display-1">Current Inventory</h1>
+                <h2 class="display-2" id="recent-transactions-subheader"></h2>
+            </div>
+            <div class="table-container" style="display:none">
+                <table id="transactions-table" class="display cell-border" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Researchers</th>
+                            <th>Subject</th>
+                            <th>Availability</th>
+                            <th>Length</th>
+                            <th>Release Date</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let mediaList;
+    let table;
+    //Get list of projectors
+    $(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/Explore/GetJournalList',
+            async: false,
+            datatype: 'json',
+            success: function (result) {
+                mediaList = result;
+            },
+        });
+        //Creating datatable
+        table = $('#transactions-table').DataTable({
+            data: mediaList,
+            "columns": [
+                { "data": "title" },
+                { "data": "researchers" },
+                { "data": "subject" },
+                { "data": "isavailable" },
+                { "data": "length" },
+                { "data": "releasedate" },
+                {
+                    "data": null,
+                    "defaultContent": "<a class='edit-row-btn'><i class='fa-solid fa-pen-to-square'></i></a>" +
+                        "<a class='delete-row-btn'><i class='fa-solid fa-trash'></i></a>"
+                }
+            ],
+            "bLengthChange": false,
+            "pageLength": 5
+        });
+        $('.table-container').show();
+    });
+    //Edit button
+    $('#transactions-table').on('click', '.edit-row-btn', function () {
+        let tr = $(this).closest('tr');
+        let journalId = table.row(tr).data().journalid;
+
+        window.location.href = "/AddMedia/EditJournalForm?journalId=" + journalId;
+    });
+    //Delete
+    $('#transactions-table').on('click', '.delete-row-btn', function () {
+        let tr = $(this).closest('tr');
+        let journalId = table.row(tr).data().journalid;
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/AddMedia/DeleteJournal?journalId=' + journalId,
+            async: false,
+            success: function (result) {
+                window.location.href = result.redirectToUrl;
+            },
+        });
+    });
+    //Cancel
+    $('.media-entry-form').on('click', '.media-cancel-btn', function () {
+        window.location.href = "/AddMedia/AddJournal";
+    });
+
+    $("#media-type").val("Journal");
+    $('#projector-availability').on('change', function () {
+        this.value = this.checked ? val(true) : val(false);
+    });
+</script>

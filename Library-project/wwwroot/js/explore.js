@@ -60,9 +60,24 @@ $('#book-explore-btn').on('click', function () {
         url: '/Explore/GetBooks',
         asyc: false,
         success: function (result) {
-            console.log(result);
             $('#media-partial-placeholder').html(result);
             mediaType = "book";
+
+            loadRandomImages();
+            resizeExploreContainer();
+        }
+    });
+});
+
+$('#journal-explore-btn').on('click', function () {
+    $('.media-display-container').height('auto');
+    $.ajax({
+        type: 'GET',
+        url: '/Explore/GetJournals',
+        asyc: false,
+        success: function (result) {
+            $('#media-partial-placeholder').html(result);
+            mediaType = "journal";
 
             loadRandomImages();
             resizeExploreContainer();

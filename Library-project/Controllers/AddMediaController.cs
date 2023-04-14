@@ -1,10 +1,10 @@
 ﻿using Library_project.ViewModels.Book;
 using Library_project.ViewModels.Camera;
 using Library_project.ViewModels.Computer;
+using Library_project.ViewModels.Journal;
 using Library_project.ViewModels.Projector;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
-using System.Globalization;
 
 namespace Library_project.Controllers
 {
@@ -75,7 +75,7 @@ namespace Library_project.Controllers
                 {
 
                     var reader = command.ExecuteReader();
-                    while(reader.Read())
+                    while (reader.Read())
                     {
                         cam.cameraid = reader.GetInt32(0);
                         cam.serialnumber = reader.GetString(1);
@@ -99,7 +99,7 @@ namespace Library_project.Controllers
 
                 {
                     conn.Open();
-                    var updateCommand = "UPDATE cameras SET serialnumber=@s1, brand=@b1, description=@d1, megapixels=@l1, availability=@a1 " + 
+                    var updateCommand = "UPDATE cameras SET serialnumber=@s1, brand=@b1, description=@d1, megapixels=@l1, availability=@a1 " +
                         "WHERE cameraid='" + model.cameraid + "'";
                     using (var command = new NpgsqlCommand(updateCommand, conn))
                     {
@@ -140,7 +140,7 @@ namespace Library_project.Controllers
             }
             return new JsonResult(new { redirectToUrl = Url.Action("AddCamera", "AddMedia") });
         }
-        
+
         //Computers
         public IActionResult AddComputer()
         {
@@ -501,6 +501,124 @@ namespace Library_project.Controllers
                 }
             }
             return new JsonResult(new { redirectToUrl = Url.Action("AddBook", "AddMedia") });
+        }
+
+        //Journals
+        public IActionResult AddJournal()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddJournal(CreateJournalViewModel model)
+        {
+            if (model.title == null)
+            {
+                return View();
+            }
+            if (ModelState.IsValid)
+            {
+                using NpgsqlConnection conn = new NpgsqlConnection(_config["ConnectionString"]);
+                conn.Open();
+
+                using var command = new NpgsqlCommand("WITH local_id AS (INSERT INTO medias VALUES (DEFAULT) RETURNING mediaid) " +
+                            "INSERT INTO journals (journalid, mediaid, title, researchers, subject, length, releasedate, isavailable) VALUES(" +
+                            "(SELECT mediaid from local_id), " +
+                            "(SELECT mediaid from local_id), " +
+                            "@Title, " +
+                            "@Researchers, " +
+                            "@Subject, " +
+                            "@Length, " +
+                            "@DateReleased, " +
+                            "@IsAvailable)", conn)
+                {
+                    Parameters =
+                        {
+                           new("Title", model.title),
+                           new("Researchers", model.researchers),
+                           new("Subject", model.subject),
+                           new("IsAvailable", model.isavailable),
+                           new("DateReleased", DateOnly.Parse(model.releasedate)),
+                           new("Length", model.length)
+                        }
+
+                };
+                using var reader = command.ExecuteReader();
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult EditJournalForm(int journalId)
+        {
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+
+            using var dataSource = dataSourceBuilder.Build();
+            using var command = dataSource.CreateCommand("SELECT * FROM journals WHERE journalid='" + journalId.ToString() + "'");
+            using var reader = command.ExecuteReader();
+
+            var journal = new CreateJournalViewModel();
+            while (reader.Read())
+            {
+                journal.journalid = reader.GetInt32(0);
+                journal.title = reader.GetFieldValue<string>(2);
+                journal.researchers = reader.GetFieldValue<string>(3);
+                journal.subject = reader.GetFieldValue<string>(4);
+                journal.length = reader.GetFieldValue<int>(5);
+                journal.releasedate = reader.GetFieldValue<DateOnly>(6).ToString("yyyy-MM-dd");
+                journal.isavailable = reader.GetFieldValue<bool>(7);
+            }
+
+            return View("~/Views/AddMedia/AddJournal.cshtml", journal);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateJournal(CreateJournalViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+
+                {
+                    conn.Open();
+                    var updateCommand = "UPDATE journals SET title=@t1, researchers=@r1, subject=@s1, length=@l1, releasedate=@r2, isavailable=@a1 " +
+                        "WHERE journalid='" + model.journalid + "'";
+                    using (var command = new NpgsqlCommand(updateCommand, conn))
+                    {
+                        command.Parameters.AddWithValue("t1", model.title);
+                        command.Parameters.AddWithValue("r1", model.researchers);
+                        command.Parameters.AddWithValue("s1", model.subject);
+                        command.Parameters.AddWithValue("l1", model.length);
+                        command.Parameters.AddWithValue("r2", DateOnly.Parse(model.releasedate));
+                        if (model.isavailable == null)
+                            command.Parameters.AddWithValue("a1", false);
+                        else
+                            command.Parameters.AddWithValue("a1", true);
+
+                        int nRows = command.ExecuteNonQuery();
+                    }
+                }
+            }
+            return View("~/Views/AddMedia/AddJournal.cshtml");
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteJournal(int journalId)
+        {
+            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            {
+
+                Console.Out.WriteLine("Opening connection");
+                conn.Open();
+
+                var sqlCommand = "DELETE FROM journals WHERE journalid='" + journalId.ToString() + "';";
+                sqlCommand += "DELETE FROM medias WHERE mediaid='" + journalId.ToString() + "'";
+                using (var command = new NpgsqlCommand(sqlCommand, conn))
+                {
+                    int nRows = command.ExecuteNonQuery();
+                }
+            }
+            return new JsonResult(new { redirectToUrl = Url.Action("AddJournal", "AddMedia") });
         }
     }
 }

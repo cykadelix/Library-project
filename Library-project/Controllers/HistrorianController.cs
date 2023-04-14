@@ -70,12 +70,6 @@ namespace Library_project.Controllers
 
             if (ModelState.IsValid)
             {
-
-
-
-
-
-
                 await using NpgsqlConnection conn = new NpgsqlConnection("Host=127.0.0.1;Server=localhost;Port=5432;Database=my_server;UserID=postgres;Password=Fuentes5;Pooling=true;Include Error Detail=true;");
 
 
