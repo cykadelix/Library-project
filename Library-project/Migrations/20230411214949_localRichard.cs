@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Library_project.Migrations
 {
     /// <inheritdoc />
-    public partial class updateBooks : Migration
+    public partial class localRichard : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -71,15 +71,15 @@ namespace Library_project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "media",
+                name: "medias",
                 columns: table => new
                 {
-                    mediaId = table.Column<int>(type: "integer", nullable: false)
+                    mediaid = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_media", x => x.mediaId);
+                    table.PrimaryKey("PK_medias", x => x.mediaid);
                 });
 
             migrationBuilder.CreateTable(
@@ -118,10 +118,10 @@ namespace Library_project.Migrations
                 {
                     table.PrimaryKey("PK_audiobook", x => x.audiobookid);
                     table.ForeignKey(
-                        name: "FK_audiobook_media_mediaid",
+                        name: "FK_audiobook_medias_mediaid",
                         column: x => x.mediaid,
-                        principalTable: "media",
-                        principalColumn: "mediaId",
+                        principalTable: "medias",
+                        principalColumn: "mediaid",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -129,25 +129,49 @@ namespace Library_project.Migrations
                 name: "books",
                 columns: table => new
                 {
-                    bookId = table.Column<int>(type: "integer", nullable: false)
+                    bookid = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     title = table.Column<string>(type: "text", nullable: false),
                     author = table.Column<string[]>(type: "text[]", nullable: false),
                     genres = table.Column<int>(type: "integer", nullable: false),
-                    publicDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    pageCount = table.Column<int>(type: "integer", nullable: false),
+                    publicdate = table.Column<DateOnly>(type: "date", nullable: false),
+                    pagecount = table.Column<int>(type: "integer", nullable: false),
                     isbn = table.Column<long>(type: "bigint", nullable: false),
                     isavailable = table.Column<bool>(type: "boolean", nullable: false),
-                    mediaId = table.Column<int>(type: "integer", nullable: false)
+                    mediaid = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_books", x => x.bookId);
+                    table.PrimaryKey("PK_books", x => x.bookid);
                     table.ForeignKey(
-                        name: "FK_books_media_mediaId",
-                        column: x => x.mediaId,
-                        principalTable: "media",
-                        principalColumn: "mediaId",
+                        name: "FK_books_medias_mediaid",
+                        column: x => x.mediaid,
+                        principalTable: "medias",
+                        principalColumn: "mediaid",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "cameras",
+                columns: table => new
+                {
+                    cameraid = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    serialnumber = table.Column<string>(type: "text", nullable: false),
+                    brand = table.Column<string>(type: "text", nullable: false),
+                    description = table.Column<string>(type: "text", nullable: false),
+                    megapixels = table.Column<double>(type: "double precision", nullable: false),
+                    availability = table.Column<bool>(type: "boolean", nullable: false),
+                    mediaid = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_cameras", x => x.cameraid);
+                    table.ForeignKey(
+                        name: "FK_cameras_medias_mediaid",
+                        column: x => x.mediaid,
+                        principalTable: "medias",
+                        principalColumn: "mediaid",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -155,21 +179,22 @@ namespace Library_project.Migrations
                 name: "computers",
                 columns: table => new
                 {
-                    serialnumber = table.Column<int>(type: "integer", nullable: false)
+                    computerid = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    serialnumber = table.Column<string>(type: "text", nullable: false),
                     brand = table.Column<string>(type: "text", nullable: false),
                     description = table.Column<string>(type: "text", nullable: false),
-                    availibility = table.Column<bool>(type: "boolean", nullable: false),
+                    availability = table.Column<bool>(type: "boolean", nullable: false),
                     mediaid = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_computers", x => x.serialnumber);
+                    table.PrimaryKey("PK_computers", x => x.computerid);
                     table.ForeignKey(
-                        name: "FK_computers_media_mediaid",
+                        name: "FK_computers_medias_mediaid",
                         column: x => x.mediaid,
-                        principalTable: "media",
-                        principalColumn: "mediaId",
+                        principalTable: "medias",
+                        principalColumn: "mediaid",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -181,19 +206,20 @@ namespace Library_project.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     mediaid = table.Column<int>(type: "integer", nullable: false),
                     title = table.Column<string>(type: "text", nullable: false),
-                    researchers = table.Column<string>(type: "text", nullable: false),
-                    subject = table.Column<string>(type: "text", nullable: false),
+                    researchers = table.Column<string[]>(type: "text[]", nullable: false),
+                    subject = table.Column<string[]>(type: "text[]", nullable: false),
                     length = table.Column<int>(type: "integer", nullable: false),
-                    datereleased = table.Column<DateOnly>(type: "date", nullable: false)
+                    releasedate = table.Column<DateOnly>(type: "date", nullable: false),
+                    isavailable = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_journals", x => x.jouranalid);
                     table.ForeignKey(
-                        name: "FK_journals_media_mediaid",
+                        name: "FK_journals_medias_mediaid",
                         column: x => x.mediaid,
-                        principalTable: "media",
-                        principalColumn: "mediaId",
+                        principalTable: "medias",
+                        principalColumn: "mediaid",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -208,7 +234,7 @@ namespace Library_project.Migrations
                     title = table.Column<string>(type: "text", nullable: false),
                     director = table.Column<string>(type: "text", nullable: false),
                     genres = table.Column<int>(type: "integer", nullable: false),
-                    length = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
+                    length = table.Column<int>(type: "integer", nullable: false),
                     releasedate = table.Column<DateOnly>(type: "date", nullable: false),
                     availability = table.Column<bool>(type: "boolean", nullable: false)
                 },
@@ -216,10 +242,10 @@ namespace Library_project.Migrations
                 {
                     table.PrimaryKey("PK_movies", x => x.movieId);
                     table.ForeignKey(
-                        name: "FK_movies_media_mediaid",
+                        name: "FK_movies_medias_mediaid",
                         column: x => x.mediaid,
-                        principalTable: "media",
-                        principalColumn: "mediaId",
+                        principalTable: "medias",
+                        principalColumn: "mediaid",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -227,8 +253,9 @@ namespace Library_project.Migrations
                 name: "projectors",
                 columns: table => new
                 {
-                    serialnumber = table.Column<int>(type: "integer", nullable: false)
+                    projectorid = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    serialnumber = table.Column<int>(type: "integer", nullable: false),
                     brand = table.Column<string>(type: "text", nullable: false),
                     description = table.Column<string>(type: "text", nullable: false),
                     lumens = table.Column<int>(type: "integer", nullable: false),
@@ -237,12 +264,12 @@ namespace Library_project.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_projectors", x => x.serialnumber);
+                    table.PrimaryKey("PK_projectors", x => x.projectorid);
                     table.ForeignKey(
-                        name: "FK_projectors_media_mediaid",
+                        name: "FK_projectors_medias_mediaid",
                         column: x => x.mediaid,
-                        principalTable: "media",
-                        principalColumn: "mediaId",
+                        principalTable: "medias",
+                        principalColumn: "mediaid",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -261,10 +288,10 @@ namespace Library_project.Migrations
                 {
                     table.PrimaryKey("PK_reviews", x => x.reviewid);
                     table.ForeignKey(
-                        name: "FK_reviews_media_mediaid",
+                        name: "FK_reviews_medias_mediaid",
                         column: x => x.mediaid,
-                        principalTable: "media",
-                        principalColumn: "mediaId",
+                        principalTable: "medias",
+                        principalColumn: "mediaid",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_reviews_students_studentid",
@@ -280,9 +307,14 @@ namespace Library_project.Migrations
                 column: "mediaid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_books_mediaId",
+                name: "IX_books_mediaid",
                 table: "books",
-                column: "mediaId");
+                column: "mediaid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_cameras_mediaid",
+                table: "cameras",
+                column: "mediaid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_computers_mediaid",
@@ -335,6 +367,9 @@ namespace Library_project.Migrations
                 name: "books");
 
             migrationBuilder.DropTable(
+                name: "cameras");
+
+            migrationBuilder.DropTable(
                 name: "computers");
 
             migrationBuilder.DropTable(
@@ -356,7 +391,7 @@ namespace Library_project.Migrations
                 name: "reviews");
 
             migrationBuilder.DropTable(
-                name: "media");
+                name: "medias");
 
             migrationBuilder.DropTable(
                 name: "students");

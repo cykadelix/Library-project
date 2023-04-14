@@ -34,8 +34,8 @@ namespace Library_project.Controllers
                 {
                     jouranalid = (int)reader["journalid"],
                     title = (string)reader["title"],
-                    researchers = reader.GetFieldValue<string[]>(5),
-                    subject = reader.GetFieldValue<string[]>(6),
+                    researchers = reader.GetFieldValue<string>(5),
+                    subject = reader.GetFieldValue<string>(6),
                     length = (int)reader["length"],
                     releasedate = reader.GetFieldValue<DateOnly>(4)
                 }) ; ;

@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Library_project</RootNamespace>
-    <UserSecretsId>8542b893-24fb-4826-8d9e-0b211a57fa3d</UserSecretsId>
+    <UserSecretsId>534afa50-a2f0-491d-8f20-5022d67dbf68</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>
