@@ -12,7 +12,7 @@ namespace Library_project.Models
 
         
         public string title { get; set; }
-        public string[] author { get; set; }
+        public string author { get; set; }
         public int genres { get; set; }
         public DateOnly publicdate { get; set; }
 

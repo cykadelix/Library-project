@@ -43,7 +43,7 @@ namespace Library_project.Controllers
                     isbn = (long)reader["isbn"],
                     pagecount = (int)reader["pageCount"],
                     publicdate = reader.GetFieldValue<DateOnly>(3),
-                    author = reader.GetFieldValue <string[]>(2),
+                    author = reader.GetFieldValue <string>(2),
                     genres = reader.GetFieldValue<int>(8),
                     location = reader.GetFieldValue<Location>(10)
                 });
