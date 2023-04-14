@@ -33,7 +33,7 @@ namespace Library_project.Controllers
 
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+                using (var conn = new NpgsqlConnection("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;"))
 
                 {
                     conn.Open();
@@ -95,7 +95,7 @@ namespace Library_project.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+                using (var conn = new NpgsqlConnection("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;"))
 
                 {
                     conn.Open();
