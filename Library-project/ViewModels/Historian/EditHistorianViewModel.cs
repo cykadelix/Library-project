@@ -1,6 +1,6 @@
 using Library_project.Models;
 
-namespace Library_project.ViewModels
+namespace Library_project.ViewModels.Historian
 {
     public class EditHistorianViewModel
     {

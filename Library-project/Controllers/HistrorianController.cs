@@ -1,7 +1,7 @@
 using Library_project.Data.Enums;
 using Library_project.Data.Objects;
 using Library_project.Models;
-using Library_project.ViewModels;
+using Library_project.ViewModels.Historian;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Npgsql;

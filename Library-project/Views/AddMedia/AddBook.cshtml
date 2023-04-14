@@ -1,4 +1,5 @@
-﻿@model Library_project.ViewModels.Book.EditBookViewModel
+﻿@using Library_project.Data.Enums
+@model Library_project.ViewModels.Book.EditBookViewModel
 
 @{
     ViewData["Title"] = "Add camera";
@@ -58,10 +59,11 @@
                 <input type="text" id="book-author" name="author" value="@(Model is null ? "" : Model.author)" />
                 <span asp-validation-for="author" class="text-danger"></span>
             </div>
-            <div class="input-wrapper">
-                <label asp-for="genres">Genres</label>
-                <input type="text" id="book-genres" name="genres" value="@(Model is null ? "" : Model.genres)" />
-            </div>
+            <label asp-for="genres">Genres</label>
+            <select asp-for="genres" asp-items="Html.GetEnumSelectList<genres>()" style="margin-bottom: 0.5rem;">
+                <option>Select type</option>
+            </select>
+            <span asp-validation-for="genres"></span>
             <div class="input-wrapper">
                 <label asp-for="publicDate">Publishing date</label>
                 <input type="date" id="book-publicDate" name="publicDate" value="@(Model is null ? "" : Model.publicDate)" />
@@ -123,6 +125,19 @@
 <script>
     let mediaList;
     let table;
+    let genreEnum = {
+        0: "romance",
+        1: "mystery",
+        2: "Sci_Fi",
+        3: "Drama",
+        4: "Horror",
+        5: "Fantasy",
+        6: "Young_Adule",
+        7: "Comedy",
+        8: "Manga",
+        9: "Non_Fiction",
+        10: "History",
+    };
     //Get list of books
     $(function () {
         $.ajax({
@@ -131,28 +146,21 @@
             async: false,
             datatype: 'json',
             success: function (result) {
-                console.log(result);
                 mediaList = result;
             },
         });
         //Creating datatable
         table = $('#transactions-table').DataTable({
             data: mediaList,
-            columnDefs: [{
-                targets: 2,
-                render: function (data, type, row) {
-                    if (data.length > 30) {
-                        return data.substr(0, 50) + "...";
-
-                    }
-                    else
-                        return data;
-                }
-            }],
             "columns": [
                 { "data": "title" },
                 { "data": "author" },
-                { "data": "genres" },
+                {
+                    "data": "genres",
+                    "render": function (data, type, row) {
+                        return genreEnum[data];
+                    }
+                },
                 { "data": "publicDate" },
                 { "data": "pageCount" },
                 { "data": "isbn" },

@@ -1,6 +1,6 @@
 using Library_project.Models;
 
-namespace Library_project.ViewModels
+namespace Library_project.ViewModels.Historian
 {
     public class CreateHistorianViewModel
     {
@@ -13,7 +13,7 @@ namespace Library_project.ViewModels
         public short age { get; set; }
 
         //Relationships
-        //public List<student> studentstosee { get; set; }
+        public List<student> studentstosee { get; set; }
     }
 
 }

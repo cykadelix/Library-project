@@ -1,4 +1,5 @@
-﻿@using Library_project.ViewModels.Book
+﻿@using Library_project.Data.Enums
+@using Library_project.ViewModels.Book
 @model List<EditBookViewModel>
 
 @if (Model is null)
@@ -19,7 +20,7 @@ else
                 <div class="media-display-text">
                     <h1 class="display-1">@items.title</h1>
                     <h2 class="display-2">@items.author</h2>
-                    <h2 class="display-2">@items.genres</h2>
+                    <h2 class="display-2">@((genres)items.genres)</h2>
                     <h2 class="display-2">Publishing date: @items.publicDate</h2>
                     <h2 class="display-2">Page count: @items.pageCount</h2>
                     <h2 class="display-2">ISBN: @items.pageCount</h2>
