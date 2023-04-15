@@ -27,7 +27,7 @@ namespace Library_project.Controllers
         public PartialViewResult GetCameras()
         {
             ListCameraViewModel cameraList = new ListCameraViewModel();
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;"))
             {
 
                 Console.Out.WriteLine("Opening connection");
@@ -63,7 +63,7 @@ namespace Library_project.Controllers
         [HttpGet]
         public async Task<IActionResult> GetBooks()
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;");
             dataSourceBuilder.MapEnum<genres>();
             dataSourceBuilder.MapComposite<Location>();
             await using var dataSource = dataSourceBuilder.Build();
@@ -108,7 +108,7 @@ namespace Library_project.Controllers
 
             if (ModelState.IsValid)
             {
-                await using NpgsqlConnection conn = new NpgsqlConnection(_config["ConnectionString"]);
+                await using NpgsqlConnection conn = new NpgsqlConnection("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;");
 
                 // Connect to the database
                 await conn.OpenAsync();
@@ -143,7 +143,7 @@ namespace Library_project.Controllers
         }
         public async Task<IActionResult> GetJournal()
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;");
 
             dataSourceBuilder.MapComposite<Location>();
             await using var dataSource = dataSourceBuilder.Build();
@@ -157,7 +157,7 @@ namespace Library_project.Controllers
             {
                 local_list.Add(new journal()
                 {
-                    jouranalid = (int)reader["journalid"],
+                    journalid = (int)reader["journalid"],
                     title = (string)reader["title"],
                     researchers = reader.GetFieldValue<string[]>(5),
                     subject = reader.GetFieldValue<string[]>(6),

@@ -19,7 +19,7 @@ namespace Library_project.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;");
             dataSourceBuilder.MapEnum<genres>();
             dataSourceBuilder.MapComposite<Location>();
             await using var dataSource = dataSourceBuilder.Build();
@@ -46,9 +46,6 @@ namespace Library_project.Controllers
             }
             movieList.allMovies = local_list;
             return View(movieList);
-        
-        
-        
         }
     }
 }

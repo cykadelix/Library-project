@@ -8,7 +8,7 @@ var connectionString = builder.Configuration["ConnectionString"];
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
-        opt.UseNpgsql(builder.Configuration.GetConnectionString(builder.Configuration["ConnectionString"])));
+        opt.UseNpgsql(builder.Configuration.GetConnectionString("libraryConnectionString")));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -18,7 +18,7 @@ namespace Library_project.Controllers
         
         public async Task<IActionResult> Index()
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder("Host=127.0.0.1;Server=localhost;Port=5432;Database=my_library;UserID=postgres;Password=killer89;Pooling=true");
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;");
             
             dataSourceBuilder.MapComposite<Location>();
             await using var dataSource = dataSourceBuilder.Build();
@@ -32,7 +32,7 @@ namespace Library_project.Controllers
             {
                 local_list.Add(new journal()
                 {
-                    jouranalid = (int)reader["journalid"],
+                    journalid = (int)reader["journalid"],
                     title = (string)reader["title"],
                     researchers = reader.GetFieldValue<string[]>(5),
                     subject = reader.GetFieldValue<string[]>(6),
@@ -65,7 +65,7 @@ namespace Library_project.Controllers
             if (ModelState.IsValid)
             {
                 
-                await using NpgsqlConnection conn = new NpgsqlConnection(_config["ConnectionString"]);
+                await using NpgsqlConnection conn = new NpgsqlConnection("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;");
                 await conn.OpenAsync();
 
                 await using var command = new NpgsqlCommand("WITH local_id AS (INSERT INTO media VALUES (DEFAULT,(2,1)) RETURNING mediaid) " +

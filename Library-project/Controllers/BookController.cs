@@ -23,7 +23,7 @@ namespace Library_project.Controllers
         public async Task<IActionResult> Index()
         {
 
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;");
             dataSourceBuilder.MapEnum<genres>();
             dataSourceBuilder.MapComposite<Location>();
             await using var dataSource = dataSourceBuilder.Build();
@@ -70,7 +70,7 @@ namespace Library_project.Controllers
 
             if (ModelState.IsValid)
             {
-                await using NpgsqlConnection conn = new NpgsqlConnection(_config["ConnectionString"]);
+                await using NpgsqlConnection conn = new NpgsqlConnection("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;");
 
                 // Connect to the database
                 await conn.OpenAsync();
@@ -106,7 +106,7 @@ namespace Library_project.Controllers
             
         public async Task<IActionResult> Edit(int book_id)
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;");
 
             await using var dataSource = dataSourceBuilder.Build();
             await using var command = dataSource.CreateCommand("SELECT * FROM books");
