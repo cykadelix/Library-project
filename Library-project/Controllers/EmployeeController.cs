@@ -23,10 +23,10 @@ namespace Library_project.Controllers
             await using var reader = await command.ExecuteReaderAsync();
 
             var employeeList = new listEmployeeViewModel();
-            var LocalList = new List<employee>();
+            var LocalList = new List<employees>();
             while (await reader.ReadAsync())
             {
-                LocalList.Add(new employee()
+                LocalList.Add(new employees()
                 {
                     fname = (string)reader["fname"],
                     mname = (string)reader["mname"],
@@ -40,7 +40,7 @@ namespace Library_project.Controllers
                     password = (string)reader["password"],
                     homeaddress = (string)reader["homeaddress"],
                     phonenumber = (string)reader["phoneNumber"],
-                    supervisor = (employee)reader["supervisor"]
+                    supervisor = (employees)reader["supervisor"]
                 });
 
                 employeeList.allEmployees = LocalList;
@@ -161,7 +161,7 @@ namespace Library_project.Controllers
                 localemployee.password = innerRead.GetFieldValue<string>(7);
                 localemployee.homeaddress = innerRead.GetFieldValue<string>(7);
                 localemployee.phonenumber = innerRead.GetFieldValue<string>(7);
-                localemployee.supervisor = innerRead.GetFieldValue<employee>(7);
+                localemployee.supervisor = innerRead.GetFieldValue<employees>(7);
             }
 
             return View(localemployee);

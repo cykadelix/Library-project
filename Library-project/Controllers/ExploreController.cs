@@ -10,6 +10,7 @@ using Library_project.ViewModels.Camera;
 using Library_project.ViewModels.Computer;
 using Library_project.ViewModels.Projector;
 using Library_project.ViewModels.Movie;
+using Library_project.ViewModels.Audiobook;
 
 namespace Library_project.Controllers
 {
@@ -295,6 +296,52 @@ namespace Library_project.Controllers
         public IActionResult GetMovieList()
         {
             return Json(MovieToList());
+        }
+
+        //Audiobooks
+        [HttpGet]
+        public List<AudiobookViewModel>? AudiobookToList()
+        {
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+
+            dataSourceBuilder.MapComposite<Location>();
+            using var dataSource = dataSourceBuilder.Build();
+            using var command = dataSource.CreateCommand("SELECT * FROM audiobooks");
+            using var reader = command.ExecuteReader();
+
+            List<AudiobookViewModel> local_list = new List<AudiobookViewModel>();
+
+            while (reader.Read())
+            {
+                AudiobookViewModel audiobook = new AudiobookViewModel();
+                audiobook.audiobookid = reader.GetInt32(0);
+                audiobook.genre = reader.GetInt32(2);
+                audiobook.title = reader.GetFieldValue<string>(3);
+                audiobook.narrator = reader.GetFieldValue<string>(4);
+                audiobook.author = reader.GetFieldValue<string>(5);
+                audiobook.length = reader.GetFieldValue<TimeOnly>(6).ToString("hh:mm:ss");
+                audiobook.availability = reader.GetFieldValue<bool>(7);
+                local_list.Add(audiobook);
+            }
+
+            reader.Close();
+            if (local_list.Count == 0)
+            {
+                return null;
+            }
+            return local_list;
+        }
+
+        [HttpGet]
+        public PartialViewResult GetAudiobooks()
+        {
+            return PartialView("~/Views/Explore/_AudiobookView.cshtml", AudiobookToList());
+        }
+
+        [HttpGet]
+        public IActionResult GetAudiobookList()
+        {
+            return Json(AudiobookToList());
         }
     }
 

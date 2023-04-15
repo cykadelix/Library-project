@@ -13,24 +13,24 @@ namespace Library_project.Data
     public class AppDbContext : DbContext
     {
         public DbSet<camera> cameras { get; set; }
-        public DbSet<employee> employees { get; set; }
-        public DbSet<historian> historians { get; set; }
-        public DbSet<student> students { get; set; }
+        public DbSet<employees> employees { get; set; }
+        public DbSet<historians> historians { get; set; }
+        public DbSet<students> students { get; set; }
 
 
-        public DbSet<media> medias { get; set; }
-        public DbSet<audiobook> audioBooks { get; set; }
-        public DbSet<book> books { get; set; }
-        public DbSet<journal> journals { get; set; }
-        public DbSet<movie> movies { get; set; }
+        public DbSet<medias> medias { get; set; }
+        public DbSet<audiobooks> audioBooks { get; set; }
+        public DbSet<books> books { get; set; }
+        public DbSet<journals> journals { get; set; }
+        public DbSet<movies> movies { get; set; }
 
-        public DbSet<projector> projectors { get; set;}
+        public DbSet<projectors> projectors { get; set;}
         
-        public DbSet<computer> computers { get; set; }
+        public DbSet<computers> computers { get; set; }
 
 
-        public DbSet<audiobook> checkouts { get; set; }
-        public DbSet<review> reviews { get; set; }
+        public DbSet<audiobooks> checkouts { get; set; }
+        public DbSet<reviews> reviews { get; set; }
        
 
 

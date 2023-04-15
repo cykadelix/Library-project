@@ -1,4 +1,6 @@
-﻿using Library_project.ViewModels.Book;
+﻿using Library_project.Models;
+using Library_project.ViewModels.Audiobook;
+using Library_project.ViewModels.Book;
 using Library_project.ViewModels.Camera;
 using Library_project.ViewModels.Computer;
 using Library_project.ViewModels.Journal;
@@ -6,6 +8,7 @@ using Library_project.ViewModels.Movie;
 using Library_project.ViewModels.Projector;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
+using System.Security.Policy;
 
 namespace Library_project.Controllers
 {
@@ -737,6 +740,120 @@ namespace Library_project.Controllers
                 }
             }
             return new JsonResult(new { redirectToUrl = Url.Action("AddMovie", "AddMedia") });
+        }
+
+        //Movies
+        public IActionResult AddAudiobook()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddAudiobook(AudiobookViewModel model)
+        {
+            if (model.title == null)
+            {
+                return View();
+            }
+            if (ModelState.IsValid)
+            {
+                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+
+                {
+                    conn.Open();
+                    var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid) VALUES (default) RETURNING mediaid)" +
+                        "INSERT INTO audiobooks (audiobookid, mediaid, genre, title, narrator, author, length, availability)";
+                    using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), (SELECT mediaid from newid), @g1, @t1, @n1, @a1, @l1, @a2)", conn))
+                    {
+                        command.Parameters.AddWithValue("g1", model.genre);
+                        command.Parameters.AddWithValue("t1", model.title);
+                        command.Parameters.AddWithValue("n1", model.narrator);
+                        command.Parameters.AddWithValue("a1", model.author);
+                        command.Parameters.AddWithValue("l1", TimeOnly.Parse(model.length));
+                        if (model.availability == null)
+                            command.Parameters.AddWithValue("a2", false);
+                        else
+                            command.Parameters.AddWithValue("a2", true);
+
+                        int nRows = command.ExecuteNonQuery();
+                    }
+                }
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult EditAudiobookForm(int audiobookId)
+        {
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+
+            using var dataSource = dataSourceBuilder.Build();
+            using var command = dataSource.CreateCommand("SELECT * FROM audiobooks WHERE audiobookid='" + audiobookId.ToString() + "'");
+            using var reader = command.ExecuteReader();
+
+            AudiobookViewModel audiobook = new AudiobookViewModel();
+            var movie = new AudiobookViewModel();
+            while (reader.Read())
+            {
+                audiobook.audiobookid = reader.GetInt32(0);
+                audiobook.genre = reader.GetInt32(2);
+                audiobook.title = reader.GetFieldValue<string>(3);
+                audiobook.narrator = reader.GetFieldValue<string>(4);
+                audiobook.author = reader.GetFieldValue<string>(5);
+                audiobook.length = reader.GetFieldValue<TimeOnly>(6).ToString("hh:mm:ss");
+                audiobook.availability = reader.GetFieldValue<bool>(7);
+            }
+
+            return View("~/Views/AddMedia/AddAudiobook.cshtml", audiobook);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateAudiobook(AudiobookViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+
+                {
+                    conn.Open();
+                    var updateCommand = "UPDATE audiobooks SET genre=@g1, title=@t1, narrator=@n1, author=@a1, length=@l1, availability=@a2 " +
+                        "WHERE audiobookid='" + model.audiobookid + "'";
+                    using (var command = new NpgsqlCommand(updateCommand, conn))
+                    {
+                        command.Parameters.AddWithValue("g1", model.genre);
+                        command.Parameters.AddWithValue("t1", model.title);
+                        command.Parameters.AddWithValue("n1", model.narrator);
+                        command.Parameters.AddWithValue("a1", model.author);
+                        command.Parameters.AddWithValue("l1", TimeOnly.Parse(model.length));
+                        if (model.availability == null)
+                            command.Parameters.AddWithValue("a2", false);
+                        else
+                            command.Parameters.AddWithValue("a2", true);
+
+                        int nRows = command.ExecuteNonQuery();
+                    }
+                }
+            }
+            return View("~/Views/AddMedia/AddAudiobook.cshtml");
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteAudiobook(int audiobookId)
+        {
+            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            {
+
+                Console.Out.WriteLine("Opening connection");
+                conn.Open();
+
+                var sqlCommand = "DELETE FROM audiobooks WHERE audiobookid='" + audiobookId.ToString() + "';";
+                sqlCommand += "DELETE FROM medias WHERE mediaid='" + audiobookId.ToString() + "'";
+                using (var command = new NpgsqlCommand(sqlCommand, conn))
+                {
+                    int nRows = command.ExecuteNonQuery();
+                }
+            }
+            return new JsonResult(new { redirectToUrl = Url.Action("AddAudiobook", "AddMedia") });
         }
     }
 }

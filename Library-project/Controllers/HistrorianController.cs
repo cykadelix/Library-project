@@ -23,10 +23,10 @@ namespace Library_project.Controllers
             await using var reader = await command.ExecuteReaderAsync();
 
             var historianList = new listHistorianViewModel();
-            var LocalList = new List<historian>();
+            var LocalList = new List<historians>();
             while (await reader.ReadAsync())
             {
-                LocalList.Add(new historian()
+                LocalList.Add(new historians()
                 {
                     fname = (string)reader["fname"],
                     mname = (string)reader["mname"],
@@ -35,7 +35,7 @@ namespace Library_project.Controllers
                     expertise = (string)reader["expertise"],
                     education = (string)reader["education"],
                     age = (short)reader["age"],
-                    studentstosee = (List<student>)reader["studentsToSee"]
+                    studentstosee = (List<students>)reader["studentsToSee"]
                 });
 
                 historianList.allHistorians = LocalList;

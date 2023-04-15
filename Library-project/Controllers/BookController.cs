@@ -31,10 +31,10 @@ namespace Library_project.Controllers
             await using var reader = await command.ExecuteReaderAsync();
 
             var bookList = new BookListViewModel();
-            var LocalList = new List<book>();
+            var LocalList = new List<books>();
             while (await reader.ReadAsync())
             {
-                LocalList.Add(  new book()
+                LocalList.Add(  new books()
                 {
                     bookid = (int)reader["bookId"],
                     title = reader["title"] as string,

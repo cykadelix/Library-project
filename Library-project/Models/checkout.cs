@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Library_project.Models
 {
-    public class checkout
+    public class checkouts
     {
         //Review info
         public DateTime checkoutdate { get; set; }
@@ -15,12 +15,12 @@ namespace Library_project.Models
         [Key] public int checkoutid { get; set; }
 
         [ForeignKey("student")] 
-        public student student { get; set; }
+        public students student { get; set; }
         public int studentid { get; set; }
 
         [ForeignKey("media")]
         public int mediaid { get; set; }
-        public media media { get; set; }
+        public medias media { get; set; }
 
         
     }

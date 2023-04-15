@@ -27,10 +27,10 @@ namespace Library_project.Controllers
             await using var reader = await command.ExecuteReaderAsync();
 
             var movieList = new MovieListViewModel();
-            var local_list = new List<movie>();
+            var local_list = new List<movies>();
             while(await reader.ReadAsync())
             {
-                local_list.Add(new movie()
+                local_list.Add(new movies()
                 {
                     movieid = (int)reader["mediaid"],
                     rating = (int)reader["rating"],

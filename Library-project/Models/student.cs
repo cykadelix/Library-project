@@ -2,7 +2,7 @@
 
 namespace Library_project.Models
 {
-    public class student
+    public class students
     {
         [Key]
         public int id { get; set; }

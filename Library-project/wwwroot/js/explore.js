@@ -101,6 +101,23 @@ $('#movie-explore-btn').on('click', function () {
     });
 });
 
+$('#audiobook-explore-btn').on('click', function () {
+    $('.media-display-container').height('auto');
+    $.ajax({
+        type: 'GET',
+        url: '/Explore/GetAudiobooks',
+        asyc: false,
+        success: function (result) {
+            console.log(result);
+            $('#media-partial-placeholder').html(result);
+            mediaType = "audiobook";
+
+            loadRandomImages();
+            resizeExploreContainer();
+        }
+    });
+});
+
 function resizeExploreContainer() {
     let $images = $('.media-item-img');
     let loadedImagesCount = 0;

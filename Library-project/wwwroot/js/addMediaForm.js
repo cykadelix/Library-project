@@ -14,8 +14,6 @@
     } else if (selectedType == "Movie") {
         window.location.href = '../AddMedia/AddMovie';
     } else if (selectedType == "Audiobook") {
-        $('.media-entry-form').not('#audiobook-entry-form').hide();
-        $('#audiobook-entry-form').show();
-
+        window.location.href = '../AddMedia/AddAudiobook';
     }
 });
