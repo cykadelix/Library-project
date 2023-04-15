@@ -9,7 +9,7 @@ namespace Library_project.ViewModels
 {
     public class listEmployeeViewModel
     {
-        public List<employee> allEmployees;
+        public List<employees> allEmployees;
     }
 
 }

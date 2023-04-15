@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Library_project.Models
 {
-    public class employee 
+    public class employees
     {
         //employee Name
         public string fname { get; set; }
@@ -30,8 +30,6 @@ namespace Library_project.Models
         public string homeaddress { get; set; }
         public string phonenumber { get; set; }
 
-
-       
         
     }
 

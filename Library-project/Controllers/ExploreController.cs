@@ -9,6 +9,7 @@ using Library_project.ViewModels.Journal;
 using Library_project.ViewModels.Camera;
 using Library_project.ViewModels.Computer;
 using Library_project.ViewModels.Projector;
+
 using Microsoft.AspNetCore.Authorization;
 
 namespace Library_project.Controllers
@@ -32,7 +33,7 @@ namespace Library_project.Controllers
         public List<CameraViewModel>? CameraToList()
         {
             List<CameraViewModel> cameraList = new List<CameraViewModel>();
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
                 conn.Open();
 
@@ -77,7 +78,7 @@ namespace Library_project.Controllers
         public List<ComputerViewModel>? ComputerToList()
         {
             List<ComputerViewModel> computerList = new List<ComputerViewModel>();
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
                 conn.Open();
 
@@ -121,7 +122,7 @@ namespace Library_project.Controllers
         public List<ProjectorViewModel>? ProjectorToList()
         {
             List<ProjectorViewModel> computerList = new List<ProjectorViewModel>();
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
                 conn.Open();
 
@@ -167,7 +168,8 @@ namespace Library_project.Controllers
         [HttpGet]
         public List<EditBookViewModel>? BookToList()
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder("Host=127.0.0.1;Server=localhost;Port=5432;Database=my_library;UserID=postgres;Password=killer89;Pooling=true");
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
+
             dataSourceBuilder.MapEnum<genres>();
             dataSourceBuilder.MapComposite<Location>();
             using var dataSource = dataSourceBuilder.Build();
@@ -208,35 +210,142 @@ namespace Library_project.Controllers
             return Json(BookToList());
         }
 
-        public async Task<IActionResult> GetJournal()
+        //Journals
+        [HttpGet]
+        public List<CreateJournalViewModel>? JournalToList()
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
             dataSourceBuilder.MapComposite<Location>();
-            await using var dataSource = dataSourceBuilder.Build();
-            await using var command = dataSource.CreateCommand("SELECT * FROM journal ,media WHERE journalid=media.mediaId");
-            await using var reader = await command.ExecuteReaderAsync();
+            using var dataSource = dataSourceBuilder.Build();
+            using var command = dataSource.CreateCommand("SELECT * FROM journals");
+            using var reader = command.ExecuteReader();
 
-            var journalList = new JournalListViewModel();
-            List<journal> local_list = new List<journal>();
+            List<CreateJournalViewModel> local_list = new List<CreateJournalViewModel>();
 
-            while (await reader.ReadAsync())
+            while (reader.Read())
             {
-                local_list.Add(new journal()
+                local_list.Add(new CreateJournalViewModel()
                 {
-                    jouranalid = (int)reader["journalid"],
-                    title = (string)reader["title"],
-                    researchers = reader.GetFieldValue<string>(5),
-                    subject = reader.GetFieldValue<string>(6),
-                    length = (int)reader["length"],
-                    releasedate = reader.GetFieldValue<DateOnly>(4)
+                    journalid = reader.GetInt32(0),
+                    title = reader.GetFieldValue<string>(2),
+                    researchers = reader.GetFieldValue<string>(3),
+                    subject = reader.GetFieldValue<string>(4),
+                    length = reader.GetFieldValue<int>(5),
+                    releasedate = reader.GetFieldValue<DateOnly>(6).ToString("yyyy-MM-dd"),
+                    isavailable = reader.GetFieldValue<bool>(7),
                 }); ;
             }
-            journalList.allJournals = local_list;
-            return View(journalList);
-
+            if (local_list.Count == 0)
+            {
+                return null;
+            }
+            return local_list;
         }
 
+        [HttpGet]
+        public PartialViewResult GetJournals()
+        {
+            return PartialView("~/Views/Explore/_JournalView.cshtml", JournalToList());
+        }
+
+        [HttpGet]
+        public IActionResult GetJournalList()
+        {
+            return Json(JournalToList());
+        }
+
+        //Movies
+        [HttpGet]
+        public List<MovieViewModel>? MovieToList()
+        {
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
+
+            dataSourceBuilder.MapComposite<Location>();
+            using var dataSource = dataSourceBuilder.Build();
+            using var command = dataSource.CreateCommand("SELECT * FROM movies");
+            using var reader = command.ExecuteReader();
+
+            List<MovieViewModel> local_list = new List<MovieViewModel>();
+
+            while (reader.Read())
+            {
+                local_list.Add(new MovieViewModel()
+                {
+                    movieid = reader.GetInt32(0),
+                    rating = reader.GetFieldValue<int>(2),
+                    title = reader.GetFieldValue<string>(3),
+                    director = reader.GetFieldValue<string>(4),
+                    genres = reader.GetFieldValue<int>(5),
+                    length = reader.GetFieldValue<int>(6),
+                    releasedate = reader.GetFieldValue<DateOnly>(7).ToString("yyyy-MM-dd"),
+                    availability = reader.GetFieldValue<bool>(8),
+                }); ;
+            }
+            if (local_list.Count == 0)
+            {
+                return null;
+            }
+            return local_list;
+        }
+
+        [HttpGet]
+        public PartialViewResult GetMovies()
+        {
+            return PartialView("~/Views/Explore/_MovieView.cshtml", MovieToList());
+        }
+
+        [HttpGet]
+        public IActionResult GetMovieList()
+        {
+            return Json(MovieToList());
+        }
+
+        //Audiobooks
+        [HttpGet]
+        public List<AudiobookViewModel>? AudiobookToList()
+        {
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
+
+            dataSourceBuilder.MapComposite<Location>();
+            using var dataSource = dataSourceBuilder.Build();
+            using var command = dataSource.CreateCommand("SELECT * FROM audiobooks");
+            using var reader = command.ExecuteReader();
+
+            List<AudiobookViewModel> local_list = new List<AudiobookViewModel>();
+
+            while (reader.Read())
+            {
+                AudiobookViewModel audiobook = new AudiobookViewModel();
+                audiobook.audiobookid = reader.GetInt32(0);
+                audiobook.genre = reader.GetInt32(2);
+                audiobook.title = reader.GetFieldValue<string>(3);
+                audiobook.narrator = reader.GetFieldValue<string>(4);
+                audiobook.author = reader.GetFieldValue<string>(5);
+                audiobook.length = reader.GetFieldValue<TimeOnly>(6).ToString("hh:mm:ss");
+                audiobook.availability = reader.GetFieldValue<bool>(7);
+                local_list.Add(audiobook);
+            }
+
+            reader.Close();
+            if (local_list.Count == 0)
+            {
+                return null;
+            }
+            return local_list;
+        }
+
+        [HttpGet]
+        public PartialViewResult GetAudiobooks()
+        {
+            return PartialView("~/Views/Explore/_AudiobookView.cshtml", AudiobookToList());
+        }
+
+        [HttpGet]
+        public IActionResult GetAudiobookList()
+        {
+            return Json(AudiobookToList());
+        }
     }
 
 }

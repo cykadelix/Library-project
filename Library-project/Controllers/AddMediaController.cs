@@ -1,10 +1,14 @@
-﻿using Library_project.ViewModels.Book;
+﻿using Library_project.Models;
+using Library_project.ViewModels.Audiobook;
+using Library_project.ViewModels.Book;
 using Library_project.ViewModels.Camera;
 using Library_project.ViewModels.Computer;
+using Library_project.ViewModels.Journal;
+using Library_project.ViewModels.Movie;
 using Library_project.ViewModels.Projector;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
-using System.Globalization;
+using System.Security.Policy;
 
 namespace Library_project.Controllers
 {
@@ -33,7 +37,7 @@ namespace Library_project.Controllers
 
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;"))
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
@@ -64,7 +68,7 @@ namespace Library_project.Controllers
         public IActionResult EditCameraForm(int cameraId)
         {
             CameraViewModel cam = new CameraViewModel();
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
 
                 Console.Out.WriteLine("Opening connection");
@@ -75,7 +79,7 @@ namespace Library_project.Controllers
                 {
 
                     var reader = command.ExecuteReader();
-                    while(reader.Read())
+                    while (reader.Read())
                     {
                         cam.cameraid = reader.GetInt32(0);
                         cam.serialnumber = reader.GetString(1);
@@ -95,11 +99,11 @@ namespace Library_project.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;"))
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
-                    var updateCommand = "UPDATE cameras SET serialnumber=@s1, brand=@b1, description=@d1, megapixels=@l1, availability=@a1 " + 
+                    var updateCommand = "UPDATE cameras SET serialnumber=@s1, brand=@b1, description=@d1, megapixels=@l1, availability=@a1 " +
                         "WHERE cameraid='" + model.cameraid + "'";
                     using (var command = new NpgsqlCommand(updateCommand, conn))
                     {
@@ -125,7 +129,7 @@ namespace Library_project.Controllers
         [HttpDelete]
         public IActionResult DeleteCamera(int cameraId)
         {
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
 
                 Console.Out.WriteLine("Opening connection");
@@ -140,7 +144,7 @@ namespace Library_project.Controllers
             }
             return new JsonResult(new { redirectToUrl = Url.Action("AddCamera", "AddMedia") });
         }
-        
+
         //Computers
         public IActionResult AddComputer()
         {
@@ -157,7 +161,7 @@ namespace Library_project.Controllers
 
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
@@ -187,7 +191,7 @@ namespace Library_project.Controllers
         public IActionResult EditComputerForm(int computerId)
         {
             ComputerViewModel comp = new ComputerViewModel();
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
 
                 Console.Out.WriteLine("Opening connection");
@@ -217,7 +221,7 @@ namespace Library_project.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
@@ -246,7 +250,7 @@ namespace Library_project.Controllers
         [HttpDelete]
         public IActionResult DeleteComputer(int computerId)
         {
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
 
                 Console.Out.WriteLine("Opening connection");
@@ -278,7 +282,7 @@ namespace Library_project.Controllers
 
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
@@ -309,7 +313,7 @@ namespace Library_project.Controllers
         public IActionResult EditProjectorForm(int projectorId)
         {
             ProjectorViewModel proj = new ProjectorViewModel();
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
 
                 Console.Out.WriteLine("Opening connection");
@@ -340,7 +344,7 @@ namespace Library_project.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
@@ -370,7 +374,7 @@ namespace Library_project.Controllers
         [HttpDelete]
         public IActionResult DeleteProjector(int projectorId)
         {
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
 
                 Console.Out.WriteLine("Opening connection");
@@ -401,7 +405,7 @@ namespace Library_project.Controllers
             }
             if (ModelState.IsValid)
             {
-                using NpgsqlConnection conn = new NpgsqlConnection(_config["ConnectionString"]);
+                using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
 
                 // Connect to the database
                 conn.Open();
@@ -431,7 +435,7 @@ namespace Library_project.Controllers
         [HttpGet]
         public IActionResult EditBookForm(int bookId)
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
             using var dataSource = dataSourceBuilder.Build();
             using var command = dataSource.CreateCommand("SELECT * FROM books WHERE bookid='" + bookId.ToString() + "'");
@@ -458,7 +462,7 @@ namespace Library_project.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
@@ -487,7 +491,7 @@ namespace Library_project.Controllers
         [HttpDelete]
         public IActionResult DeleteBook(int bookId)
         {
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
 
                 Console.Out.WriteLine("Opening connection");
@@ -501,6 +505,355 @@ namespace Library_project.Controllers
                 }
             }
             return new JsonResult(new { redirectToUrl = Url.Action("AddBook", "AddMedia") });
+        }
+
+        //Journals
+        public IActionResult AddJournal()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddJournal(CreateJournalViewModel model)
+        {
+            if (model.title == null)
+            {
+                return View();
+            }
+            if (ModelState.IsValid)
+            {
+                using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
+                conn.Open();
+
+                using var command = new NpgsqlCommand("WITH local_id AS (INSERT INTO medias VALUES (DEFAULT) RETURNING mediaid) " +
+                            "INSERT INTO journals (journalid, mediaid, title, researchers, subject, length, releasedate, isavailable) VALUES(" +
+                            "(SELECT mediaid from local_id), " +
+                            "(SELECT mediaid from local_id), " +
+                            "@Title, " +
+                            "@Researchers, " +
+                            "@Subject, " +
+                            "@Length, " +
+                            "@DateReleased, " +
+                            "@IsAvailable)", conn)
+                {
+                    Parameters =
+                        {
+                           new("Title", model.title),
+                           new("Researchers", model.researchers),
+                           new("Subject", model.subject),
+                           new("IsAvailable", model.isavailable),
+                           new("DateReleased", DateOnly.Parse(model.releasedate)),
+                           new("Length", model.length)
+                        }
+
+                };
+                using var reader = command.ExecuteReader();
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult EditJournalForm(int journalId)
+        {
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
+
+            using var dataSource = dataSourceBuilder.Build();
+            using var command = dataSource.CreateCommand("SELECT * FROM journals WHERE journalid='" + journalId.ToString() + "'");
+            using var reader = command.ExecuteReader();
+
+            var journal = new CreateJournalViewModel();
+            while (reader.Read())
+            {
+                journal.journalid = reader.GetInt32(0);
+                journal.title = reader.GetFieldValue<string>(2);
+                journal.researchers = reader.GetFieldValue<string>(3);
+                journal.subject = reader.GetFieldValue<string>(4);
+                journal.length = reader.GetFieldValue<int>(5);
+                journal.releasedate = reader.GetFieldValue<DateOnly>(6).ToString("yyyy-MM-dd");
+                journal.isavailable = reader.GetFieldValue<bool>(7);
+            }
+
+            return View("~/Views/AddMedia/AddJournal.cshtml", journal);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateJournal(CreateJournalViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
+
+                {
+                    conn.Open();
+                    var updateCommand = "UPDATE journals SET title=@t1, researchers=@r1, subject=@s1, length=@l1, releasedate=@r2, isavailable=@a1 " +
+                        "WHERE journalid='" + model.journalid + "'";
+                    using (var command = new NpgsqlCommand(updateCommand, conn))
+                    {
+                        command.Parameters.AddWithValue("t1", model.title);
+                        command.Parameters.AddWithValue("r1", model.researchers);
+                        command.Parameters.AddWithValue("s1", model.subject);
+                        command.Parameters.AddWithValue("l1", model.length);
+                        command.Parameters.AddWithValue("r2", DateOnly.Parse(model.releasedate));
+                        if (model.isavailable == null)
+                            command.Parameters.AddWithValue("a1", false);
+                        else
+                            command.Parameters.AddWithValue("a1", true);
+
+                        int nRows = command.ExecuteNonQuery();
+                    }
+                }
+            }
+            return View("~/Views/AddMedia/AddJournal.cshtml");
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteJournal(int journalId)
+        {
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
+            {
+
+                Console.Out.WriteLine("Opening connection");
+                conn.Open();
+
+                var sqlCommand = "DELETE FROM journals WHERE journalid='" + journalId.ToString() + "';";
+                sqlCommand += "DELETE FROM medias WHERE mediaid='" + journalId.ToString() + "'";
+                using (var command = new NpgsqlCommand(sqlCommand, conn))
+                {
+                    int nRows = command.ExecuteNonQuery();
+                }
+            }
+            return new JsonResult(new { redirectToUrl = Url.Action("AddJournal", "AddMedia") });
+        }
+
+        //Movies
+        public IActionResult AddMovie()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddMovie(MovieViewModel model)
+        {
+            if (model.title == null)
+            {
+                return View();
+            }
+
+            if (ModelState.IsValid)
+            {
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
+
+                {
+                    conn.Open();
+                    var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid) VALUES (default) RETURNING mediaid)" +
+                        "INSERT INTO movies (movieid, mediaid, rating, title, director, genres, length, releasedate, availability)";
+                    using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), (SELECT mediaid from newid), @r1, @t1, @d1, @g1, @l1, @r2, @a1)", conn))
+                    {
+                        command.Parameters.AddWithValue("r1", model.rating);
+                        command.Parameters.AddWithValue("t1", model.title);
+                        command.Parameters.AddWithValue("d1", model.director);
+                        command.Parameters.AddWithValue("g1", model.genres);
+                        command.Parameters.AddWithValue("l1", model.length);
+                        command.Parameters.AddWithValue("r2", DateOnly.Parse(model.releasedate));
+                        if (model.availability == null)
+                            command.Parameters.AddWithValue("a1", false);
+                        else
+                            command.Parameters.AddWithValue("a1", true);
+
+                        int nRows = command.ExecuteNonQuery();
+                    }
+                }
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult EditMovieForm(int movieId)
+        {
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
+
+            using var dataSource = dataSourceBuilder.Build();
+            using var command = dataSource.CreateCommand("SELECT * FROM movies WHERE movieid='" + movieId.ToString() + "'");
+            using var reader = command.ExecuteReader();
+
+            var movie = new MovieViewModel();
+            while (reader.Read())
+            {
+                movie.movieid = reader.GetInt32(0);
+                movie.rating = reader.GetFieldValue<int>(2);
+                movie.title = reader.GetFieldValue<string>(3);
+                movie.director = reader.GetFieldValue<string>(4);
+                movie.genres = reader.GetFieldValue<int>(5);
+                movie.length = reader.GetFieldValue<int>(6);
+                movie.releasedate = reader.GetFieldValue<DateOnly>(7).ToString("yyyy-MM-dd");
+                movie.availability = reader.GetFieldValue<bool>(8);
+            }
+
+            return View("~/Views/AddMedia/AddMovie.cshtml", movie);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateMovie(MovieViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
+
+                {
+                    conn.Open();
+                    var updateCommand = "UPDATE movies SET title=@t1, rating=@r1, director=@d1, genres=@g1, length=@l1, releasedate=@r2, availability=@a1 " +
+                        "WHERE movieid='" + model.movieid + "'";
+                    using (var command = new NpgsqlCommand(updateCommand, conn))
+                    {
+                        command.Parameters.AddWithValue("t1", model.title);
+                        command.Parameters.AddWithValue("r1", model.rating);
+                        command.Parameters.AddWithValue("d1", model.director);
+                        command.Parameters.AddWithValue("g1", model.genres);
+                        command.Parameters.AddWithValue("l1", model.length);
+                        command.Parameters.AddWithValue("r2", DateOnly.Parse(model.releasedate));
+                        if (model.availability == null)
+                            command.Parameters.AddWithValue("a1", false);
+                        else
+                            command.Parameters.AddWithValue("a1", true);
+
+                        int nRows = command.ExecuteNonQuery();
+                    }
+                }
+            }
+            return View("~/Views/AddMedia/AddMovie.cshtml");
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteMovie(int movieId)
+        {
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
+            {
+
+                Console.Out.WriteLine("Opening connection");
+                conn.Open();
+
+                var sqlCommand = "DELETE FROM movies WHERE movieid='" + movieId.ToString() + "';";
+                sqlCommand += "DELETE FROM medias WHERE mediaid='" + movieId.ToString() + "'";
+                using (var command = new NpgsqlCommand(sqlCommand, conn))
+                {
+                    int nRows = command.ExecuteNonQuery();
+                }
+            }
+            return new JsonResult(new { redirectToUrl = Url.Action("AddMovie", "AddMedia") });
+        }
+
+        //Movies
+        public IActionResult AddAudiobook()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddAudiobook(AudiobookViewModel model)
+        {
+            if (model.title == null)
+            {
+                return View();
+            }
+            if (ModelState.IsValid)
+            {
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
+
+                {
+                    conn.Open();
+                    var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid) VALUES (default) RETURNING mediaid)" +
+                        "INSERT INTO audiobooks (audiobookid, mediaid, genre, title, narrator, author, length, availability)";
+                    using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), (SELECT mediaid from newid), @g1, @t1, @n1, @a1, @l1, @a2)", conn))
+                    {
+                        command.Parameters.AddWithValue("g1", model.genre);
+                        command.Parameters.AddWithValue("t1", model.title);
+                        command.Parameters.AddWithValue("n1", model.narrator);
+                        command.Parameters.AddWithValue("a1", model.author);
+                        command.Parameters.AddWithValue("l1", TimeOnly.Parse(model.length));
+                        if (model.availability == null)
+                            command.Parameters.AddWithValue("a2", false);
+                        else
+                            command.Parameters.AddWithValue("a2", true);
+
+                        int nRows = command.ExecuteNonQuery();
+                    }
+                }
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult EditAudiobookForm(int audiobookId)
+        {
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
+
+            using var dataSource = dataSourceBuilder.Build();
+            using var command = dataSource.CreateCommand("SELECT * FROM audiobooks WHERE audiobookid='" + audiobookId.ToString() + "'");
+            using var reader = command.ExecuteReader();
+
+            AudiobookViewModel audiobook = new AudiobookViewModel();
+            var movie = new AudiobookViewModel();
+            while (reader.Read())
+            {
+                audiobook.audiobookid = reader.GetInt32(0);
+                audiobook.genre = reader.GetInt32(2);
+                audiobook.title = reader.GetFieldValue<string>(3);
+                audiobook.narrator = reader.GetFieldValue<string>(4);
+                audiobook.author = reader.GetFieldValue<string>(5);
+                audiobook.length = reader.GetFieldValue<TimeOnly>(6).ToString("hh:mm:ss");
+                audiobook.availability = reader.GetFieldValue<bool>(7);
+            }
+
+            return View("~/Views/AddMedia/AddAudiobook.cshtml", audiobook);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateAudiobook(AudiobookViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
+
+                {
+                    conn.Open();
+                    var updateCommand = "UPDATE audiobooks SET genre=@g1, title=@t1, narrator=@n1, author=@a1, length=@l1, availability=@a2 " +
+                        "WHERE audiobookid='" + model.audiobookid + "'";
+                    using (var command = new NpgsqlCommand(updateCommand, conn))
+                    {
+                        command.Parameters.AddWithValue("g1", model.genre);
+                        command.Parameters.AddWithValue("t1", model.title);
+                        command.Parameters.AddWithValue("n1", model.narrator);
+                        command.Parameters.AddWithValue("a1", model.author);
+                        command.Parameters.AddWithValue("l1", TimeOnly.Parse(model.length));
+                        if (model.availability == null)
+                            command.Parameters.AddWithValue("a2", false);
+                        else
+                            command.Parameters.AddWithValue("a2", true);
+
+                        int nRows = command.ExecuteNonQuery();
+                    }
+                }
+            }
+            return View("~/Views/AddMedia/AddAudiobook.cshtml");
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteAudiobook(int audiobookId)
+        {
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
+            {
+
+                Console.Out.WriteLine("Opening connection");
+                conn.Open();
+
+                var sqlCommand = "DELETE FROM audiobooks WHERE audiobookid='" + audiobookId.ToString() + "';";
+                sqlCommand += "DELETE FROM medias WHERE mediaid='" + audiobookId.ToString() + "'";
+                using (var command = new NpgsqlCommand(sqlCommand, conn))
+                {
+                    int nRows = command.ExecuteNonQuery();
+                }
+            }
+            return new JsonResult(new { redirectToUrl = Url.Action("AddAudiobook", "AddMedia") });
         }
     }
 }
