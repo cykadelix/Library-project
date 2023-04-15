@@ -3,17 +3,56 @@
 @{
     ViewBag.Title = "EmployeeIndex";
 }
-<div class="employee-display-container">
-	@foreach (var item in Model.allEmployees)
-	{
-		<div class="employee-display-card">
-			<h1>@item.fname</h1>
-			<h2>Position: @item.position</h2>
-			<h2>Email: @item.email</h2>
-			<img src=""/>
-		</div>
-	}
-</div>
-<div>
-    <a href="/Employee/CreateEmployeeView">Add an Employee</a>
+
+<div class="account-container">
+    <div class="account-controls-panel">
+        <div class="library-logo">
+            Library Logo
+        </div>
+        <div class="user-info">
+            <div class="user-pfp-container">
+                <img src="~/images/pfp_male.svg" id="user-pfp-img" />
+            </div>
+            <h1 class="display-1">Name</h1>
+        </div>
+        <a class="account-nav" asp-area="" asp-controller="Home" asp-action="AdminDashboard">
+            <i class="fa-solid fa-chart-bar"></i>
+            <h2 class="display-2">Dashboard</h2>
+        </a>
+        <a class="account-nav" asp-area="" asp-controller="Home" asp-action="AddMediaForm">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <h2 class="display-2">Inventory</h2>
+        </a>
+        <a class="account-nav active-l" asp-area="" asp-controller="Employee" asp-action="EmployeeIndex">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <h2 class="display-2">Manage Employees</h2>
+        </a>
+        <a class="account-nav" asp-area="" asp-controller="Historian" asp-action="HistorianIndex">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <h2 class="display-2">Manage Historians</h2>
+        </a>
+        <a class="account-nav">
+            <i class="fa-solid fa-gear"></i>
+            <h2 class="display-2">Settings</h2>
+        </a>
+        <a class="account-nav" id="account-signout-btn">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <h2 class="display-2">Sign out</h2>
+        </a>
+    </div>
+    <div class="employee-display-container">
+	    @foreach (var item in Model.allEmployees)
+	    {
+		    <div class="employee-display-card">
+			    <h1>@item.fname</h1>
+			    <h2>Position: @item.position</h2>
+			    <h2>Email: @item.email</h2>
+			    <img src=""/>
+		    </div>
+	    }
+    </div>
+    <div>
+        <a href="/Employee/CreateEmployeeView">Add an Employee</a>
+    </div>
+
 </div>

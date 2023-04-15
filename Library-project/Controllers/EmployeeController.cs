@@ -32,15 +32,13 @@ namespace Library_project.Controllers
                     mname = (string)reader["mname"],
                     lname = (string)reader["lname"],
                     employeeid = (int)reader["employeeID"],
-                    supervisorid = (int)reader["supervisorID"],
                     position = (string)reader["position"],
                     salary = (float)reader["salary"],
                     age = (short)reader["age"],
                     email = (string)reader["eMail"],
                     password = (string)reader["password"],
                     homeaddress = (string)reader["homeaddress"],
-                    phonenumber = (string)reader["phoneNumber"],
-                    supervisor = (employee)reader["supervisor"]
+                    phonenumber = (string)reader["phoneNumber"]
                 });
 
                 employeeList.allEmployees = LocalList;
@@ -55,7 +53,7 @@ namespace Library_project.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult CreateemployeeView()
+        public IActionResult CreateEmployeeView()
         {
             var newemployee = new CreateEmployeeViewModel();
 
@@ -75,56 +73,36 @@ namespace Library_project.Controllers
             example.password = newemployee.password;
             example.homeaddress = newemployee.homeaddress;
             example.phonenumber = newemployee.phonenumber;
-            example.supervisor = newemployee.supervisor;
 
-            if (ModelState.IsValid)
+
+
+
+
+            await using NpgsqlConnection conn = new NpgsqlConnection("Host=127.0.0.1;Server=localhost;Port=5432;Database=my_server;UserID=postgres;Password=Fuentes5;Pooling=true;Include Error Detail=true;");
+
+
+            // Connect to the database
+            await conn.OpenAsync();
+
+            await using var command = new NpgsqlCommand("INSERT INTO employee(VALUES(" +
+                "DEFAULT, @fname, @mname, @lname, @position, @salary, @age, @email, @password, @homeaddress, @phonenumber))", conn)
             {
+                Parameters =
+                    {
+                        new("fname", newemployee.fname),
+                        new("mname", newemployee.mname),
+                        new("lname", newemployee.lname),
+                        new("position", newemployee.position),
+                        new("salary", newemployee.salary),
+                        new("age", newemployee.age),
+                        new("eMail", newemployee.email),
+                        new("password", newemployee.password),
+                        new("homeaddress", newemployee.homeaddress),
+                        new("phoneNumber", newemployee.phonenumber)
+                    }
+            };
+            await using var reader = await command.ExecuteReaderAsync();
 
-
-
-
-
-
-                await using NpgsqlConnection conn = new NpgsqlConnection("Host=127.0.0.1;Server=localhost;Port=5432;Database=my_server;UserID=postgres;Password=Fuentes5;Pooling=true;Include Error Detail=true;");
-
-
-                // Connect to the database
-                await conn.OpenAsync();
-
-                await using var command = new NpgsqlCommand("INSERT INTO employee(VALUES(" +
-                    "@fname, @mname, @lname, DEFAULT, DEFAULT, @phoneNumber, @email, @homeaddress, @position, @salary, @age, @password))", conn)
-                {
-                    Parameters =
-                        {
-                            new("fname", newemployee.fname),
-                            new("mname", newemployee.mname),
-                            new("lname", newemployee.lname),
-                            new("position", newemployee.position),
-                            new("salary", newemployee.salary),
-                            new("age", newemployee.age),
-                            new("eMail", newemployee.email),
-                            new("password", newemployee.password),
-                            new("homeaddress", newemployee.homeaddress),
-                            new("phoneNumber", newemployee.phonenumber),
-                            new("supervisor", newemployee.supervisor),
-                        }
-                };
-                await using var reader = await command.ExecuteReaderAsync();
-
-
-
-
-
-
-
-
-            }
-            else
-            {
-
-                example.fname = "invalid";
-
-            }
             return View(example);
 
 

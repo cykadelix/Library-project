@@ -14,7 +14,7 @@ namespace Library_project.Controllers
 
 
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> HistorianIndex()
         {
 
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
@@ -35,7 +35,7 @@ namespace Library_project.Controllers
                     expertise = (string)reader["expertise"],
                     education = (string)reader["education"],
                     age = (short)reader["age"],
-                    studentstosee = (List<student>)reader["studentsToSee"]
+                    //studentstosee = (List<student>)reader["studentsToSee"]
                 });
 
                 historianList.allHistorians = LocalList;
@@ -82,7 +82,7 @@ namespace Library_project.Controllers
                 await conn.OpenAsync();
 
                 await using var command = new NpgsqlCommand("INSERT INTO historian(VALUES(" +
-                    "@fname, @mname, @lname, DEFAULT, @expertise, @education, @age))", conn)
+                    "DEFAULT, @fname, @mname, @lname, @expertise, @education, @age))", conn)
                 {
                     Parameters =
                         {
@@ -91,7 +91,7 @@ namespace Library_project.Controllers
                             new("lname", newHistorian.lname),
                             new("expertise", newHistorian.expertise),
                             new("education", newHistorian.education),
-                            new("age", newHistorian.age),
+                            new("age", newHistorian.age)
                         }
                 };
                 await using var reader = await command.ExecuteReaderAsync();

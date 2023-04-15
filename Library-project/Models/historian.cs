@@ -21,7 +21,7 @@ namespace Library_project.Models
         public short age { get; set; }
 
         //Relationships
-        public List<student> studentstosee { get; set; }
+       // public List<student> studentstosee { get; set; }
     }
 
 }
