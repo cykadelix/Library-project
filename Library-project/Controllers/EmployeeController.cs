@@ -33,12 +33,12 @@ namespace Library_project.Controllers
                     lname = (string)reader["lname"],
                     employeeid = (int)reader["employeeID"],
                     position = (string)reader["position"],
-                    salary = (float)reader["salary"],
                     age = (short)reader["age"],
                     email = (string)reader["eMail"],
                     password = (string)reader["password"],
                     homeaddress = (string)reader["homeaddress"],
-                    phonenumber = (string)reader["phoneNumber"]
+                    phonenumber = (string)reader["phoneNumber"],
+                    salary = (float)reader["salary"]
                 });
 
                 employeeList.allEmployees = LocalList;
@@ -85,7 +85,7 @@ namespace Library_project.Controllers
             await conn.OpenAsync();
 
             await using var command = new NpgsqlCommand("INSERT INTO employee(VALUES(" +
-                "DEFAULT, @fname, @mname, @lname, @position, @salary, @age, @email, @password, @homeaddress, @phonenumber))", conn)
+                "DEFAULT, @fname, @mname, @lname, @position, @age, @email, @password, @homeaddress, @phonenumber, @salary))", conn)
             {
                 Parameters =
                     {
