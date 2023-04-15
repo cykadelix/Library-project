@@ -32,7 +32,7 @@ namespace Library_project.Controllers
         public List<CameraViewModel>? CameraToList()
         {
             List<CameraViewModel> cameraList = new List<CameraViewModel>();
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
                 conn.Open();
 
@@ -77,7 +77,7 @@ namespace Library_project.Controllers
         public List<ComputerViewModel>? ComputerToList()
         {
             List<ComputerViewModel> computerList = new List<ComputerViewModel>();
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
                 conn.Open();
 
@@ -121,7 +121,7 @@ namespace Library_project.Controllers
         public List<ProjectorViewModel>? ProjectorToList()
         {
             List<ProjectorViewModel> computerList = new List<ProjectorViewModel>();
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
                 conn.Open();
 
@@ -166,7 +166,7 @@ namespace Library_project.Controllers
         [HttpGet]
         public List<EditBookViewModel>? BookToList()
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
             dataSourceBuilder.MapEnum<genres>();
             dataSourceBuilder.MapComposite<Location>();
             using var dataSource = dataSourceBuilder.Build();
@@ -211,7 +211,7 @@ namespace Library_project.Controllers
         [HttpGet]
         public List<CreateJournalViewModel>? JournalToList()
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
             dataSourceBuilder.MapComposite<Location>();
             using var dataSource = dataSourceBuilder.Build();
@@ -256,7 +256,7 @@ namespace Library_project.Controllers
         [HttpGet]
         public List<MovieViewModel>? MovieToList()
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
             dataSourceBuilder.MapComposite<Location>();
             using var dataSource = dataSourceBuilder.Build();
@@ -302,7 +302,7 @@ namespace Library_project.Controllers
         [HttpGet]
         public List<AudiobookViewModel>? AudiobookToList()
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
             dataSourceBuilder.MapComposite<Location>();
             using var dataSource = dataSourceBuilder.Build();

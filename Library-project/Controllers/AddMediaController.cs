@@ -37,7 +37,7 @@ namespace Library_project.Controllers
 
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
@@ -68,7 +68,7 @@ namespace Library_project.Controllers
         public IActionResult EditCameraForm(int cameraId)
         {
             CameraViewModel cam = new CameraViewModel();
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
 
                 Console.Out.WriteLine("Opening connection");
@@ -99,7 +99,7 @@ namespace Library_project.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
@@ -129,7 +129,7 @@ namespace Library_project.Controllers
         [HttpDelete]
         public IActionResult DeleteCamera(int cameraId)
         {
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
 
                 Console.Out.WriteLine("Opening connection");
@@ -161,7 +161,7 @@ namespace Library_project.Controllers
 
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
@@ -191,7 +191,7 @@ namespace Library_project.Controllers
         public IActionResult EditComputerForm(int computerId)
         {
             ComputerViewModel comp = new ComputerViewModel();
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
 
                 Console.Out.WriteLine("Opening connection");
@@ -221,7 +221,7 @@ namespace Library_project.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
@@ -250,7 +250,7 @@ namespace Library_project.Controllers
         [HttpDelete]
         public IActionResult DeleteComputer(int computerId)
         {
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
 
                 Console.Out.WriteLine("Opening connection");
@@ -282,7 +282,7 @@ namespace Library_project.Controllers
 
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
@@ -313,7 +313,7 @@ namespace Library_project.Controllers
         public IActionResult EditProjectorForm(int projectorId)
         {
             ProjectorViewModel proj = new ProjectorViewModel();
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
 
                 Console.Out.WriteLine("Opening connection");
@@ -344,7 +344,7 @@ namespace Library_project.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
@@ -374,7 +374,7 @@ namespace Library_project.Controllers
         [HttpDelete]
         public IActionResult DeleteProjector(int projectorId)
         {
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
 
                 Console.Out.WriteLine("Opening connection");
@@ -405,7 +405,7 @@ namespace Library_project.Controllers
             }
             if (ModelState.IsValid)
             {
-                using NpgsqlConnection conn = new NpgsqlConnection(_config["ConnectionString"]);
+                using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
 
                 // Connect to the database
                 conn.Open();
@@ -435,7 +435,7 @@ namespace Library_project.Controllers
         [HttpGet]
         public IActionResult EditBookForm(int bookId)
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
             using var dataSource = dataSourceBuilder.Build();
             using var command = dataSource.CreateCommand("SELECT * FROM books WHERE bookid='" + bookId.ToString() + "'");
@@ -462,7 +462,7 @@ namespace Library_project.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
@@ -491,7 +491,7 @@ namespace Library_project.Controllers
         [HttpDelete]
         public IActionResult DeleteBook(int bookId)
         {
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
 
                 Console.Out.WriteLine("Opening connection");
@@ -522,7 +522,7 @@ namespace Library_project.Controllers
             }
             if (ModelState.IsValid)
             {
-                using NpgsqlConnection conn = new NpgsqlConnection(_config["ConnectionString"]);
+                using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
                 conn.Open();
 
                 using var command = new NpgsqlCommand("WITH local_id AS (INSERT INTO medias VALUES (DEFAULT) RETURNING mediaid) " +
@@ -555,7 +555,7 @@ namespace Library_project.Controllers
         [HttpGet]
         public IActionResult EditJournalForm(int journalId)
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
             using var dataSource = dataSourceBuilder.Build();
             using var command = dataSource.CreateCommand("SELECT * FROM journals WHERE journalid='" + journalId.ToString() + "'");
@@ -581,7 +581,7 @@ namespace Library_project.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
@@ -609,7 +609,7 @@ namespace Library_project.Controllers
         [HttpDelete]
         public IActionResult DeleteJournal(int journalId)
         {
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
 
                 Console.Out.WriteLine("Opening connection");
@@ -641,7 +641,7 @@ namespace Library_project.Controllers
 
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
@@ -670,7 +670,7 @@ namespace Library_project.Controllers
         [HttpGet]
         public IActionResult EditMovieForm(int movieId)
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
             using var dataSource = dataSourceBuilder.Build();
             using var command = dataSource.CreateCommand("SELECT * FROM movies WHERE movieid='" + movieId.ToString() + "'");
@@ -697,7 +697,7 @@ namespace Library_project.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
@@ -726,7 +726,7 @@ namespace Library_project.Controllers
         [HttpDelete]
         public IActionResult DeleteMovie(int movieId)
         {
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
 
                 Console.Out.WriteLine("Opening connection");
@@ -757,7 +757,7 @@ namespace Library_project.Controllers
             }
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
@@ -785,7 +785,7 @@ namespace Library_project.Controllers
         [HttpGet]
         public IActionResult EditAudiobookForm(int audiobookId)
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
             using var dataSource = dataSourceBuilder.Build();
             using var command = dataSource.CreateCommand("SELECT * FROM audiobooks WHERE audiobookid='" + audiobookId.ToString() + "'");
@@ -812,7 +812,7 @@ namespace Library_project.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
@@ -840,7 +840,7 @@ namespace Library_project.Controllers
         [HttpDelete]
         public IActionResult DeleteAudiobook(int audiobookId)
         {
-            using (var conn = new NpgsqlConnection(_config["ConnectionString"]))
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
 
                 Console.Out.WriteLine("Opening connection");
