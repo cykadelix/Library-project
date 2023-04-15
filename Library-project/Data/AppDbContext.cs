@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Library_project.Models;
-﻿using Library_project.Data.Objects;
+using Library_project.Data.Objects;
 using Microsoft.EntityFrameworkCore;
 
 namespace Library_project.Data
@@ -24,14 +24,14 @@ namespace Library_project.Data
         public DbSet<journal> journals { get; set; }
         public DbSet<movie> movies { get; set; }
 
-        public DbSet<projector> projectors { get; set;}
-        
+        public DbSet<projector> projectors { get; set; }
+
         public DbSet<computer> computers { get; set; }
 
 
         public DbSet<audiobook> checkouts { get; set; }
         public DbSet<review> reviews { get; set; }
-       
+
 
 
         public readonly IConfiguration configuration;
@@ -41,7 +41,7 @@ namespace Library_project.Data
         }
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseNpgsql(configuration.GetConnectionString("local_lib"));
+            options.UseNpgsql("Host=127.0.0.1;Server=localhost;Port=5432;Database=my_library;UserID=postgres;Password=killer89;Pooling=true");
         }
 
 
@@ -52,10 +52,10 @@ namespace Library_project.Data
         }
 
         public AppDbContext() { }
-        
-      
-        
 
-        
+
+
+
+
     }
 }

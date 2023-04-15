@@ -9,9 +9,11 @@ using Library_project.ViewModels.Journal;
 using Library_project.ViewModels.Camera;
 using Library_project.ViewModels.Computer;
 using Library_project.ViewModels.Projector;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Library_project.Controllers
 {
+    [Authorize]
     public class ExploreController : Controller
     {
         private readonly IConfiguration _config;
@@ -160,11 +162,12 @@ namespace Library_project.Controllers
             return Json(ProjectorToList());
         }
 
+      
         //Books
         [HttpGet]
         public List<EditBookViewModel>? BookToList()
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder("Host=127.0.0.1;Server=localhost;Port=5432;Database=my_library;UserID=postgres;Password=killer89;Pooling=true");
             dataSourceBuilder.MapEnum<genres>();
             dataSourceBuilder.MapComposite<Location>();
             using var dataSource = dataSourceBuilder.Build();
@@ -178,19 +181,19 @@ namespace Library_project.Controllers
                 {
                     bookid = reader.GetInt32(0),
                     title = reader.GetString(1),
-                    author = reader.GetString(2),
-                    genres = reader.GetInt32(3),
-                    publicDate = reader.GetFieldValue<DateOnly>(4).ToString(),
-                    pageCount = reader.GetInt32(5),
-                    isbn = reader.GetInt64(6),
-                    isAvailable = reader.GetBoolean(7)
+                    author = reader.GetString(7),
+                    genres = reader.GetInt32(6),
+                    publicDate = reader.GetFieldValue<DateOnly>(2).ToString(),
+                    pageCount = reader.GetInt32(3),
+                    isbn = reader.GetInt64(4),
+                    isAvailable = reader.GetBoolean(5)
                 });
             }
             if (bookList.Count == 0)
             {
                 return null;
             }
-            return bookList;
+              return bookList;
         }
 
         [HttpGet]

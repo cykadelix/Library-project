@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Library_project.Models
 {
-    public class employee
+    public class employee 
     {
         //employee Name
         public string fname { get; set; }
@@ -30,10 +31,7 @@ namespace Library_project.Models
         public string phonenumber { get; set; }
 
 
-        [ForeignKey("employee")]
-        public employee supervisor { get; set; }
-        public int supervisorid { get; set; }
-
+       
         
     }
 

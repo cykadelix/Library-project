@@ -1,5 +1,11 @@
 using Library_project.Data;
+using Library_project.Settings;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 internal class Program
 {
     private static void Main(string[] args)
@@ -9,9 +15,21 @@ internal class Program
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
 
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
+        });
         builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
         opt.UseNpgsql(builder.Configuration.GetConnectionString("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;")));
+
+        
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -24,7 +42,8 @@ internal class Program
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-
+        app.UseAuthentication();
+        app.UseAuthorization();
         app.UseRouting();
 
         app.UseAuthorization();
