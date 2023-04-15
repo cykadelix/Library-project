@@ -12,7 +12,7 @@ namespace Library_project.Data
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<camera> cameras { get; set; }
+        public DbSet<cameras> cameras { get; set; }
         public DbSet<employees> employees { get; set; }
         public DbSet<historians> historians { get; set; }
         public DbSet<students> students { get; set; }

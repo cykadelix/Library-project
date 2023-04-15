@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library_project.Models
 {
-    public class camera
+    public class cameras
     {
         [Key]
         public int cameraid { get; set; }
