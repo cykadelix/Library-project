@@ -5,14 +5,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library_project.Models
 {
-    public class movie
+    public class movies
     {
         [ForeignKey("media")]
         public int mediaid { get; set; }
-        public media media { get; set; }
+        public medias media { get; set; }
 
         [Key]
-        public int movieId { get; set; }
+        public int movieid { get; set; }
 
         public int rating { get; set; }
         public string title { get; set; }
