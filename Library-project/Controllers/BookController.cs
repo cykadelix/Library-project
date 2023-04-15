@@ -23,7 +23,7 @@ namespace Library_project.Controllers
         public async Task<IActionResult> Index()
         {
 
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;");
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder("Host=127.0.0.1;Server=localhost;Port=5432;Database=my_library;UserID=postgres;Password=killer89;Pooling=true");
             dataSourceBuilder.MapEnum<genres>();
             dataSourceBuilder.MapComposite<Location>();
             await using var dataSource = dataSourceBuilder.Build();
@@ -34,7 +34,8 @@ namespace Library_project.Controllers
             var LocalList = new List<books>();
             while (await reader.ReadAsync())
             {
-                LocalList.Add(  new books()
+
+                LocalList.Add(  new books(
                 {
                     bookid = (int)reader["bookId"],
                     title = reader["title"] as string,
@@ -42,11 +43,15 @@ namespace Library_project.Controllers
                     isavailable = (bool)reader["isAvailable"],
                     isbn = (long)reader["isbn"],
                     pagecount = (int)reader["pageCount"],
-                    publicdate = reader.GetFieldValue<DateOnly>(3),
-                    author = reader.GetFieldValue <string>(2),
+                    publicdate = reader.GetFieldValue<DateOnly>(2),
+                    //publicdate = reader.GetFieldValue<DateOnly>(4),
+                    author = reader["author"] as string,
+                    //author = reader.GetFieldValue <string>(2),
                     genres = reader.GetFieldValue<int>(8),
+                    //genres = reader.GetFieldValue<int>(8),
+                    //location = reader.GetFieldValue<Location>(10),
                     location = reader.GetFieldValue<Location>(10)
-                });
+                }); 
 
                 bookList.allBooks = LocalList;
             }

@@ -10,12 +10,13 @@ namespace Library_project.Controllers
 {
     public class employeeController : Controller
     {
-        private readonly string connString = "Host=127.0.0.1;Server=localhost;Port=5432;Database=my_server;UserID=postgres;Password=Fuentes5;Pooling=true";
+        private readonly string connString = "Host=127.0.0.1;Server=localhost;Port=5432;Database=my_library;UserID=postgres;Password=killer89;Pooling=true";
 
 
 
         public async Task<IActionResult> Index()
         {
+            
 
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
             await using var dataSource = dataSourceBuilder.Build();
@@ -32,7 +33,7 @@ namespace Library_project.Controllers
                     mname = (string)reader["mname"],
                     lname = (string)reader["lname"],
                     employeeid = (int)reader["employeeID"],
-                    supervisorid = (int)reader["supervisorID"],
+                    
                     position = (string)reader["position"],
                     salary = (float)reader["salary"],
                     age = (short)reader["age"],
@@ -40,7 +41,6 @@ namespace Library_project.Controllers
                     password = (string)reader["password"],
                     homeaddress = (string)reader["homeaddress"],
                     phonenumber = (string)reader["phoneNumber"],
-                    supervisor = (employees)reader["supervisor"]
                 });
 
                 employeeList.allEmployees = LocalList;

@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -28,11 +29,6 @@ namespace Library_project.Models
         public string password { get; set; }
         public string homeaddress { get; set; }
         public string phonenumber { get; set; }
-
-
-        [ForeignKey("employee")]
-        public employees supervisor { get; set; }
-        public int supervisorid { get; set; }
 
         
     }

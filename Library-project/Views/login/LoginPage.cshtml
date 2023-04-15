@@ -1,0 +1,18 @@
+﻿@using Library_project.Models
+@model userdto
+@{
+    ViewData["Title"]="LoginPage";
+}
+<form action="LoginLandingPage" method="post">
+    <div class="input-wrapper">
+        <label asp-for="UserName">username:</label>
+        <input asp-for="UserName" />
+    </div>
+    <div class="input-wrapper">
+        <label asp-for="password">password:</label>
+        <input asp-for="password" />
+    </div>
+    <div class="input-wrapper">
+        <input type="submit" />
+    </div>
+</form>
