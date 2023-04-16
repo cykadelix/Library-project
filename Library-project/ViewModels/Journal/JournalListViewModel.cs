@@ -4,7 +4,7 @@ namespace Library_project.ViewModels.Journal
 {
     public class JournalListViewModel
     {
-        public List<journal> allJournals { get; set; }
+        public List<journals>? allJournals { get; set; }
 
     }
 }

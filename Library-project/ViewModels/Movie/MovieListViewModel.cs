@@ -5,6 +5,6 @@ namespace Library_project.ViewModels.Movie
 {
     public class MovieListViewModel
     {
-        public List<movie> allMovies;
+        public List<movies>? allMovies;
     }
 }

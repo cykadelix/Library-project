@@ -1,0 +1,188 @@
+﻿@model Library_project.ViewModels.Projector.ProjectorViewModel
+
+@{
+    ViewData["Title"] = "Add projectors";
+}
+
+<div class="account-container">
+    <div class="account-controls-panel">
+        <div class="library-logo">
+            Library Logo
+        </div>
+        <div class="user-info">
+            <div class="user-pfp-container">
+                <img src="~/images/pfp_male.svg" id="user-pfp-img" />
+            </div>
+            <h1 class="display-1">Name</h1>
+        </div>
+        <a class="account-nav" asp-area="" asp-controller="Home" asp-action="AdminDashboard">
+            <i class="fa-solid fa-chart-bar"></i>
+            <h2 class="display-2">Dashboard</h2>
+        </a>
+        <a class="account-nav active-l" asp-area="" asp-controller="AddMedia" asp-action="AddComputer">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <h2 class="display-2">Inventory</h2>
+        </a>
+        <a class="account-nav">
+            <i class="fa-solid fa-gear"></i>
+            <h2 class="display-2">Settings</h2>
+        </a>
+        <a class="account-nav" id="account-signout-btn">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <h2 class="display-2">Sign out</h2>
+        </a>
+    </div>
+    <div class="media-entry-container">
+        <div class="media-form-header">
+            <h1 class="display-1">Choose an entry type</h1>
+            <h2 class="display-2" id="media-form-subheader"></h2>
+            <label for="media-type"></label>
+            <select name="media-type" id="media-type">
+                <option><a>Computer</a></option>
+                <option>Camera</option>
+                <option>Projector</option>
+                <option>Book</option>
+                <option>Journal</option>
+                <option>Movie</option>
+                <option>Audiobook</option>
+            </select>
+        </div>
+        <form class="media-entry-form" id="projector-entry-form" method="post" asp-action="@(Model is null ? "AddProjector" : "UpdateProjector")" asp-controller="AddMedia">
+            <div class="input-wrapper">
+                <label asp-for="serialnumber">Serial Number</label>
+                <input type="text" id="projector-serialnumber" name="serialnumber" value="@(Model is null ? "" : Model.serialnumber)" />
+                <span asp-validation-for="serialnumber" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="brand">Brand</label>
+                <input type="text" id="projector-brand" name="brand" value="@(Model is null ? "" : Model.brand)" />
+                <span asp-validation-for="brand" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="description">Description</label>
+                <input type="text" id="projector-description" name="description" value="@(Model is null ? "" : Model.description)" />
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="lumens">Lumens</label>
+                <input type="text" id="projector-lumens" name="lumens" value="@(Model is null ? "" : Model.lumens)" />
+                <span asp-validation-for="lumens" class="text-danger"></span>
+            </div>
+            <div class="checkbox-wrapper">
+                <input type="checkbox" value=true id="projector-availability" name="availability" @(Model is null ? "checked" : (Model.availability.Value ? "checked" : "")) />
+                <label asp-for="availability">Availability</label>
+            </div>
+
+            @if (Model is null)
+            {
+                <button type="submit" class="media-submit-btn" id="projector-submit-form">Submit</button>
+            }
+            else
+            {
+                <input asp-for="projectorid" type="hidden" class="media-form-serialnumber" value="@Model.projectorid" />
+                <div class="edit-form-controls">
+                    <button type="reset" class="media-cancel-btn" id="projector-cancel-form">Cancel</button>
+                    <button type="submit" class="media-save-btn" id="projector-save-form">Save</button>
+                </div>
+            }
+        </form>
+    </div>
+    <div class="media-recent-transactions-panel">
+        <div class="media-recent-transactions">
+            <div class="recent-transactions-header">
+                <h1 class="display-1">Current Inventory</h1>
+                <h2 class="display-2" id="recent-transactions-subheader"></h2>
+            </div>
+            <div class="table-container" style="display:none">
+                <table id="transactions-table" class="display cell-border" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Serial Number</th>
+                            <th>Brand</th>
+                            <th>Description</th>
+                            <th>Megapixels</th>
+                            <th>Availability</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let mediaList;
+    let table;
+    //Get list of projectors
+    $(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/Explore/GetProjectorList',
+            async: false,
+            datatype: 'json',
+            success: function (result) {
+                mediaList = result;
+            },
+        });
+        //Creating datatable
+        table = $('#transactions-table').DataTable({
+            data: mediaList,
+            columnDefs: [{
+                targets: 2,
+                render: function (data, type, row) {
+                    if (data.length > 30) {
+                        return data.substr(0, 50) + "...";
+
+                    }
+                    else
+                        return data;
+                }
+            }],
+            "columns": [
+                { "data": "serialnumber" },
+                { "data": "brand" },
+                { "data": "description" },
+                { "data": "lumens" },
+                { "data": "availability" },
+                {
+                    "data": null,
+                    "defaultContent": "<a class='edit-row-btn'><i class='fa-solid fa-pen-to-square'></i></a>" +
+                        "<a class='delete-row-btn'><i class='fa-solid fa-trash'></i></a>"
+                }
+            ],
+            "bLengthChange": false,
+            "pageLength": 5
+        });
+        $('.table-container').show();
+    });
+    //Edit button
+    $('#transactions-table').on('click', '.edit-row-btn', function () {
+        let tr = $(this).closest('tr');
+        let projectorId = table.row(tr).data().projectorid;
+
+        window.location.href = "/AddMedia/EditProjectorForm?projectorId=" + projectorId;
+    });
+    //Delete
+    $('#transactions-table').on('click', '.delete-row-btn', function () {
+        let tr = $(this).closest('tr');
+        let projectorid = table.row(tr).data().projectorid;
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/AddMedia/DeleteProjector?projectorId=' + projectorid,
+            async: false,
+            success: function (result) {
+                window.location.href = result.redirectToUrl;
+            },
+        });
+    });
+    //Cancel
+    $('.media-entry-form').on('click', '.media-cancel-btn', function () {
+        window.location.href = "/AddMedia/AddProjector";
+    });
+
+    $("#media-type").val("Projector");
+    $('#projector-availability').on('change', function () {
+        this.value = this.checked ? val(true) : val(false);
+    });
+</script>
