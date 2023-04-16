@@ -16,7 +16,7 @@ namespace Library_project.ViewModels.Employee
         public string password { get; set; } = string.Empty;
         public string homeaddress { get; set; } = string.Empty;
         public string phonenumber { get; set; } = string.Empty;
-        public employee supervisor { get; set; } = new employee();
+        public employees supervisor { get; set; } = new employees();
     }
 
 }

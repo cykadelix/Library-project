@@ -7,6 +7,8 @@
 
 .media-entry-form {
     margin: 0 3vw;
+    display: flex;
+    flex-direction: column;
 }
 
 .media-form-header {
@@ -19,14 +21,77 @@
     }
 
 #media-type {
+    margin-top: 0.5rem;
     padding: 0.5rem;
-    border-radius: 4px;
 }
 
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+    .checkbox-wrapper input {
+        transform: scale(1.25);
+        margin: 0 0.5rem;
+    }
+
+.media-submit-btn {
+    background-color: #2550d2;
+    align-self: flex-end;
+    color: white;
+    border: 1px solid #2550d2;
+    border-radius: 6px;
+    font-size: 1.25rem;
+    width: 50%;
+    height: 3rem;
+    margin: 0.5rem 0;
+}
+
+    .media-submit-btn:hover {
+        background-color: #1e40a8;
+        color: white;
+    }
+
+.edit-form-controls {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+.media-save-btn {
+    background-color: #2550d2;
+    color: white;
+    border: 1px solid #2550d2;
+    border-radius: 6px;
+    font-size: 1.25rem;
+    width: 30%;
+    height: 3rem;
+    margin: 0.5rem 0;
+}
+
+    .media-save-btn:hover {
+        background-color: #1e40a8;
+        color: white;
+    }
+
+.media-cancel-btn {
+    background-color: white;
+    color: gray;
+    border: 1px solid gray;
+    border-radius: 6px;
+    font-size: 1.25rem;
+    width: 30%;
+    height: 3rem;
+    margin: 0.5rem 0.5rem;
+}
+
+    .media-cancel-btn:hover {
+        background-color: #c5c9d2;
+        color: black;
+    }
 
 .media-recent-transactions-panel {
     height: 100%;
-    width: 50vw;
+    width: 60vw;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -42,10 +107,49 @@
     margin: 3vw;
 }
 
-.recent-transactions-header h1{
-    font-size: 3rem;
-}
+    .recent-transactions-header h1 {
+        font-size: 3rem;
+    }
 
 .table-container {
-    margin: 1rem;
+    margin: 1rem 2rem;
+    background-color: white;
+    padding: 3rem 1rem 5rem;
+    display: flex;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px solid #D3D3D3;
+    box-shadow: 0px 0px 4px rgb(146, 168, 233, 0.3);
+}
+
+#transactions-table_wrapper {
+    width: 90%;
+}
+
+#transactions-table {
+    border-radius: 5px;
+    padding: 1rem 0 0.5rem 0;
+    border: none;
+}
+
+    #transactions-table thead {
+        border-radius: 5px 5px 0 0;
+        background-color: #2550d2;
+        color: white;
+    }
+
+    #transactions-table tbody {
+        background-color: white;
+    }
+
+    #transactions-table a {
+        margin: 0 0.4rem;
+    }
+
+.edit-row-btn {
+    cursor: pointer;
+}
+
+.delete-row-btn {
+    cursor: pointer;
 }

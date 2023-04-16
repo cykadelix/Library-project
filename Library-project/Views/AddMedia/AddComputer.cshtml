@@ -1,7 +1,7 @@
-﻿@model Library_project.Models.camera
+﻿@model Library_project.ViewModels.Computer.ComputerViewModel
 
 @{
-    ViewData["Title"] = "Add camera";
+    ViewData["Title"] = "Add computer";
 }
 <div class="account-container">
     <div class="account-controls-panel">
@@ -18,7 +18,7 @@
             <i class="fa-solid fa-chart-bar"></i>
             <h2 class="display-2">Dashboard</h2>
         </a>
-        <a class="account-nav active-l" asp-area="" asp-controller="Home" asp-action="AddMediaForm">
+        <a class="account-nav active-l" asp-area="" asp-controller="AddMedia" asp-action="AddComputer">
             <i class="fa-solid fa-boxes-stacked"></i>
             <h2 class="display-2">Inventory</h2>
         </a>
@@ -47,21 +47,37 @@
             </select>
         </div>
 
-        <form class="media-entry-form" id="computer-entry-form" method="post" asp-action="AddComputer" asp-controller="AddMedia">
-            <div class="input-wrapper">
-                <label asp-for="brand">Brand</label>
-                <input type="text" id="computer-brand" name="brand" />
-            </div>
+        <form class="media-entry-form" id="computer-entry-form" method="post" asp-action="@(Model is null ? "AddComputer" : "UpdateComputer")" asp-controller="AddMedia">
             <div class="input-wrapper">
                 <label asp-for="serialnumber">Serial Number</label>
-                <input type="text" id="computer-serialNumber" name="serialnumber" />
+                <input type="text" id="computer-serialnumber" name="serialnumber" value="@(Model is null ? "" : Model.serialnumber)" />
+                <span asp-validation-for="serialnumber" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="brand">Brand</label>
+                <input type="text" id="computer-brand" name="brand" value="@(Model is null ? "" : Model.brand)" />
+                <span asp-validation-for="brand" class="text-danger"></span>
             </div>
             <div class="input-wrapper">
                 <label asp-for="description">Description</label>
-                <input type="text" id="computer-description" name="description" />
+                <input type="text" id="computer-description" name="description" value="@(Model is null ? "" : Model.description)" />
             </div>
-            <label asp-for="availability">Availability</label>
-            <input type="checkbox" id="computer-availability" name="availability" />
+            <div class="checkbox-wrapper">
+                <input type="checkbox" value=true id="computer-availability" name="availability" @(Model is null ? "checked" : (Model.availability.Value ? "checked" : "")) />
+                <label asp-for="availability">Availability</label>
+            </div>
+            @if (Model is null)
+            {
+                <button type="submit" class="media-submit-btn" id="computer-submit-form">Submit</button>
+            }
+            else
+            {
+                <input asp-for="computerid" type="hidden" class="media-form-serialnumber" value="@Model.computerid" />
+                <div class="edit-form-controls">
+                    <button type="reset" class="media-cancel-btn" id="computer-cancel-form">Cancel</button>
+                    <button type="submit" class="media-save-btn" id="computer-save-form">Save</button>
+                </div>
+            }
         </form>
     </div>
     <div class="media-recent-transactions-panel">
@@ -70,6 +86,95 @@
                 <h1 class="display-1">Current Inventory</h1>
                 <h2 class="display-2" id="recent-transactions-subheader"></h2>
             </div>
+            <div class="table-container" style="display:none">
+                <table id="transactions-table" class="display cell-border" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Serial Number</th>
+                            <th>Brand</th>
+                            <th>Description</th>
+                            <th>Availability</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    let mediaList;
+    let table;
+    //Get list of computers
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/Explore/GetComputerList',
+            async: false,
+            datatype: 'json',
+            success: function (result) {
+                mediaList = result;
+            },
+        });
+        //Creating datatable
+        table = $('#transactions-table').DataTable({
+            data: mediaList,
+            columnDefs: [{
+                targets: 2,
+                render: function (data, type, row) {
+                    if (data.length > 30) {
+                        return data.substr(0, 50) + "...";
+
+                    }
+                    else
+                        return data;
+                }
+            }],
+            "columns": [
+                { "data": "serialnumber" },
+                { "data": "brand" },
+                { "data": "description" },
+                { "data": "availability" },
+                {
+                    "data": null,
+                    "defaultContent": "<a class='edit-row-btn'><i class='fa-solid fa-pen-to-square'></i></a>" +
+                        "<a class='delete-row-btn'><i class='fa-solid fa-trash'></i></a>"
+                }
+            ],
+            "bLengthChange": false,
+            "pageLength": 5
+        });
+        $('.table-container').show();
+    });
+    //Edit button
+    $('#transactions-table').on('click', '.edit-row-btn', function () {
+        let tr = $(this).closest('tr');
+        let computerId = table.row(tr).data().computerid;
+
+        window.location.href = "/AddMedia/EditComputerForm?computerId=" + computerId;
+    });
+    //Delete
+    $('#transactions-table').on('click', '.delete-row-btn', function () {
+        let tr = $(this).closest('tr');
+        let computerId = table.row(tr).data().computerid;
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/AddMedia/DeleteComputer?ComputerId=' + computerId,
+            async: false,
+            success: function (result) {
+                window.location.href = result.redirectToUrl;
+            },
+        });
+    });
+    //Cancel
+    $('.media-entry-form').on('click', '.media-cancel-btn', function () {
+        window.location.href = "/AddMedia/AddComputer";
+    });
+
+    $("#media-type").val("Computer");
+    $('#camera-availability').on('change', function () {
+        this.value = this.checked ? val(true) : val(false);
+    });
+</script>
