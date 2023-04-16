@@ -19,7 +19,7 @@ namespace Library_project.Data
 
 
         public DbSet<medias> medias { get; set; }
-        public DbSet<audiobooks> audioBooks { get; set; }
+        public DbSet<audiobooks> audiobooks { get; set; }
         public DbSet<books> books { get; set; }
         public DbSet<journals> journals { get; set; }
         public DbSet<movies> movies { get; set; }
