@@ -24,14 +24,16 @@ namespace Library_project.Data
         public DbSet<journals> journals { get; set; }
         public DbSet<movies> movies { get; set; }
 
-        public DbSet<projectors> projectors { get; set;}
-        
+        public DbSet<projectors> projectors { get; set; }
+
         public DbSet<computers> computers { get; set; }
 
 
-        public DbSet<audiobooks> checkouts { get; set; }
+        public DbSet<checkouts> checkouts { get; set; }
         public DbSet<reviews> reviews { get; set; }
-       
+
+        public DbSet<user> user { get; set; }
+        public DbSet<userdto> userdtos { get; set; }
 
 
 
@@ -42,7 +44,7 @@ namespace Library_project.Data
         }
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseNpgsql("Host=127.0.0.1;Server=localhost;Port=5432;Database=my_library;UserID=postgres;Password=killer89;Pooling=true");
+            options.UseNpgsql(configuration.GetConnectionString("local_lib"));
         }
 
 
