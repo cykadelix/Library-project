@@ -1,18 +1,22 @@
-﻿using Library_project.Data.Objects;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Library_project.ViewModels.Journal
 {
     public class CreateJournalViewModel
     {
-        
-        
-        public string title { get; set; }
+        public int journalid { get; set; }
 
-        public Location? location { get; set; }
-        public string[] researchers { get; set; }
-        public string[] subject { get; set; }
-        public bool isavailable { get; set; }
-        public int length { get; set; }
-        public DateOnly releasedate { get; set; }
+        [Required(ErrorMessage = "Please enter the title!")]
+        public string? title { get; set; }
+        [Required(ErrorMessage = "Please enter the researcher(s)!")]
+        public string? researchers { get; set; }
+        [Required(ErrorMessage = "Please enter the subject(s)!")]
+        public string? subject { get; set; }
+        [Required(ErrorMessage = "Please enter the length!")]
+        public int? length { get; set; }
+        [Required(ErrorMessage = "Please enter the date!")]
+        public string? releasedate { get; set; }
+        public bool? isavailable { get; set; }
+
     }
 }

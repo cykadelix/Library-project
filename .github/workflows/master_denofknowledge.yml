@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'denofknowledge'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_EBF0E28582704D42A875D9F16628DF59 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8ED83F95E45B40FD868C8EE523EE9506 }}
           package: .

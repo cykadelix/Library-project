@@ -4,12 +4,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library_project.Models
 {
-    public class journal
+    public class journals
     {
         
         [ForeignKey("media")]
         public int mediaid { get; set; }
-        public media media { get; set; }
+        public medias media { get; set; }
         
 
         [Key]
@@ -22,10 +22,10 @@ namespace Library_project.Models
         public Location? location { get; set; }
 
         
-        public string[]   researchers { get; set; }
-        public string[]   subject { get; set; }
+        public string researchers { get; set; }
+        public string subject { get; set; }
         
-        public int      length { get; set; }
+        public int length { get; set; }
         public DateOnly releasedate { get; set; }
         public bool isavailable { get; set; }
         

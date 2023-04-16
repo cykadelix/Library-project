@@ -23,7 +23,11 @@ namespace Library_project.Controllers
         public async Task<IActionResult> Index()
         {
 
+<<<<<<< HEAD
             var dataSourceBuilder = new NpgsqlDataSourceBuilder("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;");
+=======
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder("Host=127.0.0.1;Server=localhost;Port=5432;Database=my_library;UserID=postgres;Password=killer89;Pooling=true");
+>>>>>>> origin/master
             dataSourceBuilder.MapEnum<genres>();
             dataSourceBuilder.MapComposite<Location>();
             await using var dataSource = dataSourceBuilder.Build();
@@ -31,10 +35,11 @@ namespace Library_project.Controllers
             await using var reader = await command.ExecuteReaderAsync();
 
             var bookList = new BookListViewModel();
-            var LocalList = new List<book>();
+            var LocalList = new List<books>();
             while (await reader.ReadAsync())
             {
-                LocalList.Add(  new book()
+
+                LocalList.Add(  new books(
                 {
                     bookid = (int)reader["bookId"],
                     title = reader["title"] as string,
@@ -42,11 +47,15 @@ namespace Library_project.Controllers
                     isavailable = (bool)reader["isAvailable"],
                     isbn = (long)reader["isbn"],
                     pagecount = (int)reader["pageCount"],
-                    publicdate = reader.GetFieldValue<DateOnly>(3),
-                    author = reader.GetFieldValue <string[]>(2),
+                    publicdate = reader.GetFieldValue<DateOnly>(2),
+                    //publicdate = reader.GetFieldValue<DateOnly>(4),
+                    author = reader["author"] as string,
+                    //author = reader.GetFieldValue <string>(2),
                     genres = reader.GetFieldValue<int>(8),
+                    //genres = reader.GetFieldValue<int>(8),
+                    //location = reader.GetFieldValue<Location>(10),
                     location = reader.GetFieldValue<Location>(10)
-                });
+                }); 
 
                 bookList.allBooks = LocalList;
             }
@@ -122,9 +131,9 @@ namespace Library_project.Controllers
             while(innerRead.Read())
             {
                 localBook.title = innerRead.GetFieldValue<string>(1);
-                localBook.author = innerRead.GetFieldValue<string[]>(2);
-                localBook.genres = innerRead.GetFieldValue<genres[]>(3);
-                localBook.publicDate = innerRead.GetFieldValue<DateOnly>(4);
+                localBook.author = innerRead.GetFieldValue<string>(2);
+                localBook.genres = innerRead.GetFieldValue<int>(3);
+                localBook.publicDate = innerRead.GetFieldValue<string>(4);
                 localBook.pageCount = innerRead.GetFieldValue<int>(4);
                 localBook.isbn = innerRead.GetFieldValue<int>(6);
                 localBook.isAvailable = innerRead.GetFieldValue<bool>(7);

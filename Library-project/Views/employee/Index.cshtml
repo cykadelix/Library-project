@@ -1,0 +1,14 @@
+﻿@using Library_project.ViewModels
+@model listEmployeeViewModel;
+@{
+    ViewBag.Title = "Index";
+}
+<div class="media-display-container">
+	@foreach (var item in Model.allEmployees)
+	{
+		<div class="media-display-card">
+			<h1>@item.fname</h1>
+			
+		</div>
+	}
+</div>

@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace Library_project.Models
 {
-    public class employee
+    public class employees
     {
-        //Employee Name
+        //employee Name
         public string fname { get; set; }
         public string mname { get; set; }
         public string lname { get; set; }
 
-        //Employee Data
+        //employee Data
         [Key] public int employeeid { get; set; }
 
        
@@ -28,11 +29,6 @@ namespace Library_project.Models
         public string password { get; set; }
         public string homeaddress { get; set; }
         public string phonenumber { get; set; }
-
-
-        [ForeignKey("employee")]
-        public employee supervisor { get; set; }
-        public int supervisorid { get; set; }
 
         
     }

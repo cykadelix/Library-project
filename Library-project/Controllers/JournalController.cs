@@ -26,16 +26,16 @@ namespace Library_project.Controllers
             await using var reader = await command.ExecuteReaderAsync();
 
             var journalList = new JournalListViewModel();
-            List<journal> local_list = new List<journal>();
+            List<journals> local_list = new List<journals>();
 
             while(await reader.ReadAsync())
             {
-                local_list.Add(new journal()
+                local_list.Add(new journals()
                 {
                     journalid = (int)reader["journalid"],
                     title = (string)reader["title"],
-                    researchers = reader.GetFieldValue<string[]>(5),
-                    subject = reader.GetFieldValue<string[]>(6),
+                    researchers = reader.GetFieldValue<string>(5),
+                    subject = reader.GetFieldValue<string>(6),
                     length = (int)reader["length"],
                     releasedate = reader.GetFieldValue<DateOnly>(4)
                 }) ; ;

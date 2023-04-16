@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Library_project.Models
 {
-    public class review
+    public class reviews
     {
         //Review info
         [Key] 
@@ -20,12 +20,12 @@ namespace Library_project.Models
 
         [ForeignKey("media")]
         public int mediaid { get; set; }
-        public media media { get; set; }
+        public medias media { get; set; }
 
 
         [ForeignKey("student")]
         public int studentid { get; set; }
-        public student student { get; set; }
+        public students student { get; set; }
 
 
     }
