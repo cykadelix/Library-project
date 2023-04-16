@@ -22,4 +22,12 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.29.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Repository\" />
+    <None Remove="Interfaces\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Repository\" />
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
 </Project>
