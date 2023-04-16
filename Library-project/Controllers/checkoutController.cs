@@ -68,10 +68,10 @@ namespace Library_project.Controllers
 			await using var reader = await command.ExecuteReaderAsync();
 
 			var checkoutList = new CheckoutListViewModel();
-			var LocalList = new List<checkout>();
+			var LocalList = new List<checkouts>();
 			while (await reader.ReadAsync())
 			{
-				LocalList.Add(new checkout()
+				LocalList.Add(new checkouts()
 				{
 					checkoutid = (int)reader["checkoutid"],
 					studentid = (int)reader["studentid"] ,
