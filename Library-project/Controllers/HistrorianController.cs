@@ -34,7 +34,7 @@ namespace Library_project.Controllers
                     historianid = (int)reader["historianID"],
                     expertise = (string)reader["expertise"],
                     education = (string)reader["education"],
-                    age = (short)reader["age"],
+                    birthday = (DateOnly)reader["birthday"],
                     studentstosee = (List<students>)reader["studentsToSee"]
                 });
 

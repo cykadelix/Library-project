@@ -1,6 +1,5 @@
 using Library_project.Data;
 using Library_project.Settings;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

@@ -13,19 +13,16 @@ namespace Library_project.Models
         [Key] 
         public int reviewid { get; set; }
         
-        public string evaluation { get; set; }
+        public string? evaluation { get; set; }
         public short rating { get; set; }
-
-
 
         [ForeignKey("media")]
         public int mediaid { get; set; }
-        public medias media { get; set; }
-
+        public medias? media { get; set; }
 
         [ForeignKey("student")]
         public int studentid { get; set; }
-        public students student { get; set; }
+        public students? student { get; set; }
 
 
     }

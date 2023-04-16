@@ -36,7 +36,7 @@ namespace Library_project.Controllers
                     
                     position = (string)reader["position"],
                     salary = (float)reader["salary"],
-                    age = (short)reader["age"],
+                    birthday = (DateOnly)reader["birthday"],
                     email = (string)reader["eMail"],
                     password = (string)reader["password"],
                     homeaddress = (string)reader["homeaddress"],

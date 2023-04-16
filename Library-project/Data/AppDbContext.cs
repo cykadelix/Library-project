@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Library_project.Models;
 using Library_project.Data.Objects;
-using Microsoft.EntityFrameworkCore;
 
 namespace Library_project.Data
 {
