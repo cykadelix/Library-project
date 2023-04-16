@@ -27,7 +27,7 @@ namespace Library_project.Repository
             return await context.activities.ToListAsync();
         }
 
-        //Returns a activity  that is going to happen in the given room number
+        //Returns an activity that is going to happen in the given room number
         public async Task<activities> GetByRoomAsync(int rno)
         {
             return await context.activities.FirstOrDefaultAsync(i => i.room_number == rno);

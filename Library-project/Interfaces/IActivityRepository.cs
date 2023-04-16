@@ -5,6 +5,7 @@ namespace Library_project.Interfaces
 {
 	public interface IActivityRepository
 	{
+        Task<IEnumerable<activities>> GetAll();
         Task<activities> GetByRoomAsync(int rno);
         Task<IEnumerable<activities>> GetActivityByLength(TimeOnly length);
 
