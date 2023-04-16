@@ -23,11 +23,11 @@ namespace Library_project.Controllers
         public async Task<IActionResult> Index()
         {
 
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder("Host = 127.0.0.1; Server = localhost; Port = 5432; Database = library_server; UserID = postgres; Password = hatem0199; Pooling = true");
             dataSourceBuilder.MapEnum<genres>();
             dataSourceBuilder.MapComposite<Location>();
             await using var dataSource = dataSourceBuilder.Build();
-            await using var command = dataSource.CreateCommand("SELECT * FROM book ,media WHERE bookId=media.mediaId");
+            await using var command = dataSource.CreateCommand("SELECT * FROM books ,media WHERE bookId=media.mediaId");
             await using var reader = await command.ExecuteReaderAsync();
 
             var bookList = new BookListViewModel();
@@ -70,7 +70,7 @@ namespace Library_project.Controllers
 
             if (ModelState.IsValid)
             {
-                await using NpgsqlConnection conn = new NpgsqlConnection(_config["ConnectionString"]);
+                await using NpgsqlConnection conn = new NpgsqlConnection("Host = 127.0.0.1; Server = localhost; Port = 5432; Database = library_server; UserID = postgres; Password = hatem0199; Pooling = true");
 
                 // Connect to the database
                 await conn.OpenAsync();
@@ -106,7 +106,7 @@ namespace Library_project.Controllers
             
         public async Task<IActionResult> Edit(int book_id)
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config["ConnectionString"]);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder("Host = 127.0.0.1; Server = localhost; Port = 5432; Database = library_server; UserID = postgres; Password = hatem0199; Pooling = true");
 
             await using var dataSource = dataSourceBuilder.Build();
             await using var command = dataSource.CreateCommand("SELECT * FROM books");

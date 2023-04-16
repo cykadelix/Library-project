@@ -47,8 +47,8 @@ namespace Library_project.Controllers
             movieList.allMovies = local_list;
             return View(movieList);
         
-        
-        
+ 
+            
         }
     }
 }
