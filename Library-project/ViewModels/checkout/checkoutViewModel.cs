@@ -1,6 +1,6 @@
-﻿namespace Library_project.ViewModels.checkout
+﻿namespace Library_project.ViewModels.Checkout
 {
-    public class checkoutViewModel
+    public class CheckoutViewModel
     {
         public int studentid { get; set; }
         public int mediaid { get; set; }
