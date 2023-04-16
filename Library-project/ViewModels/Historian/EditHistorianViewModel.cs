@@ -14,7 +14,7 @@ namespace Library_project.ViewModels.Historian
         public short? age { get; set; }
 
         //Relationships
-        public List<students>? studentstosee { get; set; }
+        //public List<students>? studentstosee { get; set; }
 
     }
 }

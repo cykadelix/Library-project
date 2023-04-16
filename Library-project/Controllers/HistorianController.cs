@@ -10,16 +10,19 @@ namespace Library_project.Controllers
 {
     public class HistorianController : Controller
     {
-        private readonly string connString = "Host=127.0.0.1;Server=localhost;Port=5432;Database=my_server;UserID=postgres;Password=Fuentes5;Pooling=true";
+        private readonly IConfiguration _config;
+        public HistorianController(IConfiguration config)
+        {
+            _config = config;
+        }
 
 
-
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> HistorianIndex()
         {
 
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
             await using var dataSource = dataSourceBuilder.Build();
-            await using var command = dataSource.CreateCommand("SELECT * FROM historian");
+            await using var command = dataSource.CreateCommand("SELECT * FROM historians");
             await using var reader = await command.ExecuteReaderAsync();
 
             var historianList = new listHistorianViewModel();
@@ -31,11 +34,11 @@ namespace Library_project.Controllers
                     fname = (string)reader["fname"],
                     mname = (string)reader["mname"],
                     lname = (string)reader["lname"],
-                    historianid = (int)reader["historianID"],
+                    historianid = (int)reader["historianid"],
                     expertise = (string)reader["expertise"],
                     education = (string)reader["education"],
-                    birthday = (DateOnly)reader["birthday"],
-                    studentstosee = (List<students>)reader["studentsToSee"]
+                    age = (short)reader["age"],
+                    //studentstosee = (List<student>)reader["studentsToSee"]
                 });
 
                 historianList.allHistorians = LocalList;
@@ -66,18 +69,15 @@ namespace Library_project.Controllers
             example.expertise = newHistorian.expertise;
             example.education = newHistorian.education;
             example.age = newHistorian.age;
-            example.studentstosee = newHistorian.studentstosee;
 
             if (ModelState.IsValid)
             {
-                await using NpgsqlConnection conn = new NpgsqlConnection("Host=127.0.0.1;Server=localhost;Port=5432;Database=my_server;UserID=postgres;Password=Fuentes5;Pooling=true;Include Error Detail=true;");
-
-
+                await using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
                 // Connect to the database
                 await conn.OpenAsync();
 
-                await using var command = new NpgsqlCommand("INSERT INTO historian(VALUES(" +
-                    "@fname, @mname, @lname, DEFAULT, @expertise, @education, @age))", conn)
+                await using var command = new NpgsqlCommand("INSERT INTO historians (VALUES(" +
+                    "DEFAULT, @fname, @mname, @lname, @expertise, @education, @age))", conn)
                 {
                     Parameters =
                         {
@@ -86,18 +86,10 @@ namespace Library_project.Controllers
                             new("lname", newHistorian.lname),
                             new("expertise", newHistorian.expertise),
                             new("education", newHistorian.education),
-                            new("age", newHistorian.age),
+                            new("age", newHistorian.age)
                         }
                 };
                 await using var reader = await command.ExecuteReaderAsync();
-
-
-
-
-
-
-
-
             }
             else
             {
@@ -106,24 +98,15 @@ namespace Library_project.Controllers
 
             }
             return View(example);
-
-
         }
-
-
-
-
 
         public async Task<IActionResult> Edit(int historian_id)
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
             await using var dataSource = dataSourceBuilder.Build();
             await using var command = dataSource.CreateCommand("SELECT * FROM historian");
             await using var reader = await command.ExecuteReaderAsync();
-
-
-
 
             var localHistorian = new EditHistorianViewModel();
             reader.Read();
@@ -140,8 +123,6 @@ namespace Library_project.Controllers
             }
 
             return View(localHistorian);
-
-
         }
         public async Task<IActionResult> Edit(EditHistorianViewModel editHistorianvm)
         {

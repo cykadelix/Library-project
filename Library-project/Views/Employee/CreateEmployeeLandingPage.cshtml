@@ -1,7 +1,7 @@
-﻿@using Library_project.ViewModels.Historian
-@model listHistorianViewModel;
+﻿@using Library_project.ViewModels.Employee
+@model CreateEmployeeViewModel
 @{
-    ViewBag.Title = "HistorianIndex";
+    ViewBag.Title = "CreateLandingPage";
 }
 <div class="account-container">
     <div class="account-controls-panel">
@@ -22,11 +22,11 @@
             <i class="fa-solid fa-boxes-stacked"></i>
             <h2 class="display-2">Inventory</h2>
         </a>
-        <a class="account-nav" asp-area="" asp-controller="Employee" asp-action="EmployeeIndex">
+        <a class="account-nav active-l" asp-area="" asp-controller="Employee" asp-action="EmployeeIndex">
             <i class="fa-solid fa-boxes-stacked"></i>
             <h2 class="display-2">Manage Employees</h2>
         </a>
-        <a class="account-nav active-l" asp-area="" asp-controller="Historian" asp-action="HistorianIndex">
+        <a class="account-nav" asp-area="" asp-controller="Historian" asp-action="HistorianIndex">
             <i class="fa-solid fa-boxes-stacked"></i>
             <h2 class="display-2">Manage Historians</h2>
         </a>
@@ -39,19 +39,21 @@
             <h2 class="display-2">Sign out</h2>
         </a>
     </div>
-    <div class="historian-display-container">
-	    @foreach (var item in Model.allHistorians)
-	    {
-		    <div class="historian-display-card">
-			    <h1>@item.fname</h1>
-			    <h2>Expertise: @item.expertise</h2>
-			    <h2>From: @item.education</h2>
-			    <img src=""/>
-		    </div>
-	    }
-    </div>
-    <div>
-        <a href="/Historian/CreateHistorianView">Add a Historian</a>
-    </div>
+
 
 </div>
+<
+<p>@Model.fname</p>
+<p>@Model.mname</p>
+<p>@Model.lname</p>
+<p>@Model.position</p>
+<p>@Model.salary.ToString()</p>
+<p>@Model.age.ToString()</p>
+<p>@Model.email</p>
+<p>@Model.password</p>
+<p>@Model.homeaddress</p>
+<p>@Model.phonenumber</p>
+
+
+
+

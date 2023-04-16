@@ -20,10 +20,10 @@ namespace Library_project.Models
 
         public string? position { get; set; }
         public float salary { get; set; }
+        public short age { get; set; }
 
         //Personal Info
         public string? email { get; set; }
-        public DateOnly birthday { get; set; }
         public string? password { get; set; }
         public string? homeaddress { get; set; }
         public string? phonenumber { get; set; }
