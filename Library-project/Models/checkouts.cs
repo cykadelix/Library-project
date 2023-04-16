@@ -12,15 +12,17 @@ namespace Library_project.Models
         //Review info
         public DateTime checkoutdate { get; set; }
         public DateTime returndate { get; set; }
-        [Key] public int checkoutid { get; set; }
+        [Key]
+        public int checkoutid { get; set; }
 
-        [ForeignKey("students")] 
-        public students student { get; set; }
+        [ForeignKey("students")]
         public int studentid { get; set; }
+        public students? student { get; set; }
+      
 
         [ForeignKey("media")]
         public int mediaid { get; set; }
-        public medias media { get; set; }
+        public medias? media { get; set; }
 
         
     }

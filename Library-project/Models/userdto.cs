@@ -2,8 +2,8 @@
 {
     public class userdto
     {
-        public string UserName { get; set; } = string.Empty;
-        public string password {get; set;} = string.Empty;
-        public string role {get; set;} = "guest";
+        public string? UserName { get; set; } = string.Empty;
+        public string? password {get; set;} = string.Empty;
+        public string? role {get; set;} = "guest";
     }
 }

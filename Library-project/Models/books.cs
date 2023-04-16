@@ -10,9 +10,8 @@ namespace Library_project.Models
         [Key]
         public int bookid { get; set; }
 
-        
-        public string title { get; set; }
-        public string author { get; set; }
+        public string? title { get; set; }
+        public string? author { get; set; }
         public int genres { get; set; }
         public DateOnly publicdate { get; set; }
 
@@ -21,11 +20,11 @@ namespace Library_project.Models
         public int pagecount { get; set; }
 
         public long isbn { get; set; }
-        public Boolean isavailable { get; set; }
+        public bool availability { get; set; }
         
         [ForeignKey("media")]
         public int mediaid { get; set; }
-        public medias media { get; set; }
+        public medias? media { get; set; }
 
        
 

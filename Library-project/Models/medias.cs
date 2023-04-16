@@ -9,7 +9,7 @@ namespace Library_project.Models
         [Key]
         public int mediaid { get; set; }
         [NotMapped]
-        public Location location { get; set; }
+        public Location? location { get; set; }
 
         ICollection<reviews>? reviews { get; set; }
         

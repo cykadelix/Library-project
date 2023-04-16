@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <PackageReference Include="jQuery.Validation" Version="1.19.5" />
-    <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.4">
@@ -23,4 +22,18 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.29.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Repository\" />
+    <None Remove="Interfaces\" />
+    <None Remove="Views\Room\" />
+    <None Remove="Views\Student\" />
+    <None Remove="Views\Activity\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Repository\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Views\Room\" />
+    <Folder Include="Views\Student\" />
+    <Folder Include="Views\Activity\" />
+  </ItemGroup>
 </Project>

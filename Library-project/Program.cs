@@ -1,6 +1,7 @@
 using Library_project.Data;
+using Library_project.Interfaces;
+using Library_project.Repository;
 using Library_project.Settings;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -15,6 +16,9 @@ internal class Program
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
+        builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+        builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+        builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
         {
             options.TokenValidationParameters = new TokenValidationParameters

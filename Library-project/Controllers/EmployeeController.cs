@@ -1,7 +1,7 @@
 using Library_project.Data.Enums;
 using Library_project.Data.Objects;
 using Library_project.Models;
-using Library_project.ViewModels;
+using Library_project.ViewModels.Employee;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Npgsql;
@@ -10,17 +10,20 @@ namespace Library_project.Controllers
 {
     public class employeeController : Controller
     {
-        private readonly string connString = "Host=127.0.0.1;Server=localhost;Port=5432;Database=my_library;UserID=postgres;Password=killer89;Pooling=true";
-
-
-
-        public async Task<IActionResult> Index()
+        private readonly IConfiguration _config;
+        public employeeController(IConfiguration config)
         {
-            
+            _config = config;
+        }
 
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
+
+        public async Task<IActionResult> EmployeeIndex()
+        {
+
+
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
             await using var dataSource = dataSourceBuilder.Build();
-            await using var command = dataSource.CreateCommand("SELECT * FROM employee");
+            await using var command = dataSource.CreateCommand("SELECT * FROM employees");
             await using var reader = await command.ExecuteReaderAsync();
 
             var employeeList = new listEmployeeViewModel();
@@ -32,15 +35,14 @@ namespace Library_project.Controllers
                     fname = (string)reader["fname"],
                     mname = (string)reader["mname"],
                     lname = (string)reader["lname"],
-                    employeeid = (int)reader["employeeID"],
-                    
+                    employeeid = (int)reader["employeeid"],
                     position = (string)reader["position"],
-                    salary = (float)reader["salary"],
                     age = (short)reader["age"],
-                    email = (string)reader["eMail"],
+                    email = (string)reader["email"],
                     password = (string)reader["password"],
                     homeaddress = (string)reader["homeaddress"],
-                    phonenumber = (string)reader["phoneNumber"],
+                    phonenumber = (string)reader["phonenumber"],
+                    salary = (float)reader["salary"]
                 });
 
                 employeeList.allEmployees = LocalList;
@@ -55,14 +57,14 @@ namespace Library_project.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult CreateemployeeView()
+        public IActionResult CreateEmployeeView()
         {
             var newemployee = new CreateEmployeeViewModel();
 
             return View(newemployee);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateemployeeLandingPage(CreateEmployeeViewModel newemployee)
+        public async Task<IActionResult> CreateEmployeeLandingPage(CreateEmployeeViewModel newemployee)
         {
             CreateEmployeeViewModel example = new CreateEmployeeViewModel();
             example.fname = newemployee.fname;
@@ -75,75 +77,40 @@ namespace Library_project.Controllers
             example.password = newemployee.password;
             example.homeaddress = newemployee.homeaddress;
             example.phonenumber = newemployee.phonenumber;
-            example.supervisor = newemployee.supervisor;
 
-            if (ModelState.IsValid)
+            await using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
+            // Connect to the database
+            await conn.OpenAsync();
+
+            await using var command = new NpgsqlCommand("INSERT INTO employees (VALUES(" +
+                "DEFAULT, @fname, @mname, @lname, @position, @age, @email, @password, @homeaddress, @phonenumber, @salary))", conn)
             {
+                Parameters =
+                    {
+                        new("fname", newemployee.fname),
+                        new("mname", newemployee.mname),
+                        new("lname", newemployee.lname),
+                        new("position", newemployee.position),
+                        new("salary", newemployee.salary),
+                        new("age", newemployee.age),
+                        new("email", newemployee.email),
+                        new("password", newemployee.password),
+                        new("homeaddress", newemployee.homeaddress),
+                        new("phonenumber", newemployee.phonenumber)
+                    }
+            };
+            await using var reader = await command.ExecuteReaderAsync();
 
-
-
-
-
-
-                await using NpgsqlConnection conn = new NpgsqlConnection("Host=127.0.0.1;Server=localhost;Port=5432;Database=my_server;UserID=postgres;Password=Fuentes5;Pooling=true;Include Error Detail=true;");
-
-
-                // Connect to the database
-                await conn.OpenAsync();
-
-                await using var command = new NpgsqlCommand("INSERT INTO employee(VALUES(" +
-                    "@fname, @mname, @lname, DEFAULT, DEFAULT, @phoneNumber, @email, @homeaddress, @position, @salary, @age, @password))", conn)
-                {
-                    Parameters =
-                        {
-                            new("fname", newemployee.fname),
-                            new("mname", newemployee.mname),
-                            new("lname", newemployee.lname),
-                            new("position", newemployee.position),
-                            new("salary", newemployee.salary),
-                            new("age", newemployee.age),
-                            new("eMail", newemployee.email),
-                            new("password", newemployee.password),
-                            new("homeaddress", newemployee.homeaddress),
-                            new("phoneNumber", newemployee.phonenumber),
-                            new("supervisor", newemployee.supervisor),
-                        }
-                };
-                await using var reader = await command.ExecuteReaderAsync();
-
-
-
-
-
-
-
-
-            }
-            else
-            {
-
-                example.fname = "invalid";
-
-            }
             return View(example);
-
-
         }
-
-
-
-
 
         public async Task<IActionResult> Edit(int employee_id)
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
             await using var dataSource = dataSourceBuilder.Build();
-            await using var command = dataSource.CreateCommand("SELECT * FROM employee");
+            await using var command = dataSource.CreateCommand("SELECT * FROM employees");
             await using var reader = await command.ExecuteReaderAsync();
-
-
-
 
             var localemployee = new EditEmployeeViewModel();
             reader.Read();
@@ -165,8 +132,6 @@ namespace Library_project.Controllers
             }
 
             return View(localemployee);
-
-
         }
         public async Task<IActionResult> Edit(EditEmployeeViewModel editemployeevm)
         {
