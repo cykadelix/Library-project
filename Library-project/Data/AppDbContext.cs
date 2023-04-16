@@ -52,6 +52,7 @@ namespace Library_project.Data
         {
             base.OnModelCreating(mb);
             mb.Entity<Location>().HasNoKey();
+            mb.Entity<userdto>().HasNoKey();
         }
 
         public AppDbContext() { }

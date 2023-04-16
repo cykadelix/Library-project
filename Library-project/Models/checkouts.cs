@@ -14,7 +14,7 @@ namespace Library_project.Models
         public DateTime returndate { get; set; }
         [Key] public int checkoutid { get; set; }
 
-        [ForeignKey("student")] 
+        [ForeignKey("students")] 
         public students student { get; set; }
         public int studentid { get; set; }
 
