@@ -4,6 +4,6 @@ namespace Library_project.ViewModels.Book
 {
     public class BookViewModel
     {
-        public List<book> AllBooks { get; set; }
+        public List<books> AllBooks { get; set; }
     }
 }

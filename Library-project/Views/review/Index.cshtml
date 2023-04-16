@@ -2,18 +2,10 @@
 @model reviewViewModel
 @{
     ViewData["Title"] = "Index";
+}
 
-    <form action="CreateReviewLandingPage">
-        <div class="input-wrapper">
-            <label asp-for="mediaid">Item id </label>
-            <input asp-for="mediaid">
-        </div>
-        <div class="input-wrapper">
-            <label asp-for="evaluation"> Enter evaluation</label>
-            <input asp-for="evaluation">
-        </div>
-        <div class="input-wrapper">
-            <input type ="submit">
-        </div>
+<div> 
+<a href="/review/createReview"> leave a review  </a>
+</div>
     </form>
 }

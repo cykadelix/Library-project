@@ -1,4 +1,7 @@
-﻿using Library_project.ViewModels.checkout;
+﻿using Library_project.ViewModels.Checkout;
+using Library_project.Data.Enums;
+using Library_project.Data.Objects;
+using Library_project.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Npgsql;
@@ -17,27 +20,78 @@ namespace Library_project.Controllers
         }
         public IActionResult Index()
         {
-            var newCheckout = new checkoutViewModel();
+            return View();
+        }
+
+        public IActionResult createCheckout()
+        {
+            var newCheckout = new CheckoutViewModel();
             return View(newCheckout);
         }
 
         [HttpPost]
 
-        public async Task<IActionResult> CreateCheckOutLandingPage(checkoutViewModel newCheckout)
+
+        public async Task<IActionResult> CreateCheckoutLandingPage(CheckoutViewModel newCheckout)
         {
             await using NpgsqlConnection conn = new NpgsqlConnection(_config["ConnectionString"]);
-
-            await conn.OpenAsync();
-            await using var cmd = new NpgsqlCommand("INSERT INTO checkout (checkoutid, returndate,.... " +
-            " VALUES(DEFAULT, '2000-12-07', @studentid ))", conn)
+            
+            if (ModelState.IsValid)
             {
-                Parameters =
+                await using NpgsqlConnection conn = new NpgsqlConnection("Host = 127.0.0.1; Server = localhost; Port = 5432; Database = library_server; UserID = postgres; Password = hatem0199; Pooling = true");
+
+                await conn.OpenAsync();
+       
+                await using var cmd = new NpgsqlCommand("INSERT INTO checkouts (studentid, mediaid, checkoutdate,returndate, checkoutid) VALUES (@studentid, @mediaid, current_timestamp, current_timestamp + INTERVAL '1 month', DEFAULT)", conn)
                 {
-                    new("sturdentid",newCheckout.studentid)
-                }
-            };
-            await using var reader = await cmd.ExecuteReaderAsync();
-            return View(newCheckout);
+                    Parameters =
+                    {
+                        new("studentid",newCheckout.studentid),
+                        new("mediaid", newCheckout.mediaid)
+                    }
+                };
+                await using var reader = await cmd.ExecuteReaderAsync();
+                
+            }   
+            else
+            {
+                newCheckout.studentid = -1;
+            }
+			var newCheckout2 = new CreateCheckoutViewModel();
+			return View(newCheckout2);
         }
-    }
+
+		public async Task<IActionResult> CheckoutList()
+		{
+
+			var dataSourceBuilder = new NpgsqlDataSourceBuilder("Host = 127.0.0.1; Server = localhost; Port = 5432; Database = library_server; UserID = postgres; Password = hatem0199; Pooling = true");
+
+			await using var dataSource = dataSourceBuilder.Build();
+			await using var command = dataSource.CreateCommand("SELECT * FROM checkouts");
+			await using var reader = await command.ExecuteReaderAsync();
+
+			var checkoutList = new CheckoutListViewModel();
+			var LocalList = new List<checkouts>();
+			while (await reader.ReadAsync())
+			{
+				LocalList.Add(new checkouts()
+				{
+					checkoutid = (int)reader["checkoutid"],
+					studentid = (int)reader["studentid"] ,
+					mediaid = (int)reader["mediaid"],
+					checkoutdate = (DateTime)reader["checkoutdate"],
+					returndate = (DateTime)reader["returndate"]
+				
+					//publicdate = reader.GetFieldValue<DateOnly>(3),
+				
+				});
+
+				checkoutList.allCheckouts = LocalList;
+			}
+
+
+			return View(checkoutList);
+
+		}
+	}
 }

@@ -5,10 +5,12 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Library_project</RootNamespace>
-    <UserSecretsId>8542b893-24fb-4826-8d9e-0b211a57fa3d</UserSecretsId>
+    <UserSecretsId>534afa50-a2f0-491d-8f20-5022d67dbf68</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="jQuery.Validation" Version="1.19.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.4">
       <PrivateAssets>all</PrivateAssets>
@@ -17,11 +19,21 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.13" />
     <PackageReference Include="Npgsql" Version="7.0.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.29.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
-    <Folder Include="wwwroot\images\" />
+    <None Remove="Repository\" />
+    <None Remove="Interfaces\" />
+    <None Remove="Views\Room\" />
+    <None Remove="Views\Student\" />
+    <None Remove="Views\Activity\" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Folder Include="Repository\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Views\Room\" />
+    <Folder Include="Views\Student\" />
+    <Folder Include="Views\Activity\" />
+  </ItemGroup>
 </Project>

@@ -1,0 +1,203 @@
+﻿@using Library_project.Data.Enums
+@model Library_project.ViewModels.Audiobook.AudiobookViewModel
+@{
+    ViewData["Title"] = "Add camera";
+}
+
+<div class="account-container">
+    <div class="account-controls-panel">
+        <div class="library-logo">
+            Library Logo
+        </div>
+        <div class="user-info">
+            <div class="user-pfp-container">
+                <img src="~/images/pfp_male.svg" id="user-pfp-img" />
+            </div>
+            <h1 class="display-1">Name</h1>
+        </div>
+        <a class="account-nav" asp-area="" asp-controller="Home" asp-action="AdminDashboard">
+            <i class="fa-solid fa-chart-bar"></i>
+            <h2 class="display-2">Dashboard</h2>
+        </a>
+        <a class="account-nav active-l" asp-area="" asp-controller="AddMedia" asp-action="AddComputer">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <h2 class="display-2">Inventory</h2>
+        </a>
+        <a class="account-nav">
+            <i class="fa-solid fa-gear"></i>
+            <h2 class="display-2">Settings</h2>
+        </a>
+        <a class="account-nav" id="account-signout-btn">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <h2 class="display-2">Sign out</h2>
+        </a>
+    </div>
+    <div class="media-entry-container">
+        <div class="media-form-header">
+            <h1 class="display-1">Choose an entry type</h1>
+            <h2 class="display-2" id="media-form-subheader"></h2>
+            <label for="media-type"></label>
+            <select name="media-type" id="media-type">
+                <option><a>Computer</a></option>
+                <option>Camera</option>
+                <option>Projector</option>
+                <option>Book</option>
+                <option>Journal</option>
+                <option>Movie</option>
+                <option>Audiobook</option>
+            </select>
+        </div>
+        <form class="media-entry-form" id="audiobook-entry-form" method="post" asp-action="@(Model is null ? "AddAudiobook" : "UpdateAudiobook")" asp-controller="AddMedia">
+            <div class="input-wrapper">
+                <label asp-for="title">Title</label>
+                <input type="text" id="audiobook-title" name="title" value="@(Model is null ? "" : Model.title)" />
+                <span asp-validation-for="title" class="text-danger"></span>
+            </div>
+            <label asp-for="genre">Genres</label>
+            <select asp-for="genre" asp-items="Html.GetEnumSelectList<genres>()" style="margin-bottom: 0.5rem;">
+                <option>Select type</option>
+            </select>
+            <div class="input-wrapper">
+                <label asp-for="narrator">Narrator</label>
+                <input type="text" id="audiobook-narrator" name="narrator" value="@(Model is null ? "" : Model.narrator)" />
+                <span asp-validation-for="narrator" class="text-danger"></span>
+            </div>
+            <span asp-validation-for="genre"></span>
+            <div class="input-wrapper">
+                <label asp-for="author">Author</label>
+                <input type="text" id="audiobook-author" name="author" value="@(Model is null ? "" : Model.author)" />
+                <span asp-validation-for="author" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="length">Length</label>
+                <input type="text" placeholder="hh:mm:ss" id="audiobook-length" name="length" value="@(Model is null ? "" : Model.length)" />
+                <span asp-validation-for="length" class="text-danger"></span>
+            </div>
+            <div class="checkbox-wrapper">
+                <input type="checkbox" value=true id="audiobook-availability" name="availability" @(Model is null ? "checked" : (Model.availability.Value ? "checked" : "")) />
+                <label asp-for="availability">Availability</label>
+            </div>
+
+            @if (Model is null)
+            {
+                <button type="submit" class="media-submit-btn" id="audiobook-submit-form">Submit</button>
+            }
+            else
+            {
+                <input asp-for="audiobookid" type="hidden" class="media-form-serialnumber" value="@Model.audiobookid" />
+                <div class="edit-form-controls">
+                    <button type="reset" class="media-cancel-btn" id="audiobook-cancel-form">Cancel</button>
+                    <button type="submit" class="media-save-btn" id="audiobook-save-form">Save</button>
+                </div>
+            }
+        </form>
+    </div>
+    <div class="media-recent-transactions-panel">
+        <div class="media-recent-transactions">
+            <div class="recent-transactions-header">
+                <h1 class="display-1">Current Inventory</h1>
+                <h2 class="display-2" id="recent-transactions-subheader"></h2>
+            </div>
+            <div class="table-container" style="display:none">
+                <table id="transactions-table" class="display cell-border" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Genre</th>
+                            <th>Narrator</th>
+                            <th>Author</th>
+                            <th>Length (hh:mm:ss)</th>
+                            <th>Availability</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let mediaList;
+    let table;
+    let genreEnum = {
+        0: "romance",
+        1: "mystery",
+        2: "Sci_Fi",
+        3: "Drama",
+        4: "Horror",
+        5: "Fantasy",
+        6: "Young_Adule",
+        7: "Comedy",
+        8: "Manga",
+        9: "Non_Fiction",
+        10: "History",
+    };
+    //Get list of books
+    $(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/Explore/GetAudiobookList',
+            async: false,
+            datatype: 'json',
+            success: function (result) {
+                mediaList = result;
+            },
+        });
+        //Creating datatable
+        table = $('#transactions-table').DataTable({
+            data: mediaList,
+            "columns": [
+                { "data": "title" },
+                {
+                    "data": "genre",
+                    "render": function (data, type, row) {
+                        return genreEnum[data];
+                    }
+                },
+                { "data": "narrator" },
+                { "data": "author" },
+                { "data": "length" },
+                { "data": "availability" },
+                {
+                    "data": null,
+                    "defaultContent": "<a class='edit-row-btn'><i class='fa-solid fa-pen-to-square'></i></a>" +
+                        "<a class='delete-row-btn'><i class='fa-solid fa-trash'></i></a>"
+                }
+            ],
+            "bLengthChange": false,
+            "pageLength": 5
+        });
+        $('.table-container').show();
+    });
+    //Edit button
+    $('#transactions-table').on('click', '.edit-row-btn', function () {
+        let tr = $(this).closest('tr');
+        let audiobookId = table.row(tr).data().audiobookid;
+
+        window.location.href = "/AddMedia/EditAudiobookForm?audiobookId=" + audiobookId;
+    });
+    //Delete
+    $('#transactions-table').on('click', '.delete-row-btn', function () {
+        let tr = $(this).closest('tr');
+        let audiobookId = table.row(tr).data().audiobookid;
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/AddMedia/DeleteAudiobook?audiobookId=' + audiobookId,
+            async: false,
+            success: function (result) {
+                window.location.href = result.redirectToUrl;
+            },
+        });
+    });
+    //Cancel
+    $('.media-entry-form').on('click', '.media-cancel-btn', function () {
+        window.location.href = "/AddMedia/AddAudiobook";
+    });
+
+    $("#media-type").val("Audiobook");
+    $('#audiobook-availability').on('change', function () {
+        this.value = this.checked ? val(true) : val(false);
+    });
+</script>

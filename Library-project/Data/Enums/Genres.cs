@@ -2,13 +2,13 @@
 {
     public enum genres
     {
-        romance,
+        Romance,
         mystery,
         Sci_Fi,
         Drama,
         Horror,
         Fantasy,
-        Young_Adule,
+        Young_Adult,
         Comedy,
         Manga,
         Non_Fiction,
