@@ -1,4 +1,4 @@
-﻿using Library_project.ViewModels.review;
+﻿using Library_project.ViewModels.Review;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Npgsql;
@@ -22,12 +22,12 @@ namespace Library_project.Controllers
         }
         public IActionResult createReview()
         {
-            var newReview = new reviewViewModel();
+            var newReview = new ReviewViewModel();
             return View(newReview);
         }
 
 
-        public async Task<IActionResult> CreateReviewLandingPage(reviewViewModel newReview)
+        public async Task<IActionResult> CreateReviewLandingPage(ReviewViewModel newReview)
         {
             if (ModelState.IsValid)
             {
