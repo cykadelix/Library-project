@@ -45,7 +45,6 @@
             <div class="media-form-header">
                 <h1 class="display-1">Create or manage an employee</h1>
             </div>
-
             <form class="user-entry-form" asp-controller="Employee" asp-action="@(Model is null ? "CreateEmployee" : "UpdateEmployee")" method="post">
                 <div class="input-wrapper-horizontal">
                     <label asp-for="fname">First Name</label>
@@ -156,7 +155,7 @@
 <script>
     let employeeList;
     let table;
-    //Get list of books
+    //Get list of employees
     $(function () {
         $.ajax({
             type: 'GET',
@@ -164,7 +163,6 @@
             async: false,
             datatype: 'json',
             success: function (result) {
-                console.log(result);
                 employeeList = result;
             },
         });
@@ -217,10 +215,5 @@
     //Cancel
     $('.user-entry-form').on('click', '.media-cancel-btn', function () {
         window.location.href = "/Employee/EmployeeIndex";
-    });
-
-    $("#media-type").val("Audiobook");
-    $('#audiobook-availability').on('change', function () {
-        this.value = this.checked ? val(true) : val(false);
     });
 </script>

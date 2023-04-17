@@ -48,6 +48,10 @@ namespace Library_project.Controllers
                     salary = (float)reader["salary"]
                 });
             }
+            if(employeeList.Count == 0)
+            {
+                return null;
+            }
             return employeeList;
         }
 
@@ -152,12 +156,9 @@ namespace Library_project.Controllers
         {
             using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
-
-                Console.Out.WriteLine("Opening connection");
                 conn.Open();
 
                 var sqlCommand = "DELETE FROM employees WHERE employeeid='" + employeeId.ToString() + "';";
-                sqlCommand += "DELETE FROM medias WHERE mediaid='" + employeeId.ToString() + "'";
                 using (var command = new NpgsqlCommand(sqlCommand, conn))
                 {
                     int nRows = command.ExecuteNonQuery();
