@@ -9,12 +9,13 @@ using Library_project.ViewModels.Journal;
 using Library_project.ViewModels.Camera;
 using Library_project.ViewModels.Computer;
 using Library_project.ViewModels.Projector;
+using Library_project.ViewModels.Movie;
+using Library_project.ViewModels.Audiobook;
 
 using Microsoft.AspNetCore.Authorization;
 
 namespace Library_project.Controllers
 {
-   
     public class ExploreController : Controller
     {
         private readonly IConfiguration _config;

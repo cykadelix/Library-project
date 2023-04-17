@@ -9,7 +9,7 @@ namespace Library_project.ViewModels.Historian
 {
     public class listHistorianViewModel
     {
-        public List<historians> allHistorians;
+        public List<historians> allHistorians { get; set; } = new List<historians>();
     }
 
 }

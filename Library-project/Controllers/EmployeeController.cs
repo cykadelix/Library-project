@@ -1,177 +1,170 @@
 using Library_project.Data.Enums;
 using Library_project.Data.Objects;
 using Library_project.Models;
-using Library_project.ViewModels;
+using Library_project.ViewModels.Employee;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Npgsql;
+using System.Security.Policy;
 
 namespace Library_project.Controllers
 {
     public class employeeController : Controller
     {
-        private readonly string connString = "Host=127.0.0.1;Server=localhost;Port=5432;Database=my_library;UserID=postgres;Password=killer89;Pooling=true";
-
-
-
-        public async Task<IActionResult> Index()
+        private readonly IConfiguration _config;
+        public employeeController(IConfiguration config)
         {
-            
+            _config = config;
+        }
 
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
-            await using var dataSource = dataSourceBuilder.Build();
-            await using var command = dataSource.CreateCommand("SELECT * FROM employee");
-            await using var reader = await command.ExecuteReaderAsync();
 
-            var employeeList = new listEmployeeViewModel();
-            var LocalList = new List<employees>();
-            while (await reader.ReadAsync())
+        public IActionResult EmployeeIndex()
+        {
+            return View();
+        }
+
+        public List<CreateEmployeeViewModel>? EmployeeToList()
+        {
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
+            using var dataSource = dataSourceBuilder.Build();
+            using var command = dataSource.CreateCommand("SELECT * FROM employees");
+            using var reader = command.ExecuteReader();
+
+            var employeeList = new List<CreateEmployeeViewModel>();
+            while (reader.Read())
             {
-                LocalList.Add(new employees()
+                employeeList.Add(new CreateEmployeeViewModel()
                 {
                     fname = (string)reader["fname"],
                     mname = (string)reader["mname"],
                     lname = (string)reader["lname"],
-                    employeeid = (int)reader["employeeID"],
-                    
+                    employeeid = (int)reader["employeeid"],
                     position = (string)reader["position"],
-                    salary = (float)reader["salary"],
                     age = (short)reader["age"],
-                    email = (string)reader["eMail"],
+                    email = (string)reader["email"],
                     password = (string)reader["password"],
                     homeaddress = (string)reader["homeaddress"],
-                    phonenumber = (string)reader["phoneNumber"],
+                    phonenumber = (string)reader["phonenumber"],
+                    salary = (float)reader["salary"]
                 });
-
-                employeeList.allEmployees = LocalList;
             }
-
-
-            return View(employeeList);
-
+            if(employeeList.Count == 0)
+            {
+                return null;
+            }
+            return employeeList;
         }
-        public IActionResult employeeForm()
-        {
-            return View();
-        }
+
         [HttpGet]
-        public IActionResult CreateemployeeView()
+        public IActionResult GetEmployeeList()
         {
-            var newemployee = new CreateEmployeeViewModel();
-
-            return View(newemployee);
+            return Json(EmployeeToList());
         }
+
+
         [HttpPost]
-        public async Task<IActionResult> CreateemployeeLandingPage(CreateEmployeeViewModel newemployee)
+        public IActionResult CreateEmployee(CreateEmployeeViewModel model)
         {
-            CreateEmployeeViewModel example = new CreateEmployeeViewModel();
-            example.fname = newemployee.fname;
-            example.mname = newemployee.mname;
-            example.lname = newemployee.lname;
-            example.position = newemployee.position;
-            example.salary = newemployee.salary;
-            example.age = newemployee.age;
-            example.email = newemployee.email;
-            example.password = newemployee.password;
-            example.homeaddress = newemployee.homeaddress;
-            example.phonenumber = newemployee.phonenumber;
-            example.supervisor = newemployee.supervisor;
-
-            if (ModelState.IsValid)
+            if (model.fname == null)
             {
+                return View("~/Views/Employee/EmployeeIndex.cshtml");
+            }
+            using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
+            // Connect to the database
+            conn.Open();
 
+            using var command = new NpgsqlCommand("INSERT INTO employees (VALUES(" +
+                "DEFAULT, @fname, @mname, @lname, @position, @salary, @email, @password, @homeaddress, @phonenumber, @age))", conn)
+            {
+                Parameters =
+                    {
+                        new("fname", model.fname),
+                        new("mname", (model.mname == null? "" : model.fname)),
+                        new("lname", model.lname),
+                        new("position", model.position),
+                        new("salary", model.salary),
+                        new("age", model.age),
+                        new("email", model.email),
+                        new("password", model.password),
+                        new("homeaddress", model.homeaddress),
+                        new("phonenumber", model.phonenumber)
+                    }
+            };
+            using var reader = command.ExecuteReader();
 
+            return View("~/Views/Employee/EmployeeIndex.cshtml");
+        }
 
+        [HttpGet]
+        public IActionResult EditEmployee(int employeeId)
+        {
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
+            using var dataSource = dataSourceBuilder.Build();
+            using var command = dataSource.CreateCommand("SELECT * FROM employees WHERE employeeid ='" + employeeId + "'");
+            using var reader = command.ExecuteReader();
 
+            var localemployee = new CreateEmployeeViewModel();
+            while (reader.Read())
+            {
+                localemployee.employeeid = reader.GetFieldValue<int>(0);
+                localemployee.fname = reader.GetFieldValue<string>(1);
+                localemployee.mname = reader.GetFieldValue<string>(2);
+                localemployee.lname = reader.GetFieldValue<string>(3);
+                localemployee.position = reader.GetFieldValue<string>(4);
+                localemployee.salary = reader.GetFieldValue<float>(5);
+                localemployee.email = reader.GetFieldValue<string>(6);
+                localemployee.password = reader.GetFieldValue<string>(7);
+                localemployee.homeaddress = reader.GetFieldValue<string>(8);
+                localemployee.phonenumber = reader.GetFieldValue<string>(9);
+                localemployee.age = reader.GetFieldValue<short>(10);
+            }
 
-                await using NpgsqlConnection conn = new NpgsqlConnection("Host=127.0.0.1;Server=localhost;Port=5432;Database=my_server;UserID=postgres;Password=Fuentes5;Pooling=true;Include Error Detail=true;");
+            return View("~/Views/Employee/EmployeeIndex.cshtml", localemployee);
+        }
 
-
-                // Connect to the database
-                await conn.OpenAsync();
-
-                await using var command = new NpgsqlCommand("INSERT INTO employee(VALUES(" +
-                    "@fname, @mname, @lname, DEFAULT, DEFAULT, @phoneNumber, @email, @homeaddress, @position, @salary, @age, @password))", conn)
+        [HttpPost]
+        public IActionResult UpdateEmployee(CreateEmployeeViewModel model)
+        {
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
+            {
+                conn.Open();
+                string queryParameters = "fname=@f1, mname=@m1, lname=@l1, position=@p1, salary=@s1, age=@a1, email=@e1, password=@p2, homeaddress=@h1, phonenumber=@p3 ";
+                string updateCommand = "UPDATE employees SET " + queryParameters + "WHERE employeeid='" + model.employeeid + "'";
+                using (var command = new NpgsqlCommand(updateCommand, conn))
                 {
-                    Parameters =
-                        {
-                            new("fname", newemployee.fname),
-                            new("mname", newemployee.mname),
-                            new("lname", newemployee.lname),
-                            new("position", newemployee.position),
-                            new("salary", newemployee.salary),
-                            new("age", newemployee.age),
-                            new("eMail", newemployee.email),
-                            new("password", newemployee.password),
-                            new("homeaddress", newemployee.homeaddress),
-                            new("phoneNumber", newemployee.phonenumber),
-                            new("supervisor", newemployee.supervisor),
-                        }
-                };
-                await using var reader = await command.ExecuteReaderAsync();
+                    command.Parameters.AddWithValue("f1", model.fname);
+                    command.Parameters.AddWithValue("m1", model.mname);
+                    command.Parameters.AddWithValue("l1", model.lname);
+                    command.Parameters.AddWithValue("p1", model.position);
+                    command.Parameters.AddWithValue("s1", model.salary);
+                    command.Parameters.AddWithValue("a1", model.age);
+                    command.Parameters.AddWithValue("e1", model.email);
+                    command.Parameters.AddWithValue("p2", model.password);
+                    command.Parameters.AddWithValue("h1", model.homeaddress);
+                    command.Parameters.AddWithValue("p3", model.phonenumber);
 
+                    int nRows = command.ExecuteNonQuery();
 
-
-
-
-
-
-
+                }
             }
-            else
-            {
-
-                example.fname = "invalid";
-
-            }
-            return View(example);
-
-
+            return View("~/Views/Employee/EmployeeIndex.cshtml");
         }
 
-
-
-
-
-        public async Task<IActionResult> Edit(int employee_id)
+        [HttpDelete]
+        public IActionResult DeleteEmployee(int employeeId)
         {
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
-
-            await using var dataSource = dataSourceBuilder.Build();
-            await using var command = dataSource.CreateCommand("SELECT * FROM employee");
-            await using var reader = await command.ExecuteReaderAsync();
-
-
-
-
-            var localemployee = new EditEmployeeViewModel();
-            reader.Read();
-            using var innerRead = reader.GetData(0);
-
-            while (innerRead.Read())
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
-                localemployee.fname = innerRead.GetFieldValue<string>(1);
-                localemployee.mname = innerRead.GetFieldValue<string>(2);
-                localemployee.lname = innerRead.GetFieldValue<string>(3);
-                localemployee.position = innerRead.GetFieldValue<string>(6);
-                localemployee.salary = innerRead.GetFieldValue<float>(7);
-                localemployee.age = innerRead.GetFieldValue<short>(7);
-                localemployee.email = innerRead.GetFieldValue<string>(7);
-                localemployee.password = innerRead.GetFieldValue<string>(7);
-                localemployee.homeaddress = innerRead.GetFieldValue<string>(7);
-                localemployee.phonenumber = innerRead.GetFieldValue<string>(7);
-                localemployee.supervisor = innerRead.GetFieldValue<employees>(7);
+                conn.Open();
+
+                var sqlCommand = "DELETE FROM employees WHERE employeeid='" + employeeId.ToString() + "';";
+                using (var command = new NpgsqlCommand(sqlCommand, conn))
+                {
+                    int nRows = command.ExecuteNonQuery();
+                }
             }
-
-            return View(localemployee);
-
-
-        }
-        public async Task<IActionResult> Edit(EditEmployeeViewModel editemployeevm)
-        {
-
-            return RedirectToAction("Index");
+            return new JsonResult(new { redirectToUrl = Url.Action("EmployeeIndex", "Employee") });
         }
     }
 }

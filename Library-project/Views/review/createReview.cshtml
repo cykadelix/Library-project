@@ -1,0 +1,27 @@
+﻿@using Library_project.ViewModels.Review
+@model ReviewViewModel
+@{
+    ViewData["Title"] = "createReview";
+    }
+<form action="CreateReviewLandingPage">
+    <div class="input-wrapper">
+        <label asp-for="mediaid">media id </label>
+        <input asp-for="mediaid">
+    </div>
+    <div class="input-wrapper">
+        <label asp-for="evaluation"> Enter evaluation</label>
+        <input asp-for="evaluation">
+    </div>
+    <div class="input-wrapper">
+        <label asp-for="rating"> rate item</label>
+        <input asp-for="rating">
+    </div>
+    <div class="input-wrapper">
+        <label asp-for="studentid"> student id</label>
+        <input asp-for="studentid">
+    </div>
+    <div class="input-wrapper">
+        <input type="submit">
+    </div>
+</form>
+}

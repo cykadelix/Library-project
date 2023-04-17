@@ -1,20 +1,189 @@
 ﻿@using Library_project.ViewModels.Historian
-@model listHistorianViewModel;
+@model CreateHistorianViewModel;
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "HistorianIndex";
 }
-<div class="Historian-display-container">
-	@foreach (var item in Model.allHistorians)
-	{
-		<div class="media-display-card">
-			<h1>@item.fname</h1>
-			<h2>Written by @item.expertise</h2>
-			<h2>Genre - @item.education</h2>
-			<img src=""/>
-		</div>
-	}
+<div class="account-container">
+    <div class="account-controls-panel">
+        <div class="library-logo">
+            Library Logo
+        </div>
+        <div class="user-info">
+            <div class="user-pfp-container">
+                <img src="~/images/pfp_male.svg" id="user-pfp-img" />
+            </div>
+            <h1 class="display-1">Name</h1>
+        </div>
+        <a class="account-nav" asp-area="" asp-controller="Home" asp-action="AdminDashboard">
+            <i class="fa-solid fa-chart-bar"></i>
+            <h2 class="display-2">Dashboard</h2>
+        </a>
+        <a class="account-nav" asp-area="" asp-controller="AddMedia" asp-action="AddComputer">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <h2 class="display-2">Inventory</h2>
+        </a>
+        <a class="account-nav" asp-area="" asp-controller="Employee" asp-action="EmployeeIndex">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <h2 class="display-2">Manage Employees</h2>
+        </a>
+        <a class="account-nav active-l" asp-area="" asp-controller="Historian" asp-action="HistorianIndex">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <h2 class="display-2">Manage Historians</h2>
+        </a>
+        <a class="account-nav">
+            <i class="fa-solid fa-gear"></i>
+            <h2 class="display-2">Settings</h2>
+        </a>
+        <a class="account-nav" id="account-signout-btn">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <h2 class="display-2">Sign out</h2>
+        </a>
+    </div>
+    <div class="user-combined-panel">
+        <div class="user-entry-container">
+            <div class="media-form-header">
+                <h1 class="display-1">Create or manage a historian</h1>
+            </div>
+            <form class="user-entry-form" asp-action="@(Model is null ? "CreateHistorian" : "UpdateHistorian")" asp-controller="Historian" method="post">
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="fname">First name</label>
+                    <input asp-for="fname" value="@(Model is null ? "" : Model.fname)">
+                    <span asp-validation-for="fname" class="text-danger"></span>
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="mname">Middle name</label>
+                    <input asp-for="mname" value="@(Model is null ? "" : Model.mname)">
+                    <span asp-validation-for="mname" class="text-danger"></span>
+
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="lname">Last Name</label>
+                    <input asp-for="lname" value="@(Model is null ? "" : Model.lname)">
+                    <span asp-validation-for="lname" class="text-danger"></span>
+
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="expertise">Expertise</label>
+                    <input asp-for="expertise" value="@(Model is null ? "" : Model.expertise)">
+                    <span asp-validation-for="expertise" class="text-danger"></span>
+
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="education">Education</label>
+                    <input asp-for="education" value="@(Model is null ? "" : Model.education)">
+                    <span asp-validation-for="education" class="text-danger"></span>
+
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="age">Age</label>
+                    <input asp-for="age" value="@(Model is null ? "" : Model.age)">
+                    <span asp-validation-for="age" class="text-danger"></span>
+                </div>
+                <div>
+                </div>
+                <div class="user-form-controls">
+                    @if (Model is null)
+                    {
+                        <button type="submit" class="user-submit-btn" id="historian-submit-form">Submit</button>
+                    }
+                    else
+                    {
+                        <input asp-for="historianid" type="hidden" class="media-form-serialnumber" value="@Model.historianid" />
+                        <div class="user-edit-form-controls">
+                            <button type="reset" class="media-cancel-btn" id="historian-cancel-form">Cancel</button>
+                            <button type="submit" class="media-save-btn" id="historian-save-form">Save</button>
+                        </div>
+                    }
+                </div>
+            </form>
+
+        </div>
+        <div class="user-recent-transactions-panel">
+            <div class="user-recent-transactions">
+                <div class="recent-transactions-header">
+                    <h1 class="display-1" style="text-align: center">Current Historians</h1>
+                    <h2 class="display-2" id="recent-transactions-subheader"></h2>
+                </div>
+                <div class="table-container" style="display:none">
+                    <table id="transactions-table" class="display cell-border" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Fname</th>
+                                <th>Mname</th>
+                                <th>Lname</th>
+                                <th>Expertise</th>
+                                <th>Education</th>
+                                <th>Age</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 </div>
-<div>
-    <a href="/Historian/CreateHistorianView">Add a Historian</a>
-    <a href="/Historian/EditHistorianView">Edit a Historian</a>
-</div>
+
+<script>
+    let historianList;
+    let table;
+    //Get list of historians
+    $(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/Historian/GetHistorianList',
+            async: false,
+            datatype: 'json',
+            success: function (result) {
+                console.log(result);
+                historianList = result;
+            },
+        });
+        //Creating datatable
+        table = $('#transactions-table').DataTable({
+            data: historianList,
+            "columns": [
+                { "data": "fname" },
+                { "data": "mname" },
+                { "data": "lname" },
+                { "data": "expertise" },
+                { "data": "education" },
+                { "data": "age" },
+                {
+                    "data": null,
+                    "defaultContent": "<a class='edit-row-btn'><i class='fa-solid fa-pen-to-square'></i></a>" +
+                        "<a class='delete-row-btn'><i class='fa-solid fa-trash'></i></a>"
+                }
+            ],
+            "bLengthChange": false,
+            "pageLength": 5
+        });
+        $('.table-container').show();
+    });
+    //Edit button
+    $('#transactions-table').on('click', '.edit-row-btn', function () {
+        let tr = $(this).closest('tr');
+        let historianId = table.row(tr).data().historianid;
+
+        window.location.href = "/Historian/EditHistorian?historianId=" + historianId;
+    });
+    //Delete
+    $('#transactions-table').on('click', '.delete-row-btn', function () {
+        let tr = $(this).closest('tr');
+        let historianId = table.row(tr).data().historianid;
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/Historian/DeleteHistorian?historianId=' + historianId,
+            async: false,
+            success: function (result) {
+                window.location.href = result.redirectToUrl;
+            },
+        });
+    });
+    //Cancel
+    $('.user-entry-form').on('click', '.media-cancel-btn', function () {
+        window.location.href = "/Historian/HistorianIndex";
+    });
+</script>
