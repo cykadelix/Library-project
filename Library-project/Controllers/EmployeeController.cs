@@ -134,7 +134,7 @@ namespace Library_project.Controllers
                 using (var command = new NpgsqlCommand(updateCommand, conn))
                 {
                     command.Parameters.AddWithValue("f1", model.fname);
-                    command.Parameters.AddWithValue("m1", model.mname);
+                    command.Parameters.AddWithValue("m1", (model.mname == null ? "" : model.mname));
                     command.Parameters.AddWithValue("l1", model.lname);
                     command.Parameters.AddWithValue("p1", model.position);
                     command.Parameters.AddWithValue("s1", model.salary);
