@@ -32,6 +32,7 @@
   <ItemGroup>
     <Folder Include="Repository\" />
     <Folder Include="Interfaces\" />
+    <Folder Include="Views\DashboardSettings\" />
     <Folder Include="Views\Room\" />
     <Folder Include="Views\Student\" />
     <Folder Include="Views\Activity\" />

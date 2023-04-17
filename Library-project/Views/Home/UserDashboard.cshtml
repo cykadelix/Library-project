@@ -1,0 +1,82 @@
+﻿@{
+    ViewData["Title"] = "Admin account";
+}
+
+<div class="account-container">
+    <div class="account-controls-panel">
+        <div class="library-logo">
+            Library Logo
+        </div>
+        <div class="user-info">
+            <div class="user-pfp-container">
+                <img src="~/images/pfp_male.svg" id="user-pfp-img" />
+            </div>
+            <h1 class="display-1">Name</h1>
+        </div>
+        <a class="account-nav active-l" asp-area="" asp-controller="Home" asp-action="AdminDashboard">
+            <i class="fa-solid fa-chart-bar"></i>
+            <h2 class="display-2">Dashboard</h2>
+        </a>
+        <a class="account-nav">
+            <i class="fa-solid fa-gear"></i>
+            <h2 class="display-2">Settings</h2>
+        </a>
+        <a class="account-nav" id="account-signout-btn">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <h2 class="display-2">Sign out</h2>
+        </a>
+    </div>
+    <div class="events-panel">
+        <div class="events-panel-header">
+            <h1 class="display-1">Upcoming events</h1>
+            <h2 class="display-2" id="current-date"></h2>
+        </div>
+        <div class="events-gallery">
+            <div class="event-container gradient-bg-2" style="margin-left: 5vw">
+                <div class="event-header">
+                    <h1>Mindful meditation</h1>
+                    <h2 class="display-2">Mar 28</h2>
+                </div>
+                <img src="~/images/meditation.svg" id="meditation-img" />
+                <a>Explore</a>
+            </div>
+            <div class="event-container gradient-bg-2">
+                <div class="event-header">
+                    <h1>Book Diving</h1>
+                    <h2 class="display-2">Mar 30</h2>
+                </div>
+                <img src="~/images/classroom.svg" id="classroom-img" />
+                <a>Explore</a>
+            </div>
+            <div class="event-container gradient-bg-2">
+                <div class="event-header">
+                    <h1>Kids' Storytime</h1>
+                    <h2>Mar 31</h2>
+                </div>
+                <img src="~/images/kid_with_car.svg" id="classroom-img" />
+                <a>Explore</a>
+            </div>
+        </div>
+        <div class="transactions-container">
+            <div class="transactions-header">
+                <h1></h1>
+            </div>
+        </div>
+    </div>
+    <div class="agenda-panel">
+        <div class="agenda-panel-header">
+            <h1 class="display-1">Calendar</h1>
+            <h2 class="display-2">What's on the agenda today?</h2>
+        </div>
+        <div class="meeting-list">
+        </div>
+        <div class="reminder-list">
+        </div>
+    </div>
+</div>
+
+<script>
+    let date = new Date();
+    let options = { month: 'long', day: 'numeric', year: 'numeric' };
+    document.getElementById("current-date").innerHTML = date.toLocaleDateString('en-us', options);
+</script>
