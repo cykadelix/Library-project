@@ -1,5 +1,5 @@
 ﻿@using Library_project.ViewModels.Employee
-@model listEmployeeViewModel;
+@model Library_project.ViewModels.Employee.CreateEmployeeViewModel;
 @{
     ViewBag.Title = "EmployeeIndex";
 }
@@ -19,7 +19,7 @@
             <i class="fa-solid fa-chart-bar"></i>
             <h2 class="display-2">Dashboard</h2>
         </a>
-        <a class="account-nav" asp-area="" asp-controller="Home" asp-action="AddMediaForm">
+        <a class="account-nav" asp-area="" asp-controller="AddMedia" asp-action="AddComputer">
             <i class="fa-solid fa-boxes-stacked"></i>
             <h2 class="display-2">Inventory</h2>
         </a>
@@ -40,20 +40,187 @@
             <h2 class="display-2">Sign out</h2>
         </a>
     </div>
-    <div class="employee-display-container">
-	    @foreach (var item in Model.allEmployees)
-	    {
-		    <div class="employee-display-card">
-			    <h1>@item.fname</h1>
-			    <h2>Position: @item.position</h2>
-			    <h2>Email: @item.email</h2>
-			    <img src=""/>
-		    </div>
-	    }
-    </div>
+    <div class="user-combined-panel">
+        <div class="user-entry-container">
+            <div class="media-form-header">
+                <h1 class="display-1">Create or manage an employee</h1>
+            </div>
 
-    <div>
-        <a href="/Employee/CreateEmployeeView">Add an Employee</a>
-    </div>
+            <form class="user-entry-form" asp-controller="Employee" asp-action="@(Model is null ? "CreateEmployee" : "UpdateEmployee")" method="post">
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="fname">First Name</label>
+                    <input asp-for="fname" value="@(Model is null ? "" : Model.fname)">
+                    <span asp-validation-for="fname" class="text-danger"></span>
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="mname">Middle Name</label>
+                    <input asp-for="mname" value="@(Model is null ? "" : Model.mname)">
+                    <span asp-validation-for="mname" class="text-danger"></span>
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="lname">Last Name</label>
+                    <input asp-for="lname" value="@(Model is null ? "" : Model.lname)">
+                    <span asp-validation-for="lname" class="text-danger"></span>
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="position">Position</label>
+                    <input asp-for="position" value="@(Model is null ? "" : Model.position)">
+                    <span asp-validation-for="position" class="text-danger"></span>
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="salary">Salary</label>
+                    <input asp-for="salary" value="@(Model is null ? "" : Model.salary)">
+                    <span asp-validation-for="salary" class="text-danger"></span>
 
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="age">Age</label>
+                    <input asp-for="age" value="@(Model is null ? "" : Model.age)">
+                    <span asp-validation-for="age" class="text-danger"></span>
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="email">Email</label>
+                    <input asp-for="email" value="@(Model is null ? "" : Model.email)">
+                    <span asp-validation-for="email" class="text-danger"></span>
+
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="password">Password</label>
+                    <input type="@(Model is null ? "password" : "text")" asp-for="password" value="@(Model is null ? "" : Model.password)">
+                    <span asp-validation-for="password" class="text-danger"></span>
+
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="confirmpassword">Confirm password</label>
+                    <input type="@(Model is null ? "password" : "text")" asp-for="confirmpassword" value="@(Model is null ? "" : Model.confirmpassword)">
+                    <span asp-validation-for="confirmpassword" class="text-danger"></span>
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="homeaddress">Home Address</label>
+                    <input asp-for="homeaddress" value="@(Model is null ? "" : Model.homeaddress)">
+                    <span asp-validation-for="homeaddress" class="text-danger"></span>
+
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="phonenumber">Phone Number</label>
+                    <input asp-for="phonenumber" placeholder="No spaces/hyphens" value="@(Model is null ? "" : Model.phonenumber)">
+                    <span asp-validation-for="phonenumber" class="text-danger"></span>
+                </div>
+                <div class="user-form-controls">
+                    @if (Model is null)
+                    {
+                        <button type="submit" class="user-submit-btn" id="employee-submit-form">Submit</button>
+                    }
+                    else
+                    {
+                        <input asp-for="employeeid" type="hidden" class="media-form-serialnumber" value="@Model.employeeid" />
+                        <div class="user-edit-form-controls">
+                            <button type="reset" class="media-cancel-btn" id="employee-cancel-form">Cancel</button>
+                            <button type="submit" class="media-save-btn" id="employee-save-form">Save</button>
+                        </div>
+                    }
+                </div>
+            </form>
+        </div>
+        <div class="user-recent-transactions-panel">
+            <div class="user-recent-transactions">
+                <div class="recent-transactions-header">
+                    <h1 class="display-1" style="text-align: center">Current Employees</h1>
+                    <h2 class="display-2" id="recent-transactions-subheader"></h2>
+                </div>
+                <div class="table-container" style="display:none">
+                    <table id="transactions-table" class="display cell-border" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Fname</th>
+                                <th>Mname</th>
+                                <th>Lname</th>
+                                <th>Position</th>
+                                <th>Salary</th>
+                                <th>Age</th>
+                                <th>Email</th>
+                                <th>Password</th>
+                                <th>Address</th>
+                                <th>Phone #</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 </div>
+
+<script>
+    let employeeList;
+    let table;
+    //Get list of books
+    $(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/Employee/GetEmployeeList',
+            async: false,
+            datatype: 'json',
+            success: function (result) {
+                console.log(result);
+                employeeList = result;
+            },
+        });
+        //Creating datatable
+        table = $('#transactions-table').DataTable({
+            data: employeeList,
+            "columns": [
+                { "data": "fname" },
+                { "data": "mname" },
+                { "data": "lname" },
+                { "data": "position" },
+                { "data": "salary" },
+                { "data": "age" },
+                { "data": "email" },
+                { "data": "password" },
+                { "data": "homeaddress" },
+                { "data": "phonenumber" },
+                {
+                    "data": null,
+                    "defaultContent": "<a class='edit-row-btn'><i class='fa-solid fa-pen-to-square'></i></a>" +
+                        "<a class='delete-row-btn'><i class='fa-solid fa-trash'></i></a>"
+                }
+            ],
+            "bLengthChange": false,
+            "pageLength": 5
+        });
+        $('.table-container').show();
+    });
+    //Edit button
+    $('#transactions-table').on('click', '.edit-row-btn', function () {
+        let tr = $(this).closest('tr');
+        let employeeId = table.row(tr).data().employeeid;
+
+        window.location.href = "/Employee/EditEmployee?employeeId=" + employeeId;
+    });
+    //Delete
+    $('#transactions-table').on('click', '.delete-row-btn', function () {
+        let tr = $(this).closest('tr');
+        let employeeId = table.row(tr).data().employeeid;
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/Employee/DeleteEmployee?employeeId=' + employeeId,
+            async: false,
+            success: function (result) {
+                window.location.href = result.redirectToUrl;
+            },
+        });
+    });
+    //Cancel
+    $('.user-entry-form').on('click', '.media-cancel-btn', function () {
+        window.location.href = "/Employee/EmployeeIndex";
+    });
+
+    $("#media-type").val("Audiobook");
+    $('#audiobook-availability').on('change', function () {
+        this.value = this.checked ? val(true) : val(false);
+    });
+</script>
