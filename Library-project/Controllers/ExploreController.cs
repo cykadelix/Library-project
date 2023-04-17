@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Library_project.Controllers
 {
-    [Authorize]
+   
     public class ExploreController : Controller
     {
         private readonly IConfiguration _config;
@@ -193,7 +193,7 @@ namespace Library_project.Controllers
             {
                 return null;
             }
-              return bookList;
+            return bookList;
         }
 
         [HttpGet]
