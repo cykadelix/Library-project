@@ -12,10 +12,11 @@ namespace Library_project.ViewModels.Journal
         public string? researchers { get; set; }
         [Required(ErrorMessage = "Please enter the subject(s)!")]
         public string? subject { get; set; }
-        public bool isavailable { get; set; }
         [Required(ErrorMessage = "Please enter the length!")]
         public int? length { get; set; }
         [Required(ErrorMessage = "Please enter the date!")]
         public string? releasedate { get; set; }
+        public bool? isavailable { get; set; }
+
     }
 }

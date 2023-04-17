@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Library_project.Models
 {
-    public class historian
+    public class historians
     {
         //Historian Name
         public string fname { get; set; }
@@ -21,7 +21,7 @@ namespace Library_project.Models
         public short age { get; set; }
 
         //Relationships
-        public List<student> studentstosee { get; set; }
+        public List<students> studentstosee { get; set; }
     }
 
 }

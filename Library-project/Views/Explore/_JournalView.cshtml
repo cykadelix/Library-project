@@ -1,0 +1,33 @@
+﻿@using Library_project.ViewModels.Journal
+@model List<CreateJournalViewModel>
+
+@if (Model is null)
+{
+    <div class="empty-data-container">
+        <img src="~/images/empty-data.svg" />
+        <h1 clas="display-1">No items to show.</h1>
+    </div>
+}
+else
+{
+    @foreach (var items in Model)
+    {
+        @if (items.isavailable == true)
+        {
+            <div class="media-display-item">
+                <img class="media-item-img">
+                <div class="media-display-text">
+                    <h1 class="display-1">@items.title</h1>
+                    <h2 class="display-2">@items.researchers</h2>
+                    <h2 class="display-2">@items.subject</h2>
+                    <h2 class="display-2">@items.length</h2>
+                    <h2 class="display-2">@items.releasedate</h2>
+                    <h3 class="display-3 media-checkout-btn"><a>Checkout<i class="fa-solid fa-arrow-right"></i></a></h3>
+                </div>
+            </div>
+        }
+    }
+}
+
+
+

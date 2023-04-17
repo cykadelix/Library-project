@@ -1,6 +1,5 @@
 ﻿@using Library_project.Data.Enums
 @model Library_project.ViewModels.Book.EditBookViewModel
-
 @{
     ViewData["Title"] = "Add camera";
 }
@@ -72,10 +71,12 @@
             <div class="input-wrapper">
                 <label asp-for="pageCount">Page Count</label>
                 <input type="text" id="book-pageCount" name="pageCount" value="@(Model is null ? "" : Model.pageCount)" />
+                <span asp-validation-for="pageCount" class="text-danger"></span>
             </div>
             <div class="input-wrapper">
                 <label asp-for="isbn">ISBN</label>
                 <input type="text" id="book-isbn" name="isbn" value="@(Model is null ? "" : Model.isbn)" />
+                <span asp-validation-for="isbn" class="text-danger"></span>
             </div>
             <div class="checkbox-wrapper">
                 <input type="checkbox" value=true id="book-isAvailable" name="isAvailable" @(Model is null ? "checked" : (Model.isAvailable.Value ? "checked" : "")) />
@@ -108,7 +109,7 @@
                         <tr>
                             <th>Title</th>
                             <th>Author</th>
-                            <th>Genres</th>
+                            <th>Genre</th>
                             <th>Publishing Date</th>
                             <th>Page Count</th>
                             <th>ISBN</th>

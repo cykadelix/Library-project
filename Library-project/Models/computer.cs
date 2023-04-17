@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library_project.Models
 {
-    public class computer
+    public class computers
     {
         [Key]
         public int computerid { get; set; }
@@ -15,6 +15,6 @@ namespace Library_project.Models
 
         [ForeignKey("media")]
         public int mediaid { get; set; }
-        public media media { get; set; }
+        public medias media { get; set; }
     }
 }

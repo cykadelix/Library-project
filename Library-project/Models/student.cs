@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Library_project.Models
 {
-    public class student : IdentityUser
+    public class students
     {
         [Key]
         public string id { get; set; }
