@@ -3,4 +3,18 @@
 @{
     ViewBag.Title = "CreateCheckoutLandingPage";
 }
-<h2> Check out is successful </h2>
+
+@if(TempData["AlertMessage"] != null )
+{
+    <div class="alert alert-warning">
+        <strong> warning!</strong>  @TempData["AlertMessage"]
+    </div>
+}
+else
+{
+    <div class="alert alert-success">
+         <h4> Check out is successful </h4>
+    </div>
+}
+
+
