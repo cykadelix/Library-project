@@ -19,7 +19,7 @@ namespace Library_project.Models
         public string? author { get; set; }
         public TimeOnly length { get; set; }
         public Boolean availability { get; set; }
-
+        public string ? description { get; set; }
         
 
     }

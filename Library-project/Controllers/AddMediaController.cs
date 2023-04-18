@@ -7,9 +7,12 @@ using Library_project.ViewModels.Journal;
 using Library_project.ViewModels.Movie;
 using Library_project.ViewModels.Projector;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using System;
 using System.Collections;
 using System.Drawing;
+using System.IO;
 using System.Security.Policy;
 
 namespace Library_project.Controllers
@@ -54,6 +57,16 @@ namespace Library_project.Controllers
             }
         }
 
+        public IFormFile getDefaultImg()
+        {
+            IFormFile file;
+            using (var stream = System.IO.File.OpenRead("./wwwroot/images/computer/computer1.jpg"))
+            {
+                file = new FormFile(stream, 0, stream.Length, null, Path.GetFileName(stream.Name));
+            }
+            return file;
+        }
+
         //Cameras
         public IActionResult AddCamera()
         {
@@ -69,7 +82,6 @@ namespace Library_project.Controllers
             }
             if (ModelState.IsValid)
             {
-                int cameraid = 0;
                 using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
@@ -131,6 +143,9 @@ namespace Library_project.Controllers
         [HttpPost]
         public IActionResult UpdateCamera(CameraViewModel model)
         {
+            ModelState.Clear();
+            model.image = getDefaultImg();
+            TryValidateModel(model);
             if (ModelState.IsValid)
             {
                 using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
@@ -254,6 +269,9 @@ namespace Library_project.Controllers
         [HttpPost]
         public IActionResult UpdateComputer(ComputerViewModel model)
         {
+            ModelState.Clear();
+            model.image = getDefaultImg();
+            TryValidateModel(model);
             if (ModelState.IsValid)
             {
                 using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
@@ -317,7 +335,6 @@ namespace Library_project.Controllers
 
             if (ModelState.IsValid)
             {
-                int projectorid = 0;
                 using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
@@ -379,6 +396,9 @@ namespace Library_project.Controllers
         [HttpPost]
         public IActionResult UpdateProjector(ProjectorViewModel model)
         {
+            ModelState.Clear();
+            model.image = getDefaultImg();
+            TryValidateModel(model);
             if (ModelState.IsValid)
             {
                 using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
@@ -392,7 +412,7 @@ namespace Library_project.Controllers
                         command.Parameters.AddWithValue("s1", model.serialnumber);
                         command.Parameters.AddWithValue("b1", model.brand);
                         if (model.description != null)
-                            command.Parameters.AddWithValue("d1", model.description);
+                            command.Parameters.AddWithValue("d1", (model.description));
                         else
                             command.Parameters.AddWithValue("d1", "No description provided");
                         command.Parameters.AddWithValue("l1", model.lumens);
@@ -447,11 +467,11 @@ namespace Library_project.Controllers
                 // Connect to the database
                 conn.Open();
 
-                using var command = new NpgsqlCommand("WITH local_id AS (INSERT INTO medias VALUES (DEFAULT) RETURNING mediaid)" +
+                using var command = new NpgsqlCommand("WITH local_id AS (INSERT INTO medias (mediaid, timecreated) VALUES (default, CURRENT_TIMESTAMP(0)) RETURNING mediaid)" +
                     "INSERT INTO books " +
-                    "(bookid, title, author, genres, publicdate, pagecount, isbn, isavailable, mediaid)" +
+                    "(bookid, title, author, genres, publicdate, pagecount, isbn, availability, mediaid, description)" +
                     " VALUES((SELECT mediaid from local_id) , @title, @author, @genres, @publicDate, " +
-                    "@pagecount, @isbn, @isavailable,(SELECT mediaid from local_id))", conn)
+                    "@pagecount, @isbn, @isavailable,(SELECT mediaid from local_id), @description)", conn)
                 {
                     Parameters =
                         {
@@ -462,6 +482,7 @@ namespace Library_project.Controllers
                             new("pagecount", model.pageCount),
                             new("isbn", model.isbn),
                             new("isavailable", model.isAvailable),
+                            new("description", model.description is null ? "" : model.description),
                         }
                 };
                 using var reader = command.ExecuteReader();
@@ -490,6 +511,7 @@ namespace Library_project.Controllers
                 book.pageCount = reader.GetFieldValue<int>(4);
                 book.isbn = reader.GetFieldValue<long>(6);
                 book.isAvailable = reader.GetFieldValue<bool>(7);
+                book.description = reader.GetFieldValue<string>(9);
             }
 
             return View("~/Views/AddMedia/AddBook.cshtml", book);
@@ -498,13 +520,16 @@ namespace Library_project.Controllers
         [HttpPost]
         public IActionResult UpdateBook(EditBookViewModel model)
         {
+            ModelState.Clear();
+            model.image = getDefaultImg();
+            TryValidateModel(model);
             if (ModelState.IsValid)
             {
                 using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
-                    var updateCommand = "UPDATE books SET title=@t1, author=@a1, genres=@g1, publicdate=@p1, pagecount=@p2, isbn=@i1, isavailable=@a2 " +
+                    var updateCommand = "UPDATE books SET title=@t1, author=@a1, genres=@g1, publicdate=@p1, pagecount=@p2, isbn=@i1, availability=@a2, description=@d1 " +
                         "WHERE bookid='" + model.bookid + "'";
                     using (var command = new NpgsqlCommand(updateCommand, conn))
                     {
@@ -518,6 +543,7 @@ namespace Library_project.Controllers
                             command.Parameters.AddWithValue("a2", false);
                         else
                             command.Parameters.AddWithValue("a2", true);
+                        command.Parameters.AddWithValue("d1", (model.description is null ? "" : model.description));
 
                         int nRows = command.ExecuteNonQuery();
                     }
@@ -563,8 +589,8 @@ namespace Library_project.Controllers
                 using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
                 conn.Open();
 
-                using var command = new NpgsqlCommand("WITH local_id AS (INSERT INTO medias VALUES (DEFAULT) RETURNING mediaid) " +
-                            "INSERT INTO journals (journalid, mediaid, title, researchers, subject, length, releasedate, isavailable) VALUES(" +
+                using var command = new NpgsqlCommand("WITH local_id AS (INSERT INTO medias (mediaid, timecreated) VALUES (default, CURRENT_TIMESTAMP(0)) RETURNING mediaid) " +
+                            "INSERT INTO journals (journalid, mediaid, title, researchers, subject, length, releasedate, availability, description) VALUES(" +
                             "(SELECT mediaid from local_id), " +
                             "(SELECT mediaid from local_id), " +
                             "@Title, " +
@@ -572,7 +598,7 @@ namespace Library_project.Controllers
                             "@Subject, " +
                             "@Length, " +
                             "@DateReleased, " +
-                            "@IsAvailable)", conn)
+                            "@IsAvailable, @description)", conn)
                 {
                     Parameters =
                         {
@@ -581,7 +607,8 @@ namespace Library_project.Controllers
                            new("Subject", model.subject),
                            new("IsAvailable", model.isavailable),
                            new("DateReleased", DateOnly.Parse(model.releasedate)),
-                           new("Length", model.length)
+                           new("Length", model.length),
+                           new("description", model.description is null ? "" : model.description)
                         }
 
                 };
@@ -610,6 +637,7 @@ namespace Library_project.Controllers
                 journal.length = reader.GetFieldValue<int>(5);
                 journal.releasedate = reader.GetFieldValue<DateOnly>(6).ToString("yyyy-MM-dd");
                 journal.isavailable = reader.GetFieldValue<bool>(7);
+                journal.description = reader.GetFieldValue<string>(8);
             }
 
             return View("~/Views/AddMedia/AddJournal.cshtml", journal);
@@ -618,13 +646,16 @@ namespace Library_project.Controllers
         [HttpPost]
         public IActionResult UpdateJournal(CreateJournalViewModel model)
         {
+            ModelState.Clear();
+            model.image = getDefaultImg();
+            TryValidateModel(model);
             if (ModelState.IsValid)
             {
                 using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
-                    var updateCommand = "UPDATE journals SET title=@t1, researchers=@r1, subject=@s1, length=@l1, releasedate=@r2, isavailable=@a1 " +
+                    var updateCommand = "UPDATE journals SET title=@t1, researchers=@r1, subject=@s1, length=@l1, releasedate=@r2, availability=@a1, description=@d1 " +
                         "WHERE journalid='" + model.journalid + "'";
                     using (var command = new NpgsqlCommand(updateCommand, conn))
                     {
@@ -637,6 +668,7 @@ namespace Library_project.Controllers
                             command.Parameters.AddWithValue("a1", false);
                         else
                             command.Parameters.AddWithValue("a1", true);
+                        command.Parameters.AddWithValue("d1", model.description is null ? "" : model.description);
 
                         int nRows = command.ExecuteNonQuery();
                     }
@@ -670,7 +702,7 @@ namespace Library_project.Controllers
             return View();
         }
 
-        [HttpPost]
+        [HttpPost]  
         public IActionResult AddMovie(MovieViewModel model)
         {
             if (model.title == null)
@@ -685,8 +717,8 @@ namespace Library_project.Controllers
                 {
                     conn.Open();
                     var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid, timecreated) VALUES (default, CURRENT_TIMESTAMP(0)) RETURNING mediaid)" +
-                        "INSERT INTO movies (movieid, mediaid, rating, title, director, genres, length, releasedate, availability)";
-                    using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), (SELECT mediaid from newid), @r1, @t1, @d1, @g1, @l1, @r2, @a1)", conn))
+                        "INSERT INTO movies (movieid, mediaid, rating, title, director, genres, length, releasedate, availability, description)";
+                    using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), (SELECT mediaid from newid), @r1, @t1, @d1, @g1, @l1, @r2, @a1, @d2)", conn))
                     {
                         command.Parameters.AddWithValue("r1", model.rating);
                         command.Parameters.AddWithValue("t1", model.title);
@@ -698,6 +730,7 @@ namespace Library_project.Controllers
                             command.Parameters.AddWithValue("a1", false);
                         else
                             command.Parameters.AddWithValue("a1", true);
+                        command.Parameters.AddWithValue("d2", model.description is null ? "" : model.description);
 
                         int nRows = command.ExecuteNonQuery();
                     }
@@ -728,6 +761,7 @@ namespace Library_project.Controllers
                 movie.length = reader.GetFieldValue<int>(6);
                 movie.releasedate = reader.GetFieldValue<DateOnly>(7).ToString("yyyy-MM-dd");
                 movie.availability = reader.GetFieldValue<bool>(8);
+                movie.description = reader.GetFieldValue<string>(9);
             }
 
             return View("~/Views/AddMedia/AddMovie.cshtml", movie);
@@ -736,13 +770,16 @@ namespace Library_project.Controllers
         [HttpPost]
         public IActionResult UpdateMovie(MovieViewModel model)
         {
+            ModelState.Clear();
+            model.image = getDefaultImg();
+            TryValidateModel(model);
             if (ModelState.IsValid)
             {
                 using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
-                    var updateCommand = "UPDATE movies SET title=@t1, rating=@r1, director=@d1, genres=@g1, length=@l1, releasedate=@r2, availability=@a1 " +
+                    var updateCommand = "UPDATE movies SET title=@t1, rating=@r1, director=@d1, genres=@g1, length=@l1, releasedate=@r2, availability=@a1, description=@d1 " +
                         "WHERE movieid='" + model.movieid + "'";
                     using (var command = new NpgsqlCommand(updateCommand, conn))
                     {
@@ -756,6 +793,7 @@ namespace Library_project.Controllers
                             command.Parameters.AddWithValue("a1", false);
                         else
                             command.Parameters.AddWithValue("a1", true);
+                        command.Parameters.AddWithValue("d2", model.description is null ? "" : model.description);
 
                         int nRows = command.ExecuteNonQuery();
                     }
@@ -803,8 +841,8 @@ namespace Library_project.Controllers
                 {
                     conn.Open();
                     var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid, timecreated) VALUES (default, CURRENT_TIMESTAMP(0)) RETURNING mediaid)" +
-                        "INSERT INTO audiobooks (audiobookid, mediaid, genre, title, narrator, author, length, availability)";
-                    using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), (SELECT mediaid from newid), @g1, @t1, @n1, @a1, @l1, @a2)", conn))
+                        "INSERT INTO audiobooks (audiobookid, mediaid, genre, title, narrator, author, length, availability, description)";
+                    using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), (SELECT mediaid from newid), @g1, @t1, @n1, @a1, @l1, @a2, @d1)", conn))
                     {
                         command.Parameters.AddWithValue("g1", model.genre);
                         command.Parameters.AddWithValue("t1", model.title);
@@ -815,7 +853,8 @@ namespace Library_project.Controllers
                             command.Parameters.AddWithValue("a2", false);
                         else
                             command.Parameters.AddWithValue("a2", true);
-
+                        command.Parameters.AddWithValue("d1", model.description is null ? "" : model.description);
+                        
                         int nRows = command.ExecuteNonQuery();
                     }
                 }
@@ -845,6 +884,7 @@ namespace Library_project.Controllers
                 audiobook.author = reader.GetFieldValue<string>(5);
                 audiobook.length = reader.GetFieldValue<TimeOnly>(6).ToString("hh:mm:ss");
                 audiobook.availability = reader.GetFieldValue<bool>(7);
+                audiobook.description = reader.GetFieldValue<string>(8);
             }
 
             return View("~/Views/AddMedia/AddAudiobook.cshtml", audiobook);
@@ -853,13 +893,16 @@ namespace Library_project.Controllers
         [HttpPost]
         public IActionResult UpdateAudiobook(AudiobookViewModel model)
         {
+            ModelState.Clear();
+            model.image = getDefaultImg();
+            TryValidateModel(model);
             if (ModelState.IsValid)
             {
                 using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
-                    var updateCommand = "UPDATE audiobooks SET genre=@g1, title=@t1, narrator=@n1, author=@a1, length=@l1, availability=@a2 " +
+                    var updateCommand = "UPDATE audiobooks SET genre=@g1, title=@t1, narrator=@n1, author=@a1, length=@l1, availability=@a2, description=@d2 " +
                         "WHERE audiobookid='" + model.audiobookid + "'";
                     using (var command = new NpgsqlCommand(updateCommand, conn))
                     {
@@ -872,6 +915,7 @@ namespace Library_project.Controllers
                             command.Parameters.AddWithValue("a2", false);
                         else
                             command.Parameters.AddWithValue("a2", true);
+                        command.Parameters.AddWithValue("d2", model.description);
 
                         int nRows = command.ExecuteNonQuery();
                     }
