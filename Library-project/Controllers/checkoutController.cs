@@ -34,7 +34,7 @@ namespace Library_project.Controllers
 
         public async Task<IActionResult> CreateCheckoutLandingPage(CheckoutViewModel newCheckout)
         {
-            await using NpgsqlConnection conn = new NpgsqlConnection("Host=127.0.0.1;Server=localhost;Port=5432;Database=library_server;UserID=postgres;Password=hatem0199;Pooling=true");
+            await using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
             var newCheckout2 = new CreateCheckoutViewModel();
             if (ModelState.IsValid)
             {
@@ -70,7 +70,7 @@ namespace Library_project.Controllers
 		public async Task<IActionResult> CheckoutList()
 		{
 
-			var dataSourceBuilder = new NpgsqlDataSourceBuilder("Host = 127.0.0.1; Server = localhost; Port = 5432; Database = library_server; UserID = postgres; Password = hatem0199; Pooling = true");
+			var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
 			await using var dataSource = dataSourceBuilder.Build();
 			await using var command = dataSource.CreateCommand("SELECT * FROM checkouts");
