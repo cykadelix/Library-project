@@ -87,7 +87,8 @@
             @if (Model is null)
             {
                 <div class="image-wrapper">
-                    <label asp-for="image">Select Image</label><input asp-for="image" />
+                    <label asp-for="image">Select Image</label><br />
+                    <input type="file" name="image" />
                     <span asp-validation-for="image" class="text-danger"></span>
                 </div>
             }
