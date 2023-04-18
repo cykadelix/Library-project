@@ -8,6 +8,8 @@ using Library_project.ViewModels.Movie;
 using Library_project.ViewModels.Projector;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
+using System.Collections;
+using System.Drawing;
 using System.Security.Policy;
 
 namespace Library_project.Controllers
@@ -15,10 +17,41 @@ namespace Library_project.Controllers
     public class AddMediaController : Controller
     {
         private readonly IConfiguration _config;
+        private IWebHostEnvironment _hostingEnvironment;
 
-        public AddMediaController(IConfiguration config)
+        public AddMediaController(IConfiguration config, IWebHostEnvironment hostingEnvironment)
         {
             _config = config;
+            _hostingEnvironment = hostingEnvironment;
+        }
+
+        public async void saveImage(IFormFile image, string media)
+        {
+            int id = 0;
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
+
+            {
+                conn.Open();
+                var selectCommand = "SELECT MAX(mediaid) from medias";
+
+                using (var command = new NpgsqlCommand(selectCommand, conn))
+                {
+
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        id = reader.GetInt32(0);
+                    }
+                    reader.Close();
+                }
+            }
+
+            string uploads = Path.Combine(_hostingEnvironment.WebRootPath, "images\\media");
+            string filePath = Path.Combine(uploads, media + id + ".jpg");
+            using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                image.CopyTo(fileStream);
+            }
         }
 
         //Cameras
@@ -34,14 +67,14 @@ namespace Library_project.Controllers
             {
                 return View();
             }
-
             if (ModelState.IsValid)
             {
+                int cameraid = 0;
                 using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
-                    var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid) VALUES (default) RETURNING mediaid)" +
+                    var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid, timecreated) VALUES (default, CURRENT_TIMESTAMP(0)) RETURNING mediaid)" +
                         "INSERT INTO cameras (cameraid, serialnumber, brand, description, megapixels, availability, mediaid)";
                     using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), @s1, @b1, @d1, @m1, @a1, (SELECT mediaid from newid))", conn))
                     {
@@ -60,6 +93,7 @@ namespace Library_project.Controllers
                         int nRows = command.ExecuteNonQuery();
                     }
                 }
+                saveImage(model.image, "camera");
             }
             return View();
         }
@@ -165,7 +199,7 @@ namespace Library_project.Controllers
 
                 {
                     conn.Open();
-                    var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid) VALUES (default) RETURNING mediaid)" +
+                    var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid, timecreated) VALUES (default, CURRENT_TIMESTAMP(0)) RETURNING mediaid)" +
                         "INSERT INTO computers (computerid, serialnumber, brand, description, availability, mediaid)";
                     using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), @s1, @b1, @d1, @a1, (SELECT mediaid from newid))", conn))
                     {
@@ -183,6 +217,7 @@ namespace Library_project.Controllers
                         int nRows = command.ExecuteNonQuery();
                     }
                 }
+                saveImage(model.image, "computer");
             }
             return View();
         }
@@ -282,11 +317,12 @@ namespace Library_project.Controllers
 
             if (ModelState.IsValid)
             {
+                int projectorid = 0;
                 using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
-                    var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid) VALUES (default) RETURNING mediaid)" +
+                    var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid, timecreated) VALUES (default, CURRENT_TIMESTAMP(0)) RETURNING mediaid)" +
                         "INSERT INTO projectors (projectorid, serialnumber, brand, description, lumens, availability, mediaid)";
                     using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), @s1, @b1, @d1, @l1, @a1, (SELECT mediaid from newid))", conn))
                     {
@@ -305,6 +341,7 @@ namespace Library_project.Controllers
                         int nRows = command.ExecuteNonQuery();
                     }
                 }
+                saveImage(model.image, "projector");
             }
             return View();
         }
@@ -428,6 +465,7 @@ namespace Library_project.Controllers
                         }
                 };
                 using var reader = command.ExecuteReader();
+                saveImage(model.image, "book");
             }
             return View();
         }
@@ -548,6 +586,7 @@ namespace Library_project.Controllers
 
                 };
                 using var reader = command.ExecuteReader();
+                saveImage(model.image, "journal");
             }
             return View();
         }
@@ -645,7 +684,7 @@ namespace Library_project.Controllers
 
                 {
                     conn.Open();
-                    var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid) VALUES (default) RETURNING mediaid)" +
+                    var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid, timecreated) VALUES (default, CURRENT_TIMESTAMP(0)) RETURNING mediaid)" +
                         "INSERT INTO movies (movieid, mediaid, rating, title, director, genres, length, releasedate, availability)";
                     using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), (SELECT mediaid from newid), @r1, @t1, @d1, @g1, @l1, @r2, @a1)", conn))
                     {
@@ -663,6 +702,8 @@ namespace Library_project.Controllers
                         int nRows = command.ExecuteNonQuery();
                     }
                 }
+                saveImage(model.image, "movie");
+
             }
             return View();
         }
@@ -761,7 +802,7 @@ namespace Library_project.Controllers
 
                 {
                     conn.Open();
-                    var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid) VALUES (default) RETURNING mediaid)" +
+                    var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid, timecreated) VALUES (default, CURRENT_TIMESTAMP(0)) RETURNING mediaid)" +
                         "INSERT INTO audiobooks (audiobookid, mediaid, genre, title, narrator, author, length, availability)";
                     using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), (SELECT mediaid from newid), @g1, @t1, @n1, @a1, @l1, @a2)", conn))
                     {
@@ -778,6 +819,8 @@ namespace Library_project.Controllers
                         int nRows = command.ExecuteNonQuery();
                     }
                 }
+                saveImage(model.image, "audiobook");
+
             }
             return View();
         }

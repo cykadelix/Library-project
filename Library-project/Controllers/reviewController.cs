@@ -5,12 +5,12 @@ using Npgsql;
 
 namespace Library_project.Controllers
 {
-    public class reviewController : Controller
+    public class ReviewController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IConfiguration _config;
 
-        public reviewController(ILogger<HomeController> logger, IConfiguration config)
+        public ReviewController(ILogger<HomeController> logger, IConfiguration config)
         {
             _logger = logger;
             _config = config;

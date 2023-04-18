@@ -20,5 +20,7 @@ namespace Library_project.ViewModels.Movie
         public string? releasedate { get; set; }
 
         public bool? availability { get; set; }
+        [Required(ErrorMessage = "Please enter an image!")]
+        public IFormFile? image { get; set; }
     }
 }
