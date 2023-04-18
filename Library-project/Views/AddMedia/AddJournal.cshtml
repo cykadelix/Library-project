@@ -62,6 +62,10 @@
                 <span asp-validation-for="title" class="text-danger"></span>
             </div>
             <div class="input-wrapper">
+                <label asp-for="description">Description</label>
+                <input asp-for="description" value="@(Model is null ? "" : Model.description)" />
+            </div>
+            <div class="input-wrapper">
                 <label asp-for="researchers">Researcher(s)</label>
                 <input type="text" id="journal-researchers" name="researchers" value="@(Model is null ? "" : Model.researchers)" />
                 <span asp-validation-for="researchers" class="text-danger"></span>
@@ -80,11 +84,14 @@
                 <input type="date" id="book-releasedate" name="releasedate" value="@(Model is null ? "" : Model.releasedate)" />
                 <span asp-validation-for="releasedate" class="text-danger"></span>
             </div>
-            <div class="image-wrapper">
-                <label asp-for="image">Select Image</label>
-                <input asp-for="image" />
-                <span asp-validation-for="image" class="text-danger"></span>
-            </div>
+            @if (Model is null)
+            {
+                <div class="image-wrapper">
+                    <label asp-for="image">Select Image</label><br />
+                    <input type="file" name="image" />
+                    <span asp-validation-for="image" class="text-danger"></span>
+                </div>
+            }
             <div class="checkbox-wrapper">
                 <input type="checkbox" value=true id="journal-isavailable" name="isavailable" @(Model is null ? "checked" : (Model.isavailable.Value ? "checked" : "")) />
                 <label asp-for="isavailable">Availability</label>

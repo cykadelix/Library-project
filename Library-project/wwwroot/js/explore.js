@@ -138,17 +138,25 @@ function loadRandomImages() {
     })
 }
 
-$(document).on('click', '.media-display-item', function () {
-    clickToExapndCards($(this));
+$(document).on('click', '.media-display-item', function (e) {
+    if (!$(e.target).is("a") && !$(e.target).is("h3")) {
+        clickToExapndCards($(this));
+    }
 });
+
+$(document).on('click', 'media-checkout-btn', function (e) {
+
+})
 
 function clickToExapndCards($obj) {
     let clickedElement = $obj;
     if (clickedElement.hasClass('expanded')) {
+        clickedElement.find('.description-placeholder').slideUp(250);
         clickedElement.find('.media-description').slideDown(500);
         clickedElement.removeClass('expanded');
     } else {
         clickedElement.find('.media-description').slideUp(500);
+        clickedElement.find('.description-placeholder').slideDown(250);
         clickedElement.addClass('expanded');
     }
 

@@ -18,6 +18,6 @@ namespace Library_project.ViewModels.Historian
         [Required(ErrorMessage = "Please enter their age!")]
         [Range(1, 150, ErrorMessage ="Please enter an age 1-150")]
         public short? age { get; set; }
-
+        public bool active { get; set; } = true;
     }
 }

@@ -45,7 +45,8 @@ namespace Library_project.Controllers
                     password = (string)reader["password"],
                     homeaddress = (string)reader["homeaddress"],
                     phonenumber = (string)reader["phonenumber"],
-                    salary = (float)reader["salary"]
+                    salary = (float)reader["salary"],
+                    active = (bool)reader["active"],
                 });
             }
             if(employeeList.Count == 0)
@@ -74,7 +75,7 @@ namespace Library_project.Controllers
             conn.Open();
 
             using var command = new NpgsqlCommand("INSERT INTO employees (VALUES(" +
-                "DEFAULT, @fname, @mname, @lname, @position, @salary, @email, @password, @homeaddress, @phonenumber, @age))", conn)
+                "DEFAULT, @fname, @mname, @lname, @position, @salary, @email, @password, @homeaddress, @phonenumber, @age, @active))", conn)
             {
                 Parameters =
                     {
@@ -87,7 +88,8 @@ namespace Library_project.Controllers
                         new("email", model.email),
                         new("password", model.password),
                         new("homeaddress", model.homeaddress),
-                        new("phonenumber", model.phonenumber)
+                        new("phonenumber", model.phonenumber),
+                        new("active", model.active)
                     }
             };
             using var reader = command.ExecuteReader();
@@ -118,6 +120,7 @@ namespace Library_project.Controllers
                 localemployee.homeaddress = reader.GetFieldValue<string>(8);
                 localemployee.phonenumber = reader.GetFieldValue<string>(9);
                 localemployee.age = reader.GetFieldValue<short>(10);
+                localemployee.active = reader.GetFieldValue<bool>(11);
             }
 
             return View("~/Views/Employee/EmployeeIndex.cshtml", localemployee);
@@ -129,7 +132,7 @@ namespace Library_project.Controllers
             using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
                 conn.Open();
-                string queryParameters = "fname=@f1, mname=@m1, lname=@l1, position=@p1, salary=@s1, age=@a1, email=@e1, password=@p2, homeaddress=@h1, phonenumber=@p3 ";
+                string queryParameters = "fname=@f1, mname=@m1, lname=@l1, position=@p1, salary=@s1, age=@a1, email=@e1, password=@p2, homeaddress=@h1, phonenumber=@p3, active=@a2 ";
                 string updateCommand = "UPDATE employees SET " + queryParameters + "WHERE employeeid='" + model.employeeid + "'";
                 using (var command = new NpgsqlCommand(updateCommand, conn))
                 {
@@ -143,6 +146,7 @@ namespace Library_project.Controllers
                     command.Parameters.AddWithValue("p2", model.password);
                     command.Parameters.AddWithValue("h1", model.homeaddress);
                     command.Parameters.AddWithValue("p3", model.phonenumber);
+                    command.Parameters.AddWithValue("a2", model.active);
 
                     int nRows = command.ExecuteNonQuery();
 
@@ -158,7 +162,7 @@ namespace Library_project.Controllers
             {
                 conn.Open();
 
-                var sqlCommand = "DELETE FROM employees WHERE employeeid='" + employeeId.ToString() + "';";
+                var sqlCommand = "UPDATE employees SET active=false WHERE employeeid='" + employeeId.ToString() + "';";
                 using (var command = new NpgsqlCommand(sqlCommand, conn))
                 {
                     int nRows = command.ExecuteNonQuery();

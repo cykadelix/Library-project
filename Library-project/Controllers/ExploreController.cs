@@ -184,12 +184,13 @@ namespace Library_project.Controllers
                 {
                     bookid = reader.GetInt32(0),
                     title = reader.GetString(1),
-                    author = reader.GetString(7),
-                    genres = reader.GetInt32(6),
-                    publicDate = reader.GetFieldValue<DateOnly>(2).ToString(),
-                    pageCount = reader.GetInt32(3),
-                    isbn = reader.GetInt64(4),
-                    isAvailable = reader.GetBoolean(5)
+                    author = reader.GetString(2),
+                    genres = reader.GetInt32(3),
+                    publicDate = reader.GetFieldValue<DateOnly>(4).ToString(),
+                    pageCount = reader.GetInt32(5),
+                    isbn = reader.GetInt64(6),
+                    isAvailable = reader.GetBoolean(7),
+                    description = reader.GetString(9),
                 });
             }
             if (bookList.Count == 0)
@@ -235,6 +236,7 @@ namespace Library_project.Controllers
                     length = reader.GetFieldValue<int>(5),
                     releasedate = reader.GetFieldValue<DateOnly>(6).ToString("yyyy-MM-dd"),
                     isavailable = reader.GetFieldValue<bool>(7),
+                    description = reader.GetString(8),
                 }); ;
             }
             if (local_list.Count == 0)
@@ -281,6 +283,7 @@ namespace Library_project.Controllers
                     length = reader.GetFieldValue<int>(6),
                     releasedate = reader.GetFieldValue<DateOnly>(7).ToString("yyyy-MM-dd"),
                     availability = reader.GetFieldValue<bool>(8),
+                    description = reader.GetString(9),
                 }); ;
             }
             if (local_list.Count == 0)
@@ -325,6 +328,7 @@ namespace Library_project.Controllers
                 audiobook.author = reader.GetFieldValue<string>(5);
                 audiobook.length = reader.GetFieldValue<TimeOnly>(6).ToString("hh:mm:ss");
                 audiobook.availability = reader.GetFieldValue<bool>(7);
+                audiobook.description = reader.GetString(8);
                 local_list.Add(audiobook);
             }
 

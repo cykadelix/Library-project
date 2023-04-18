@@ -77,15 +77,22 @@
                 <span asp-validation-for="author" class="text-danger"></span>
             </div>
             <div class="input-wrapper">
+                <label asp-for="description">Description</label>
+                <input asp-for="description" value="@(Model is null ? "" : Model.description)"/>
+            </div>
+            <div class="input-wrapper">
                 <label asp-for="length">Length</label>
                 <input type="text" placeholder="hh:mm:ss" id="audiobook-length" name="length" value="@(Model is null ? "" : Model.length)" />
                 <span asp-validation-for="length" class="text-danger"></span>
             </div>
-            <div class="image-wrapper">
-                <label asp-for="image">Select Image</label>
-                <input asp-for="image" />
-                <span asp-validation-for="image" class="text-danger"></span>
-            </div>
+            @if (Model is null)
+            {
+                <div class="image-wrapper">
+                    <label asp-for="image">Select Image</label><br/>
+                    <input type="file" name="image" />
+                    <span asp-validation-for="image" class="text-danger"></span>
+                </div>
+            }
             <div class="checkbox-wrapper">
                 <input type="checkbox" value=true id="audiobook-availability" name="availability" @(Model is null ? "checked" : (Model.availability.Value ? "checked" : "")) />
                 <label asp-for="availability">Availability</label>

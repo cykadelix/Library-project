@@ -62,6 +62,10 @@
                 <span asp-validation-for="title" class="text-danger"></span>
             </div>
             <div class="input-wrapper">
+                <label asp-for="description">Description</label>
+                <input asp-for="description" value="@(Model is null ? "" : Model.description)" />
+            </div>
+            <div class="input-wrapper">
                 <label asp-for="rating">Rating</label>
                 <input type="text" placeholder="1-10" id="movie-rating" name="rating" value="@(Model is null ? "" : Model.rating)" />
                 <span asp-validation-for="rating" class="text-danger"></span>
@@ -86,11 +90,14 @@
                 <input type="date" id="movie-releasedate" name="releasedate" value="@(Model is null ? "" : Model.releasedate)" />
                 <span asp-validation-for="releasedate" class="text-danger"></span>
             </div>
-            <div class="image-wrapper">
-                <label asp-for="image">Select Image</label>
-                <input asp-for="image" />
-                <span asp-validation-for="image" class="text-danger"></span>
-            </div>
+            @if (Model is null)
+            {
+                <div class="image-wrapper">
+                    <label asp-for="image">Select Image</label><br />
+                    <input type="file" name="image" />
+                    <span asp-validation-for="image" class="text-danger"></span>
+                </div>
+            }
             <div class="checkbox-wrapper">
                 <input type="checkbox" value=true id="movie-availability" name="availability" @(Model is null ? "checked" : (Model.availability.Value ? "checked" : "")) />
                 <label asp-for="availability">Availability</label>

@@ -21,6 +21,7 @@ namespace Library_project.Models
 
         public long isbn { get; set; }
         public bool availability { get; set; }
+        public string? description { get; set; }
         
         [ForeignKey("media")]
         public int mediaid { get; set; }
