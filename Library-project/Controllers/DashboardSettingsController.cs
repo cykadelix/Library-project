@@ -14,7 +14,7 @@ namespace Library_project.Controllers
             _config = config;
         }
 
-        [HttpGet("{id}")]
+        [Route("DashboardSettings/Admin/{id:int}")]
         public IActionResult Admin(int id)
         {
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));

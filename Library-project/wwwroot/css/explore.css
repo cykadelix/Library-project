@@ -63,6 +63,8 @@
     background-color: white;
     border: 1px solid #D3D3D3;
     box-shadow: 3px 3px 8px rgb(205, 205, 205, .8);
+    transition: all 0.5s;
+    cursor: pointer;
 }
 
     .media-display-item h1 {
@@ -96,6 +98,14 @@
     .media-display-item:nth-child(3n) {
         order: 3;
     }
+
+.media-display-item:hover {
+    transform: translate(-5px, -5px);
+    box-shadow: 4px 4px 10px #b3b3b3;
+}
+
+.media-description {
+}
 
 .media-display-text {
     padding: 1rem 2rem;
@@ -134,4 +144,8 @@
 
 .nav-item{
     cursor:pointer;
+}
+
+.hide {
+    display: none;
 }
