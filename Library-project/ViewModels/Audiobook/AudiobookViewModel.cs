@@ -19,5 +19,7 @@ namespace Library_project.ViewModels.Audiobook
         [RegularExpression("^(?:[0-9]|[0-1][0-9]|2[0-3]):(?:[0-9]|[0-5][0-9]):(?:[0-9]|[0-5][0-9])$", ErrorMessage="Must be formatted in (hh:mm:ss)!")]
         public string? length { get; set; }
         public bool? availability { get; set; }
+        [Required(ErrorMessage = "Please enter an image!")]
+        public IFormFile? image { get; set; }
     }
 }

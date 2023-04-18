@@ -12,5 +12,7 @@ namespace Library_project.ViewModels.Computer
         public string? brand { get; set; }
         public string? description { get; set; }
         public bool? availability { get; set; }
+        [Required(ErrorMessage = "Please enter the image!")]
+        public IFormFile? image { get; set; }
     }
 }

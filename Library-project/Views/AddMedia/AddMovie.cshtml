@@ -55,7 +55,7 @@
                 <option>Audiobook</option>
             </select>
         </div>
-        <form class="media-entry-form" id="movie-entry-form" method="post" asp-action="@(Model is null ? "AddMovie" : "UpdateMovie")" asp-controller="AddMedia">
+        <form class="media-entry-form" enctype="multipart/form-data" id="movie-entry-form" method="post" asp-action="@(Model is null ? "AddMovie" : "UpdateMovie")" asp-controller="AddMedia">
             <div class="input-wrapper">
                 <label asp-for="title">Title</label>
                 <input type="text" id="movie-title" name="title" value="@(Model is null ? "" : Model.title)" />
@@ -85,6 +85,11 @@
                 <label asp-for="releasedate">Release date</label>
                 <input type="date" id="movie-releasedate" name="releasedate" value="@(Model is null ? "" : Model.releasedate)" />
                 <span asp-validation-for="releasedate" class="text-danger"></span>
+            </div>
+            <div class="image-wrapper">
+                <label asp-for="image">Select Image</label>
+                <input asp-for="image" />
+                <span asp-validation-for="image" class="text-danger"></span>
             </div>
             <div class="checkbox-wrapper">
                 <input type="checkbox" value=true id="movie-availability" name="availability" @(Model is null ? "checked" : (Model.availability.Value ? "checked" : "")) />

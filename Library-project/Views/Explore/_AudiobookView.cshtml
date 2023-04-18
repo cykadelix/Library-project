@@ -16,7 +16,7 @@ else
         @if (items.availability == true)
         {
             <div class="media-display-item">
-                <img class="media-item-img">
+                <img data-id="@items.audiobookid" class="media-item-img">
                 <div class="media-display-text">
                     <h1 class="display-1">@items.title</h1>
                     <h2 class="display-2">Genre: @((genres)items.genre)</h2>

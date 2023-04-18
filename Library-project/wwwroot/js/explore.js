@@ -108,7 +108,6 @@ $('#audiobook-explore-btn').on('click', function () {
         url: '/Explore/GetAudiobooks',
         asyc: false,
         success: function (result) {
-            console.log(result);
             $('#media-partial-placeholder').html(result);
             mediaType = "audiobook";
 
@@ -135,7 +134,7 @@ function resizeExploreContainer() {
 function loadRandomImages() {
     let i = 0;
     document.querySelectorAll('.media-item-img').forEach(function (displayItem) {
-        displayItem.src = "/images/" + mediaType + "/" + mediaType + ((i++ % 5) + 1) + ".jpg";
+        displayItem.src = "images/media/" + mediaType + $(displayItem).data('id') + ".jpg";
     })
 }
 

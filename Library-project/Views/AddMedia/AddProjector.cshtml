@@ -55,7 +55,7 @@
                 <option>Audiobook</option>
             </select>
         </div>
-        <form class="media-entry-form" id="projector-entry-form" method="post" asp-action="@(Model is null ? "AddProjector" : "UpdateProjector")" asp-controller="AddMedia">
+        <form class="media-entry-form" enctype="multipart/form-data" id="projector-entry-form" method="post" asp-action="@(Model is null ? "AddProjector" : "UpdateProjector")" asp-controller="AddMedia">
             <div class="input-wrapper">
                 <label asp-for="serialnumber">Serial Number</label>
                 <input type="text" id="projector-serialnumber" name="serialnumber" value="@(Model is null ? "" : Model.serialnumber)" />
@@ -74,6 +74,11 @@
                 <label asp-for="lumens">Lumens</label>
                 <input type="text" id="projector-lumens" name="lumens" value="@(Model is null ? "" : Model.lumens)" />
                 <span asp-validation-for="lumens" class="text-danger"></span>
+            </div>
+            <div class="image-wrapper">
+                <label asp-for="image">Select Image</label>
+                <input asp-for="image" />
+                <span asp-validation-for="image" class="text-danger"></span>
             </div>
             <div class="checkbox-wrapper">
                 <input type="checkbox" value=true id="projector-availability" name="availability" @(Model is null ? "checked" : (Model.availability.Value ? "checked" : "")) />

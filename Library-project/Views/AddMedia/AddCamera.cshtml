@@ -55,7 +55,7 @@
                 <option>Audiobook</option>
             </select>
         </div>
-        <form class="media-entry-form" id="camera-entry-form" method="post" asp-action="@(Model is null ? "AddCamera" : "UpdateCamera")" asp-controller="AddMedia">
+        <form class="media-entry-form" enctype="multipart/form-data" id="camera-entry-form" method="post" asp-action="@(Model is null ? "AddCamera" : "UpdateCamera")" asp-controller="AddMedia">
             <div class="input-wrapper">
                 <label asp-for="serialnumber">Serial Number</label>
                 <input type="text" id="camera-serialnumber" name="serialnumber" value="@(Model is null ? "" : Model.serialnumber)" />
@@ -74,6 +74,11 @@
                 <label asp-for="megapixels">Megapixels</label>
                 <input type="text" id="camera-megapixels" name="megapixels" value="@(Model is null ? "" : Model.megapixels)" />
                 <span asp-validation-for="megapixels" class="text-danger"></span>
+            </div>
+            <div class="image-wrapper">
+                <label asp-for="image">Select Image</label>
+                <input asp-for="image" />
+                <span asp-validation-for="image" class="text-danger"></span>
             </div>
             <div class="checkbox-wrapper">
                 <input type="checkbox" value=true id="camera-availability" name="availability" @(Model is null ? "checked" : (Model.availability.Value ? "checked" : "")) />
