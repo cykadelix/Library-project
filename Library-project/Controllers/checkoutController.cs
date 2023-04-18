@@ -34,30 +34,36 @@ namespace Library_project.Controllers
 
         public async Task<IActionResult> CreateCheckoutLandingPage(CheckoutViewModel newCheckout)
         {
-            await using NpgsqlConnection conn = new NpgsqlConnection(_config["ConnectionString"]);
-            
+            await using NpgsqlConnection conn = new NpgsqlConnection("Host=127.0.0.1;Server=localhost;Port=5432;Database=library_server;UserID=postgres;Password=hatem0199;Pooling=true");
+            var newCheckout2 = new CreateCheckoutViewModel();
             if (ModelState.IsValid)
             {
-                await using NpgsqlConnection conn = new NpgsqlConnection("Host = 127.0.0.1; Server = localhost; Port = 5432; Database = library_server; UserID = postgres; Password = hatem0199; Pooling = true");
 
                 await conn.OpenAsync();
-       
-                await using var cmd = new NpgsqlCommand("INSERT INTO checkouts (studentid, mediaid, checkoutdate,returndate, checkoutid) VALUES (@studentid, @mediaid, current_timestamp, current_timestamp + INTERVAL '1 month', DEFAULT)", conn)
+                try
                 {
-                    Parameters =
+                    await using var cmd = new NpgsqlCommand("INSERT INTO checkouts (studentid, mediaid, checkoutdate,returndate, checkoutid, returned) VALUES (@studentid, @mediaid, current_timestamp, current_timestamp + INTERVAL '1 month', DEFAULT, DEFAULT)", conn)
                     {
-                        new("studentid",newCheckout.studentid),
-                        new("mediaid", newCheckout.mediaid)
-                    }
-                };
-                await using var reader = await cmd.ExecuteReaderAsync();
-                
+                        Parameters =
+                        {
+                            new("studentid",newCheckout.studentid),
+                            new("mediaid", newCheckout.mediaid)
+                        }
+                    };
+                    await using var reader = await cmd.ExecuteReaderAsync();
+                }
+                catch(Exception ex)
+                {
+
+                    TempData["AlertMessage"] = ex.Message;
+                    return View(newCheckout2);
+                }
             }   
             else
             {
                 newCheckout.studentid = -1;
             }
-			var newCheckout2 = new CreateCheckoutViewModel();
+			
 			return View(newCheckout2);
         }
 

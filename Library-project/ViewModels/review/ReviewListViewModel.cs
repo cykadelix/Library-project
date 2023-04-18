@@ -4,6 +4,6 @@ namespace Library_project.ViewModels.Review
 {
 	public class ReviewListViewModel
 	{
-		public List<review> allReviews { get; set; }
+		public List<reviews> allReviews { get; set; }
 	}
 }

@@ -4,6 +4,6 @@ namespace Library_project.ViewModels.Checkout
 {
 	public class CheckoutListViewModel
 	{
-		public List<checkout> allCheckouts { get; set; }
+		public List<checkouts> allCheckouts { get; set; }
 	}
 }
