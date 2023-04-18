@@ -105,6 +105,10 @@
                     <input asp-for="phonenumber" placeholder="No spaces/hyphens" value="@(Model is null ? "" : Model.phonenumber)">
                     <span asp-validation-for="phonenumber" class="text-danger"></span>
                 </div>
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" value=true id="employee-active" name="active" @(Model is null ? "checked" : (Model.active ? "checked" : "")) />
+                    <label asp-for="active">Active Employee</label>
+                </div>
                 <div class="user-form-controls">
                     @if (Model is null)
                     {
@@ -186,8 +190,13 @@
                         "<a class='delete-row-btn'><i class='fa-solid fa-trash'></i></a>"
                 }
             ],
-            "bLengthChange": false,
-            "pageLength": 5
+            "createdRow": function (row, data, dataIndex) {
+                if (data['active'] == true) {
+                    $(row).addClass('light-green');
+                } else {
+                    $(row).addClass('light-red');
+                }
+            }
         });
         $('.table-container').show();
     });

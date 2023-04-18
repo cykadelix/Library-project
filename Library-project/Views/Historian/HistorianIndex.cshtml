@@ -79,7 +79,9 @@
                     <input asp-for="age" value="@(Model is null ? "" : Model.age)">
                     <span asp-validation-for="age" class="text-danger"></span>
                 </div>
-                <div>
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" value=true id="historian-active" name="active" @(Model is null ? "checked" : (Model.active ? "checked" : "")) />
+                    <label asp-for="active">Active Employee</label>
                 </div>
                 <div class="user-form-controls">
                     @if (Model is null)
@@ -96,7 +98,6 @@
                     }
                 </div>
             </form>
-
         </div>
         <div class="user-recent-transactions-panel">
             <div class="user-recent-transactions">
@@ -156,8 +157,13 @@
                         "<a class='delete-row-btn'><i class='fa-solid fa-trash'></i></a>"
                 }
             ],
-            "bLengthChange": false,
-            "pageLength": 5
+            "createdRow": function (row, data, dataIndex) {
+                if (data['active'] == true) {
+                    $(row).addClass('light-green');
+                } else {
+                    $(row).addClass('light-red');
+                }
+            }
         });
         $('.table-container').show();
     });
