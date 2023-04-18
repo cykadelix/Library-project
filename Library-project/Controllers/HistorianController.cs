@@ -3,6 +3,7 @@ using Library_project.Data.Objects;
 using Library_project.Models;
 using Library_project.ViewModels.Historian;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Npgsql;
 
@@ -16,20 +17,23 @@ namespace Library_project.Controllers
             _config = config;
         }
 
+        public IActionResult HistorianIndex()
+        {
+            return View();
+        }
 
-        public async Task<IActionResult> HistorianIndex()
+        public  List<CreateHistorianViewModel>? HistorianToList()
         {
 
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
-            await using var dataSource = dataSourceBuilder.Build();
-            await using var command = dataSource.CreateCommand("SELECT * FROM historians");
-            await using var reader = await command.ExecuteReaderAsync();
+            using var dataSource = dataSourceBuilder.Build();
+            using var command = dataSource.CreateCommand("SELECT * FROM historians");
+            using var reader = command.ExecuteReader();
 
-            var historianList = new listHistorianViewModel();
-            var LocalList = new List<historians>();
-            while (await reader.ReadAsync())
+            var LocalList = new List<CreateHistorianViewModel>();
+            while (reader.Read())
             {
-                LocalList.Add(new historians()
+                LocalList.Add(new CreateHistorianViewModel()
                 {
                     fname = (string)reader["fname"],
                     mname = (string)reader["mname"],
@@ -38,96 +42,120 @@ namespace Library_project.Controllers
                     expertise = (string)reader["expertise"],
                     education = (string)reader["education"],
                     age = (short)reader["age"],
-                    //studentstosee = (List<student>)reader["studentsToSee"]
+                    active = (bool)reader["active"],
                 });
-
-                historianList.allHistorians = LocalList;
             }
-
-
-            return View(historianList);
-
-        }
-        public IActionResult historianForm()
-        {
-            return View();
-        }
-        [HttpGet]
-        public IActionResult CreateHistorianView()
-        {
-            var newHistorian = new CreateHistorianViewModel();
-
-            return View(newHistorian);
-        }
-        [HttpPost]
-        public async Task<IActionResult> CreateHistorianLandingPage(CreateHistorianViewModel newHistorian)
-        {
-            CreateHistorianViewModel example = new CreateHistorianViewModel();
-            example.fname = newHistorian.fname;
-            example.mname = newHistorian.mname;
-            example.lname = newHistorian.lname;
-            example.expertise = newHistorian.expertise;
-            example.education = newHistorian.education;
-            example.age = newHistorian.age;
-
-            if (ModelState.IsValid)
+            if(LocalList.Count == 0)
             {
-                await using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
-                // Connect to the database
-                await conn.OpenAsync();
+                return null;
+            }
+            return LocalList;
 
-                await using var command = new NpgsqlCommand("INSERT INTO historians (VALUES(" +
-                    "DEFAULT, @fname, @mname, @lname, @expertise, @education, @age))", conn)
+        }
+
+        [HttpGet]
+        public IActionResult GetHistorianList()
+        {
+            return Json(HistorianToList());
+        }
+
+        [HttpPost]
+        public IActionResult CreateHistorian(CreateHistorianViewModel model)
+        {
+            if(model.fname ==  null)
+            {
+                return View("~/Views/Historian/HistorianIndex.cshtml");
+            }
+            else if (ModelState.IsValid)
+            {
+                using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
+                // Connect to the database
+                conn.Open();
+
+                using var command = new NpgsqlCommand("INSERT INTO historians (VALUES(" +
+                    "DEFAULT, @fname, @mname, @lname, @expertise, @education, @age, @active))", conn)
                 {
                     Parameters =
                         {
-                            new("fname", newHistorian.fname),
-                            new("mname", newHistorian.mname),
-                            new("lname", newHistorian.lname),
-                            new("expertise", newHistorian.expertise),
-                            new("education", newHistorian.education),
-                            new("age", newHistorian.age)
+                            new("fname", model.fname),
+                            new("mname", (model.mname == null? "": model.mname)),
+                            new("lname", model.lname),
+                            new("expertise", model.expertise),
+                            new("education", model.education),
+                            new("age", model.age),
+                            new("active", model.active)
                         }
                 };
-                await using var reader = await command.ExecuteReaderAsync();
+                using var reader = command.ExecuteReader();
             }
-            else
-            {
-
-                example.fname = "invalid";
-
-            }
-            return View(example);
+            return View("~/Views/Historian/HistorianIndex.cshtml");
         }
 
-        public async Task<IActionResult> Edit(int historian_id)
+        [HttpGet]
+        public IActionResult EditHistorian(int historianId)
         {
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
-            await using var dataSource = dataSourceBuilder.Build();
-            await using var command = dataSource.CreateCommand("SELECT * FROM historian");
-            await using var reader = await command.ExecuteReaderAsync();
+            using var dataSource = dataSourceBuilder.Build();
+            using var command = dataSource.CreateCommand("SELECT * FROM historians where historianid='" + historianId + "'");
+            using var reader = command.ExecuteReader();
 
-            var localHistorian = new EditHistorianViewModel();
-            reader.Read();
-            using var innerRead = reader.GetData(0);
-
-            while (innerRead.Read())
+            var localHistorian = new CreateHistorianViewModel();
+            while (reader.Read())
             {
-                localHistorian.fname = innerRead.GetFieldValue<string>(1);
-                localHistorian.mname = innerRead.GetFieldValue<string>(2);
-                localHistorian.lname = innerRead.GetFieldValue<string>(3);
-                localHistorian.expertise = innerRead.GetFieldValue<string>(5);
-                localHistorian.education = innerRead.GetFieldValue<string>(6);
-                localHistorian.age = innerRead.GetFieldValue<short>(7);
+                localHistorian.historianid = reader.GetFieldValue<int>(0);
+                localHistorian.fname = reader.GetFieldValue<string>(1);
+                localHistorian.mname = reader.GetFieldValue<string>(2);
+                localHistorian.lname = reader.GetFieldValue<string>(3);
+                localHistorian.expertise = reader.GetFieldValue<string>(4);
+                localHistorian.education = reader.GetFieldValue<string>(5);
+                localHistorian.age = reader.GetFieldValue<short>(6);
+                localHistorian.active = reader.GetFieldValue<bool>(7);
             }
 
-            return View(localHistorian);
+            return View("~/Views/Historian/HistorianIndex.cshtml", localHistorian);
         }
-        public async Task<IActionResult> Edit(EditHistorianViewModel editHistorianvm)
-        {
 
-            return RedirectToAction("Index");
+        [HttpPost]
+        public IActionResult UpdateHistorian(CreateHistorianViewModel model)
+        {
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
+            {
+                conn.Open();
+                string queryParameters = "fname=@f1, mname=@m1, lname=@l1, expertise=@e1, education=@e2, age=@a1, active=@a2 ";
+                string updateCommand = "UPDATE historians SET " + queryParameters + "WHERE historianid='" + model.historianid + "'";
+                using (var command = new NpgsqlCommand(updateCommand, conn))
+                {
+                    command.Parameters.AddWithValue("f1", model.fname);
+                    command.Parameters.AddWithValue("m1", (model.mname == null ? "" : model.mname));
+                    command.Parameters.AddWithValue("l1", model.lname);
+                    command.Parameters.AddWithValue("e1", model.expertise);
+                    command.Parameters.AddWithValue("e2", model.education);
+                    command.Parameters.AddWithValue("a1", model.age);
+                    command.Parameters.AddWithValue("a2", model.active);
+
+                    int nRows = command.ExecuteNonQuery();
+
+                }
+            }
+
+            return View("~/Views/Historian/HistorianIndex.cshtml");
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteHistorian(int historianId)
+        {
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
+            {
+                conn.Open();
+
+                var sqlCommand = "UPDATE historians SET active='false' WHERE historianid='" + historianId.ToString() + "';";
+                using (var command = new NpgsqlCommand(sqlCommand, conn))
+                {
+                    int nRows = command.ExecuteNonQuery();
+                }
+            }
+            return new JsonResult(new { redirectToUrl = Url.Action("HistorianIndex", "Historian") });
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Library_project.Models
         public int length { get; set; }
         public DateOnly releasedate { get; set; }
         public bool availability { get; set; }
-        
+        public string? description { get; set; }
 
 
     }
