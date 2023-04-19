@@ -25,14 +25,14 @@ namespace Library_project.Controllers
 
         public IActionResult createCheckout()
         {
-            var newCheckout = new CheckoutViewModel();
+            var newCheckout = new CreateCheckoutViewModel();
             return View(newCheckout);
         }
 
         [HttpPost]
 
 
-        public async Task<IActionResult> CreateCheckoutLandingPage(CheckoutViewModel newCheckout)
+        public async Task<IActionResult> CreateCheckoutLandingPage(CreateCheckoutViewModel newCheckout)
         {
             await using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
             var newCheckout2 = new CreateCheckoutViewModel();
