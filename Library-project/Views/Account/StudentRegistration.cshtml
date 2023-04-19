@@ -1,0 +1,35 @@
+﻿@using Library_project.ViewModels.Student
+@model RegisterStudentVM
+
+@{
+    ViewData["Title"]="StudentRegistration";
+}
+<form action="RegisterStudentLandingPage" method="post">
+    <div class="input-wrapper">
+        <label asp-for="fname">first name:</label>
+        <input asp-for="fname" />
+    </div>
+    <div class="input-wrapper">
+        <label asp-for="lname">last name:</label>
+        <input asp-for="lname" />
+    </div>
+    <div class="input-wrapper">
+        <label asp-for="homeaddress">Home Address:</label>
+        <input asp-for="homeaddress" />
+    </div>
+    <div class="input-wrapper">
+        <label asp-for="birthday">birthday:</label>
+        <input asp-for="birthday" />
+    </div>
+    <div class="input-wrapper">
+        <label asp-for="email">email:</label>
+        <input asp-for="email" />
+    </div>
+    <div class="input-wrapper">
+        <label asp-for="phonenumber">phonenumber:</label>
+        <input asp-for="phonenumber" />
+    </div>
+    <div class="input-wrapper">
+        <input type="submit" />
+    </div>
+</form>
