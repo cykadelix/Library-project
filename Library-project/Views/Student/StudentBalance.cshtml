@@ -21,10 +21,6 @@
             <i class="fa-solid fa-list-check"></i>
             <h2 class="display-2">Checkouts</h2>
         </a>
-        <a class="account-nav" asp-area="" asp-controller="Student" asp-action="StudentBalance">
-            <i class="fa-solid fa-money-bill"></i>
-            <h2 class="display-2">Balance</h2>
-        </a>
         <a class="account-nav" asp-controller="DashboardSettings" asp-action="User" asp-route-id="1">
             <i class="fa-solid fa-gear"></i>
             <h2 class="display-2">Settings</h2>
@@ -72,7 +68,7 @@
         table = $('#transactions-table').DataTable({
             "ajax": {
                 "type": "GET",
-                "data" : { "studentid": 13 },
+                "data": { "studentid": 13 },
                 "url": '/Checkout/GetStudentsCheckoutList',
                 "dataSrc": ''
             },
@@ -99,11 +95,11 @@
                             return "N/A";
                         }
                     }
-                }, 
+                },
                 {
                     "data": null,
-                    "render": function(data, type, full, meta) {
-                        if(data.returned) {
+                    "render": function (data, type, full, meta) {
+                        if (data.returned) {
                             return "<i class='fa-regular fa-square-check'></i>";
                         } else {
                             return "<a style='cursor:pointer' class='return-item'><i class='fa-regular fa-square'></i></a>";
@@ -114,7 +110,7 @@
             "createdRow": function (row, data, dataIndex) {
                 if (data['returned'] == true) {
                     $(row).addClass('light-green');
-                } else if(Date.now() - Date.parse(data.returnDate) > 0) {
+                } else if (Date.now() - Date.parse(data.returnDate) > 0) {
                     $(row).addClass('light-red');
                 } else {
                     $(row).addClass('light-orange');
@@ -134,5 +130,5 @@
     $('.user-entry-form').on('click', '.media-cancel-btn', function () {
         window.location.href = "/Employee/EmployeeIndex";
     });
-    //Return item
+        //Return item
 </script>

@@ -106,7 +106,7 @@
                     <span asp-validation-for="phonenumber" class="text-danger"></span>
                 </div>
                 <div class="checkbox-wrapper">
-                    <input type="checkbox" value=true id="employee-active" name="active" @(Model is null ? "checked" : (Model.active ? "checked" : "")) />
+                    <input type="checkbox" value=true id="employee-active" name="active" @(Model is null ? "checked" : (Model.active.Value ? "checked" : "")) />
                     <label asp-for="active">Active Employee</label>
                 </div>
                 <div class="user-form-controls">

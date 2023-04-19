@@ -24,7 +24,7 @@ namespace Library_project.Controllers
             var newCheckout = new CheckoutViewModel();
             return View(newCheckout);
         }
-        
+
         [HttpPost]
         public string CreateCheckout(CheckoutViewModel newCheckout)
         {
@@ -51,23 +51,44 @@ namespace Library_project.Controllers
                     return ex.Message;
                 }
 
-            }   
-			return "";
+            }
+            return "";
         }
 
-		public List<checkouts>? CheckoutList()
-		{
+        [HttpGet]
+        public IActionResult CheckoutItem(int mediaId)
+        {
+            if (ModelState.IsValid)
+            {
+                using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
+                conn.Open();
+                string command = "UPDATE checkouts SET returned = true, returned_date = CURRENT_TIMESTAMP(0)" +
+                    "WHERE mediaid=@m1";
+                using var cmd = new NpgsqlCommand(command, conn)
+                {
+                    Parameters =
+                        {
+                            new("m1", mediaId)
+                        }
+                };
+                using var reader = cmd.ExecuteReader();
+            }
+            return View("~/Views/Student/StudentCheckouts.cshtml");
+        }
 
-			var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
+        public List<checkouts>? CheckoutList()
+        {
 
-			using var dataSource = dataSourceBuilder.Build();
-			using var command = dataSource.CreateCommand("SELECT * FROM checkouts");
-			using var reader = command.ExecuteReader();
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
-			var checkoutList = new CheckoutListViewModel();
-			var LocalList = new List<checkouts>();
-			while (reader.Read())
-			{
+            using var dataSource = dataSourceBuilder.Build();
+            using var command = dataSource.CreateCommand("SELECT * FROM checkouts");
+            using var reader = command.ExecuteReader();
+
+            var checkoutList = new CheckoutListViewModel();
+            var LocalList = new List<checkouts>();
+            while (reader.Read())
+            {
                 LocalList.Add(new checkouts()
                 {
                     checkoutid = (int)reader["checkoutid"],
@@ -77,14 +98,14 @@ namespace Library_project.Controllers
                     returndate = (DateTime)reader["returndate"],
                     returned = (bool)reader["returned"],
                     returned_date = (reader.IsDBNull(6) ? "" : reader.GetDateTime(6).ToString())
-                }) ;
+                });
 
-				checkoutList.allCheckouts = LocalList;
-			}
+                checkoutList.allCheckouts = LocalList;
+            }
             if (LocalList.Count == 0) return null;
 
-			return LocalList;
-		}
+            return LocalList;
+        }
 
         public List<StudentCheckoutsViewModel>? StudentCheckoutList(int studentid)
         {
@@ -92,31 +113,31 @@ namespace Library_project.Controllers
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
             using var dataSource = dataSourceBuilder.Build();
-            string comm = "SELECT null as brand, null as serialnumber, title, checkoutdate, returndate, returned, returned_date, 'Book' as mediatype " +
+            string comm = "SELECT null as brand, null as serialnumber, title, checkoutdate, returndate, returned, returned_date, 'Book' as mediatype, checkouts.mediaid " +
                 "FROM checkouts, books " +
                 "WHERE ( checkouts.studentid = '" + studentid + "' AND checkouts.mediaid = books.mediaid) UNION " +
 
-                "SELECT brand, serialnumber, null as title, checkoutdate, returndate, returned, returned_date, 'Camera' as mediatype " +
+                "SELECT brand, serialnumber, null as title, checkoutdate, returndate, returned, returned_date, 'Camera' as mediatype, checkouts.mediaid " +
                 "FROM checkouts, cameras " +
                 "WHERE ( checkouts.studentid = '" + studentid + "' AND checkouts.mediaid = cameras.mediaid) UNION " +
 
-                "SELECT brand, serialnumber, null as title, checkoutdate, returndate, returned, returned_date, 'Computer' as mediatype " +
+                "SELECT brand, serialnumber, null as title, checkoutdate, returndate, returned, returned_date, 'Computer' as mediatype, checkouts.mediaid " +
                 "FROM checkouts, computers " +
                 "WHERE ( checkouts.studentid = '" + studentid + "' AND checkouts.mediaid = computers.mediaid) UNION " +
 
-                "SELECT null as brand, null as serialnumber, title, checkoutdate, returndate, returned, returned_date, 'Audiobook' as mediatype " +
+                "SELECT null as brand, null as serialnumber, title, checkoutdate, returndate, returned, returned_date, 'Audiobook' as mediatype, checkouts.mediaid " +
                 "FROM checkouts, audiobooks " +
                 "WHERE ( checkouts.studentid = '" + studentid + "' AND checkouts.mediaid = audiobooks.mediaid) UNION " +
 
-                "SELECT null as brand, null as serialnumber, title, checkoutdate, returndate, returned, returned_date, 'Journal' as mediatype " +
+                "SELECT null as brand, null as serialnumber, title, checkoutdate, returndate, returned, returned_date, 'Journal' as mediatype, checkouts.mediaid " +
                 "FROM checkouts, journals " +
                 "WHERE ( checkouts.studentid = '" + studentid + "' AND checkouts.mediaid = journals.mediaid) UNION " +
 
-                "SELECT null as brand, null as serialnumber, title, checkoutdate, returndate, returned, returned_date, 'Movie' as mediatype " +
+                "SELECT null as brand, null as serialnumber, title, checkoutdate, returndate, returned, returned_date, 'Movie' as mediatype, checkouts.mediaid " +
                 "FROM checkouts, movies " +
                 "WHERE ( checkouts.studentid = '" + studentid + "' AND checkouts.mediaid = movies.mediaid) UNION " +
 
-                "SELECT brand, serialnumber, null as title, checkoutdate, returndate, returned, returned_date, 'Projector' as mediatype " +
+                "SELECT brand, serialnumber, null as title, checkoutdate, returndate, returned, returned_date, 'Projector' as mediatype, checkouts.mediaid " +
                 "FROM checkouts, projectors " +
                 "WHERE ( checkouts.studentid = '" + studentid + "' AND checkouts.mediaid = projectors.mediaid)";
 
@@ -135,7 +156,8 @@ namespace Library_project.Controllers
                     ReturnDate = reader.GetDateTime(4).ToString("MM-dd-yyyy HH:mm"),
                     Returned = reader.IsDBNull(5) ? false : reader.GetBoolean(5),
                     ReturnedDate = reader.IsDBNull(6) ? "" : reader.GetDateTime(6).ToString(),
-                    MediaType = reader.GetString(7)
+                    MediaType = reader.GetString(7),
+                    mediaId = reader.GetInt32(8),
                 });
             }
             if (LocalList.Count == 0) return null;
@@ -156,5 +178,5 @@ namespace Library_project.Controllers
         }
 
 
-	}
+    }
 }

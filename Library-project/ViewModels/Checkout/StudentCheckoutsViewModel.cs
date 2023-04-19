@@ -2,6 +2,7 @@
 {
     public class StudentCheckoutsViewModel
     {
+        public int mediaId { get; set; }
         public string? MediaType { get; set; }
         public string? Brand { get; set; }
         public string? SerialNo { get; set; }
