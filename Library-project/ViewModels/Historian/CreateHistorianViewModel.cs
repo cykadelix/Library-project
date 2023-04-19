@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
+
 namespace Library_project.ViewModels.Historian
 {
     public class CreateHistorianViewModel
