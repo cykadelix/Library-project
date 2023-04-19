@@ -146,6 +146,7 @@
                                 <th>Address</th>
                                 <th>Phone #</th>
                                 <th>Edit</th>
+                                <th></th>
                             </tr>
                         </thead>
                     </table>
@@ -183,6 +184,14 @@
                     "data": null,
                     "defaultContent": "<a class='edit-row-btn'><i class='fa-solid fa-pen-to-square'></i></a>" +
                         "<a class='delete-row-btn'><i class='fa-solid fa-trash'></i></a>"
+                },
+                { 
+                    "data": null,
+                    "render": function (data, type, full, meta) {
+                        return data.active ? "current new employee active" : "old ex";
+                    },
+                    "searchable": true,
+                    "visible": false
                 }
             ],
             "createdRow": function (row, data, dataIndex) {

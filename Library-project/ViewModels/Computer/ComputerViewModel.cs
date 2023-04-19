@@ -14,5 +14,6 @@ namespace Library_project.ViewModels.Computer
         public bool? availability { get; set; }
         [Required(ErrorMessage = "Please enter the image!")]
         public IFormFile? image { get; set; }
+        public byte[]? imageBytes { get; set; }
     }
 }

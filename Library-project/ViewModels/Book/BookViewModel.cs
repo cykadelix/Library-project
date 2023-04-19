@@ -22,5 +22,6 @@ namespace Library_project.ViewModels.Book
         public string? description { get; set; }
         [Required(ErrorMessage = "Please enter an image!")]
         public IFormFile? image { get; set; }
+        public byte[]? imageBytes { get; set; }
     }
 }

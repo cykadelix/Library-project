@@ -49,6 +49,7 @@ namespace Library_project.Controllers
                         cam.description = reader.GetString(3);
                         cam.megapixels = reader.GetDouble(4);
                         cam.availability = reader.GetBoolean(5);
+                        cam.imageBytes = reader.GetFieldValue<byte[]>(7);
                         cameraList.Add(cam);
                         if (cam.availability == true) numAvailable++;
                     }
@@ -98,6 +99,7 @@ namespace Library_project.Controllers
                         comp.brand = reader.GetString(2);
                         comp.description = reader.GetString(3);
                         comp.availability = reader.GetBoolean(4);
+                        comp.imageBytes = reader.GetFieldValue<byte[]>(6);
                         computerList.Add(comp);
                         if (comp.availability == true) numAvailable++;
                     }
@@ -148,6 +150,7 @@ namespace Library_project.Controllers
                         proj.description = reader.GetString(3);
                         proj.lumens = reader.GetInt32(4);
                         proj.availability = reader.GetBoolean(5);
+                        proj.imageBytes = reader.GetFieldValue<byte[]>(7);
                         projectorList.Add(proj);
                         if (proj.availability == true) numAvailable++;
                     }
@@ -204,6 +207,7 @@ namespace Library_project.Controllers
                     isbn = reader.GetInt64(6),
                     isAvailable = reader.GetBoolean(7),
                     description = reader.GetString(9),
+                    imageBytes = reader.GetFieldValue<byte[]>(10),
                 });
                 if (reader.GetBoolean(7) == true) numAvailable++;
             }
@@ -255,6 +259,7 @@ namespace Library_project.Controllers
                     releasedate = reader.GetFieldValue<DateOnly>(6).ToString("yyyy-MM-dd"),
                     isavailable = reader.GetFieldValue<bool>(7),
                     description = reader.GetString(8),
+                    imageBytes = reader.GetFieldValue<byte[]>(9),
                 });
                 if (reader.GetFieldValue<bool>(7)) numAvailable++;
             }
@@ -307,6 +312,7 @@ namespace Library_project.Controllers
                     releasedate = reader.GetFieldValue<DateOnly>(7).ToString("yyyy-MM-dd"),
                     availability = reader.GetFieldValue<bool>(8),
                     description = reader.GetString(9),
+                    imageBytes = reader.GetFieldValue<byte[]>(10),
                 });
                 if(reader.GetFieldValue<bool>(8)) numAvailable++;
             }
@@ -357,6 +363,7 @@ namespace Library_project.Controllers
                 audiobook.length = reader.GetFieldValue<TimeOnly>(6).ToString("hh:mm:ss");
                 audiobook.availability = reader.GetFieldValue<bool>(7);
                 audiobook.description = reader.GetString(8);
+                audiobook.imageBytes = reader.GetFieldValue<byte[]>(9);
                 local_list.Add(audiobook);
                 if(audiobook.availability == true) numAvailable++;
             }

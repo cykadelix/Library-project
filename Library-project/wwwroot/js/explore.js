@@ -15,7 +15,7 @@ $('#camera-explore-btn').on('click', function () {
             $('#media-partial-placeholder').html(result);
             mediaType = "camera";
 
-            loadImages();
+            
             resizeExploreContainer();
         }
     });
@@ -31,7 +31,6 @@ $('#computer-explore-btn').on('click', function () {
             $('#media-partial-placeholder').html(result);
             mediaType = "computer";
 
-            loadImages();
             resizeExploreContainer();
         }
     });
@@ -47,7 +46,6 @@ $('#projector-explore-btn').on('click', function () {
             $('#media-partial-placeholder').html(result);
             mediaType = "projector";
 
-            loadImages();
             resizeExploreContainer();
         }
     });
@@ -63,7 +61,7 @@ $('#book-explore-btn').on('click', function () {
             $('#media-partial-placeholder').html(result);
             mediaType = "book";
 
-            loadImages();
+            
             resizeExploreContainer();
         }
     });
@@ -79,7 +77,7 @@ $('#journal-explore-btn').on('click', function () {
             $('#media-partial-placeholder').html(result);
             mediaType = "journal";
 
-            loadImages();
+            
             resizeExploreContainer();
         }
     });
@@ -95,7 +93,7 @@ $('#movie-explore-btn').on('click', function () {
             $('#media-partial-placeholder').html(result);
             mediaType = "movie";
 
-            loadImages();
+            
             resizeExploreContainer();
         }
     });
@@ -111,7 +109,7 @@ $('#audiobook-explore-btn').on('click', function () {
             $('#media-partial-placeholder').html(result);
             mediaType = "audiobook";
 
-            loadImages();
+            
             resizeExploreContainer();
         }
     });
@@ -162,13 +160,6 @@ function resizeExploreContainer() {
             $('.media-display-container').height(h * (3/5));
         }
     }));
-}
-
-function loadImages() {
-    let i = 0;
-    document.querySelectorAll('.media-item-img').forEach(function (displayItem) {
-        displayItem.src = "images/media/" + mediaType + $(displayItem).data('id') + ".jpg";
-    })
 }
 
 $(document).on('click', '.media-display-item', function (e) {
