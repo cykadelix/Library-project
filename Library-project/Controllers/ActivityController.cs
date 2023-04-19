@@ -15,15 +15,21 @@ namespace Library_project.Controllers
     {
         private readonly IActivityRepository activityRepository;
 
-        ActivityController(IActivityRepository _activityRepository)
+        public ActivityController(IActivityRepository _activityRepository)
         {
             activityRepository = _activityRepository;
         }
-
+           
         public async Task<IActionResult> Index()
         {
             IEnumerable<activities> activities = await activityRepository.GetAll();
             return View(activities);
+        }
+
+        public async Task<IActionResult> Detail(int rno)
+        {
+            activities activity = await activityRepository.GetByRoomAsync(rno);
+            return View(activity);
         }
     }
 }

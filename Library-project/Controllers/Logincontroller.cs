@@ -26,7 +26,7 @@ namespace Library_project.Controllers
 
             if(ModelState.IsValid)
             {
-                await using NpgsqlConnection conn = new NpgsqlConnection("Host=127.0.0.1;Server=localhost;Port=5432;Database=my_library;UserID=postgres;Password=killer89;Pooling=true");
+                await using NpgsqlConnection conn = new NpgsqlConnection("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;");
                 await conn.OpenAsync();
 
                 await using var command = new NpgsqlCommand("SELECT * FROM userdto WHERE @username=username AND @password=password",conn)

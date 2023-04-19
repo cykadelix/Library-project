@@ -23,17 +23,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Repository\" />
-    <None Remove="Interfaces\" />
     <None Remove="Views\Room\" />
     <None Remove="Views\Student\" />
     <None Remove="Views\Activity\" />
+    <None Remove="ViewModels\Student\" />
+    <None Remove="Views\Reports\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Repository\" />
-    <Folder Include="Interfaces\" />
     <Folder Include="Views\Room\" />
     <Folder Include="Views\Student\" />
     <Folder Include="Views\Activity\" />
+    <Folder Include="ViewModels\Student\" />
+    <Folder Include="Views\Reports\" />
   </ItemGroup>
 </Project>
