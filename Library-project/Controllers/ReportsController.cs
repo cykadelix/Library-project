@@ -22,6 +22,7 @@ namespace Library_project.Controllers
             return View();
         }
 
+        [IgnoreAntiforgeryToken]
         public List<checkoutReportViewModel>? CheckoutsByDateToList(checkoutReportViewModel covm)
         {
 
@@ -54,6 +55,7 @@ namespace Library_project.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public IActionResult GetCheckoutsByDateList(checkoutReportViewModel covm)
         {
             return Json(CheckoutsByDateToList(covm));

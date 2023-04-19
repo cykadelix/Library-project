@@ -53,28 +53,93 @@
                 <option>Students</option>
             </select>
         </div>
-    </div>
-    <div class="user-combined-panel">
-        <div class="user-entry-container">
-            <div class="media-form-header">
-                <h1 class="display-1">Checkouts within TimeFrame</h1>
-            </div>
-            <form class="user-entry-form" asp-action="GetCheckoutsByDateList" asp-controller="Reports" method="post">
-                <div class="input-wrapper-horizontal">
-                    <label asp-for="q_startDate">Start Date:</label>
-                    <input type="date" name="q_startDate" placeholder="YYYY-MM-DD">
-                    <span asp-validation-for="q_startDate" class="text-danger"></span>
-                </div>
-                <div class="input-wrapper-horizontal">
-                    <label asp-for="q_endDate">End Date:</label>
-                    <input type="date" name="q_endDate" placeholder="YYYY-MM-DD">
-                    <span asp-validation-for="q_endDate" class="text-danger"></span>
-                </div>
-                <button type="submit">Generate Report</button>
-            </form>
+        <div class="media-form-header">
+            <h1 class="display-1">Checkouts within TimeFrame</h1>
         </div>
+        <form id="getCheckoutReport" class="user-entry-form">
+            <div class="input-wrapper-horizontal">
+                <label >Start Date:</label>
+                <input type="date" name="q_startDate" placeholder="YYYY-MM-DD">
+            </div>
+            <div class="input-wrapper-horizontal">
+                <label asp-for="q_endDate">End Date:</label>
+                <input type="date" name="q_endDate" placeholder="YYYY-MM-DD">
+            </div>
+            <button type="submit">Generate Report</button>
+        </form>
     </div>
-    <script>
-
-    </script>
+    <div class="table-container" style="display:none">
+        <table id="transactions-table" class="display cell-border" style="width:100%">
+            <thead>
+                <tr>
+                    <th>CheckoutID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Checkout Date</th>
+                    <th>Return Date</th>
+                    <th>Return Status</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 </div>
+
+<script>
+    let mediaList;
+    let table;
+    //Get list of Audiobooks
+    $(document).ready(function () {
+        //Creating datatable
+        $("#getCheckoutReport").on('submit', (function () {
+            table = $('#transactions-table').DataTable({
+                "ajax": {
+                    "type": "GET",
+                    "data": $(this).serialize(),
+                    "url": '/Reports/GetCheckoutsByDateList',
+                    "dataSrc": ''
+                },
+                "columns": [
+                    { "data": "checkoutid" },
+                    { "data": "studentfname" },
+                    { "data": "studentlname" },
+                    { "data": "checkoutdate" },
+                    { "data": "returndate" },
+                    { "data": "returnstatus" },
+                ],
+                "bLengthChange": false,
+                "pageLength": 5
+            });
+        }))
+        $('.table-container').show();
+    });
+    //Edit button
+    $('#transactions-table').on('click', '.edit-row-btn', function () {
+        let tr = $(this).closest('tr');
+        let audiobookId = table.row(tr).data().audiobookid;
+
+        window.location.href = "/AddMedia/EditAudiobookForm?audiobookId=" + audiobookId;
+    });
+    //Delete
+    $('#transactions-table').on('click', '.delete-row-btn', function () {
+        let tr = $(this).closest('tr');
+        let audiobookId = table.row(tr).data().audiobookid;
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/AddMedia/DeleteAudiobook?audiobookId=' + audiobookId,
+            async: false,
+            success: function (result) {
+                window.location.href = result.redirectToUrl;
+            },
+        });
+    });
+    //Cancel
+    $('.media-entry-form').on('click', '.media-cancel-btn', function () {
+        window.location.href = "/AddMedia/AddAudiobook";
+    });
+
+    $("#media-type").val("Audiobook");
+    $('#audiobook-availability').on('change', function () {
+        this.value = this.checked ? val(true) : val(false);
+    });
+</script>

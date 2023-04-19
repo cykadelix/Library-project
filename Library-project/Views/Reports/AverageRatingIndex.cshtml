@@ -53,21 +53,18 @@
                 <option>Students</option>
             </select>
         </div>
-    </div>
-    <div class="user-combined-panel">
-        <div class="user-entry-container">
-            <div class="media-form-header">
-                <h1 class="display-1">Reviews of Specified Item</h1>
-            </div>
-            <form class="user-entry-form" asp-action="GetReviewsList" asp-controller="Reports" method="post">
-                <div class="input-wrapper-horizontal">
-                    <label asp-for="mediaid">ItemID:</label>
-                    <input type="number" name="mediaid" placeholder="ID of item">
-                    <span asp-validation-for="mediaid" class="text-danger"></span>
-                </div>
-                <button type="submit">Generate Report</button>
-            </form>
+        <div class="media-form-header">
+            <h2 class="display-6">Reviews of Specified Item</h2>
         </div>
+        <form class="user-entry-form" asp-action="GetReviewsList" asp-controller="Reports" method="post">
+            <div class="input-wrapper-horizontal">
+                <label asp-for="mediaid">ItemID:</label>
+                <input type="number" name="mediaid" placeholder="ID of item">
+                <span asp-validation-for="mediaid" class="text-danger"></span>
+            </div>
+            <button type="submit">Generate Report</button>
+        </form>
+
     </div>
     <script>
 
