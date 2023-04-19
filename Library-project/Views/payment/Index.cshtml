@@ -1,0 +1,16 @@
+﻿@using Library_project.ViewModels.payment
+@model PaymentViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<form action="payment/createPayment" method="post">
+    <div class="input-wrapper">
+        <label asp-for="overduefees">balance due</label>
+        <input asp-for="overduefees">
+    </div>
+    
+    <div class="input-wrapper">
+        <input type="submit" />
+    </div>
+</form>
