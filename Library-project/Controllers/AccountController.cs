@@ -15,7 +15,7 @@ namespace Library_project.Controllers
         public IActionResult StudentRegistration()
         {
             RegisterStudentVM newStudent = new RegisterStudentVM();
-            newStudent.email= User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+            
             return View(newStudent);
         }
         public IActionResult RegisterStudentLandingPage(RegisterStudentVM student)
@@ -25,16 +25,16 @@ namespace Library_project.Controllers
                 using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
                 {
                     conn.Open();
-                    var insertCommand = "INSERT INTO elijah_student (library_card_number, fname, mname, lname, homeaddress, birthday, email, phonenumber, historianshistorianid, overduefees)";
-                    using (var command = new NpgsqlCommand(insertCommand + " VALUES(@library_card_number, @fname, @mname, @lname, @homeaddress, @birthday, @email, @phonenumber,0 ,0)", conn))
+                    var insertCommand = "INSERT INTO students (library_card_number, fname, mname, lname, homeaddress, email, password, phonenumber,overduefees)";
+                    using (var command = new NpgsqlCommand(insertCommand + " VALUES(DEFAULT, @fname, @mname, @lname, @homeaddress, @email,@password, @phonenumber,0)", conn))
                     {
-                        command.Parameters.AddWithValue("@library_card_number",User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+                        
                         command.Parameters.AddWithValue("fname", student.fname);
                         command.Parameters.AddWithValue("mname", student.mname);
                         command.Parameters.AddWithValue("lname", student.lname);
                         command.Parameters.AddWithValue("homeaddress", student.homeaddress);
-                        command.Parameters.AddWithValue("birthday", student.birthday);
                         command.Parameters.AddWithValue("email", student.email);
+                        command.Parameters.AddWithValue("password", student.password);
                         command.Parameters.AddWithValue("phonenumber", student.phonenumber);
 
                         command.ExecuteNonQuery();
@@ -46,104 +46,84 @@ namespace Library_project.Controllers
                 student.fname = "fake name";
             }
 
-
-            return Redirect("Login");
-
-        }
-        public async Task Register(RegisterStudentVM newStudent, string returnUrl = "Account/StudentRegistration")
-        {
-            var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
-                .WithRedirectUri(returnUrl)
-                .Build();
-
-
-
-            await HttpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
-
-        }
-        public async Task Login(RegisterStudentVM newStudent, string returnUrl = "/Explore")
-        {
-            var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
-                .WithRedirectUri(returnUrl)
-                .Build();
-
-
-
-            await HttpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
+            TempData["role"] = "student";
+            return Redirect("/Home");
 
         }
 
-        public IActionResult PostLoginCheck()
+        public IActionResult Login()
         {
-            return View();
+            LoginStudentVM newStudent = new LoginStudentVM();
+
+            return View(newStudent);
         }
-        public void CompleteRegistration()
+        public IActionResult LoginLandingPage(LoginStudentVM newStudent, string returnUrl = "/Home")
         {
-            string id = "";
-            string localEmail = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+            Boolean studentFound=false;
             using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
                 conn.Open();
-                using (var command = new NpgsqlCommand("SELECT * FROM elijah_student WHERE email='" + localEmail + "'", conn))
+                using (var command = new NpgsqlCommand("SELECT * FROM students WHERE email='" + newStudent.email + "' AND password='"+newStudent.password+"'", conn))
                 {
                     var reader = command.ExecuteReader();
                     if (reader.Read())
                     {
-                        id = reader.GetString(0);
+                        TempData["libraryCard"]=reader.GetInt32(0);
+                        string role = "student";
+                        TempData["role"] = role;
+                        studentFound = true;
+
                     }
                     else
                     {
-                        id = "yea right";
+                        TempData["libraryCard"] =-1;
+                        TempData["role"] = "invalid";
+
                     }
                 }
-
-            }
-            if (id == "Incomplete")
-            {
-                using (var subConn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
+                if(!studentFound)
                 {
-                    subConn.Open();
-                    var updateCommand = "UPDATE elijah_student SET library_card_number=@lc WHERE email=@email";
-                    using (var subCommand = new NpgsqlCommand(updateCommand, subConn))
+                    using (var subConn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
                     {
-                        subCommand.Parameters.AddWithValue("lc", User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-                        subCommand.Parameters.AddWithValue("email", User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value);
-                        subCommand.ExecuteNonQuery();
-                    }
+                        subConn.Open();
+                        using (var command = new NpgsqlCommand("SELECT * FROM employees WHERE email='" + newStudent.email + "' AND password = '" + newStudent.password + "'", subConn))
+                        {
+                            var reader = command.ExecuteReader();
+                            if (reader.Read())
+                            {
+                                TempData["libraryCard"] = reader.GetInt32(0);
+                                string role = "employee";
+                                TempData["role"] = role;
+                                studentFound = true;
+
+                            }
+                            else
+                            {
+                                TempData["libraryCard"] = -1;
+                                TempData["role"] = "invalid";
+
+                            }
+                        }
+                    }    
+                    
                 }
+               
             }
-
-            Redirect("Home/Index");
-
+            return Redirect(returnUrl);
 
         }
-        public void updateLibraryCard(string card)
+
+        
+        public IActionResult Logout()
         {
-            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
-            {
-                conn.Open();
-                var updateCommand = "UPDATE elijah_student SET library_card_number=@lc WHERE email=@email";
-                using (var command = new NpgsqlCommand(updateCommand, conn))
-                {
-                    command.Parameters.AddWithValue("lc", card);
-                    command.Parameters.AddWithValue("emal", User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value);
-                    command.ExecuteNonQuery();
-                }
-            }
+            string role = "guest";
+            TempData["role"] = role;
+            TempData["libraryCard"] = -1;
+
+            return Redirect("/Home");
         }
 
-        [Authorize]
-        public async Task Logout()
-        {
-            var authenticationProperties = new LogoutAuthenticationPropertiesBuilder()
-                .WithRedirectUri(Url.Action("Index", "Home"))
-                .Build();
-
-            await HttpContext.SignOutAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        }
-
-        [Authorize]
+        
         public IActionResult UserProfile()
         {
             string localEmail = User.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;

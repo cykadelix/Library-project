@@ -20,7 +20,7 @@ internal class Program
        
         builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
         opt.UseNpgsql(builder.Configuration.GetConnectionString("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;")));
-
+        
         builder.Services.AddAuth0WebAppAuthentication(options =>
         {
             options.Domain = builder.Configuration["Auth0:Domain"];
@@ -48,6 +48,8 @@ internal class Program
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
+
+        
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
