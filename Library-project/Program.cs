@@ -2,9 +2,10 @@ using Library_project.Data;
 using Library_project.Interfaces;
 using Library_project.Repository;
 using Library_project.Settings;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNet.Identity.EntityFramework;
+
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+
 using System.Text;
 
 internal class Program
@@ -16,24 +17,16 @@ internal class Program
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
-        builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-        builder.Services.AddScoped<IRoomRepository, RoomRepository>();
-        builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
-
-                ValidateIssuer = false,
-                ValidateAudience = false
-            };
-        });
+       
         builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
         opt.UseNpgsql(builder.Configuration.GetConnectionString("Server=azurelibrarydatabase.postgres.database.azure.com;Database=Library;Port=5432;User Id=chavemm;Password=Postgres-2023!;Ssl Mode=Allow;")));
-
         
+        builder.Services.AddAuth0WebAppAuthentication(options =>
+        {
+            options.Domain = builder.Configuration["Auth0:Domain"];
+            options.ClientId = builder.Configuration["Auth0:ClientId"];
+            options.Scope = "openid profile email";
+        });
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -46,10 +39,17 @@ internal class Program
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+
+        
+       
+        
+        
+        
+        app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseRouting();
 
+        
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
