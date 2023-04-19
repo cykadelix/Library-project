@@ -1,6 +1,5 @@
 ﻿using Library_project.ViewModels.Review;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Npgsql;
 
 namespace Library_project.Controllers
@@ -31,7 +30,7 @@ namespace Library_project.Controllers
         {
             if (ModelState.IsValid)
             {
-                await using NpgsqlConnection conn = new NpgsqlConnection("Host = 127.0.0.1; Server = localhost; Port = 5432; Database = library_server; UserID = postgres; Password = hatem0199; Pooling = true");
+                await using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
 
                 await conn.OpenAsync();
 
