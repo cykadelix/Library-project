@@ -41,8 +41,8 @@ namespace Library_project.Controllers
                     checkoutid = (int)reader.GetInt32(0),
                     studentfname = (string)reader.GetValue(1),
                     studentlname = (string)reader.GetValue(2),
-                    checkoutdate = (DateTime)reader.GetDateTime(3),
-                    returndate = (DateTime)reader.GetDateTime(4),
+                    //checkoutdate = (DateTime)reader.GetDateTime(3),
+                    //returndate = (DateTime)reader.GetDateTime(4),
                     returnstatus = (bool)reader.GetBoolean(5),
                 });
             }
