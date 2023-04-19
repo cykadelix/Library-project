@@ -13,5 +13,7 @@ namespace Library_project.ViewModels.Projector
         [Required(ErrorMessage = "Please enter the lumens!")]
         public int? lumens { get; set; }
         public bool? availability { get; set; }
+        [Required(ErrorMessage = "Please enter an image!")]
+        public IFormFile? image { get; set; }
     }
 }

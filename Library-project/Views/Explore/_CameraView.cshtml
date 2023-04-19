@@ -15,12 +15,13 @@ else
         @if (items.availability == true)
         {
             <div class="media-display-item">
-                <img class="media-item-img">
+                <img data-id="@items.cameraid" class="media-item-img">
                 <div class="media-display-text">
                     <h1 class="display-1">@items.brand</h1>
                     <h2 class="display-2">@items.serialnumber</h2>
-                    <h2 class="display-2">@items.description</h2>
                     <h2 class="display-2">Megapixels: @items.megapixels</h2>
+                    <h2 class="display-2 description-placeholder">Click to show description</h2>
+                    <h2 class="display-2 media-description hide">@(items.description is null ? "No description provided" : items.description)</h2>
                     <h3 class="display-3 media-checkout-btn"><a>Checkout<i class="fa-solid fa-arrow-right"></i></a></h3>
                 </div>
             </div>

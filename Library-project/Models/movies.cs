@@ -22,6 +22,7 @@ namespace Library_project.Models
         public DateOnly releasedate { get; set; }
 
         public bool availability { get; set;}
+        public string description { get; set; }
 
        
         

@@ -108,7 +108,6 @@ $('#audiobook-explore-btn').on('click', function () {
         url: '/Explore/GetAudiobooks',
         asyc: false,
         success: function (result) {
-            console.log(result);
             $('#media-partial-placeholder').html(result);
             mediaType = "audiobook";
 
@@ -135,6 +134,30 @@ function resizeExploreContainer() {
 function loadRandomImages() {
     let i = 0;
     document.querySelectorAll('.media-item-img').forEach(function (displayItem) {
-        displayItem.src = "/images/" + mediaType + "/" + mediaType + ((i++ % 5) + 1) + ".jpg";
+        displayItem.src = "images/media/" + mediaType + $(displayItem).data('id') + ".jpg";
     })
 }
+
+$(document).on('click', '.media-display-item', function (e) {
+    if (!$(e.target).is("a") && !$(e.target).is("h3")) {
+        clickToExapndCards($(this));
+    }
+});
+
+$(document).on('click', 'media-checkout-btn', function (e) {
+
+})
+
+function clickToExapndCards($obj) {
+    let clickedElement = $obj;
+    if (clickedElement.hasClass('expanded')) {
+        clickedElement.find('.description-placeholder').slideUp(250);
+        clickedElement.find('.media-description').slideDown(500);
+        clickedElement.removeClass('expanded');
+    } else {
+        clickedElement.find('.media-description').slideUp(500);
+        clickedElement.find('.description-placeholder').slideDown(250);
+        clickedElement.addClass('expanded');
+    }
+
+};

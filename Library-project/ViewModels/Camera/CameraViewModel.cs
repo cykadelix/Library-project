@@ -14,5 +14,7 @@ namespace Library_project.ViewModels.Camera
         [Required(ErrorMessage = "Please enter the megapixels!")]
         public double? megapixels { get; set; }
         public bool? availability { get; set; }
+        [Required(ErrorMessage = "Please enter an image!")]
+        public IFormFile? image { get; set; }
     }
 }

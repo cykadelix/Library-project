@@ -33,3 +33,11 @@ body {
 .library-logo {
     margin: 1rem;
 }
+
+.light-green {
+    background-color: rgb(157, 255, 181, 0.7) !important;
+}
+
+.light-red {
+    background-color: rgb(255, 94, 91, 0.3) !important;
+}

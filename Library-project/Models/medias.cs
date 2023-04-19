@@ -8,6 +8,7 @@ namespace Library_project.Models
     {
         [Key]
         public int mediaid { get; set; }
+        public DateTime ? timecreated { get; set; }
         [NotMapped]
         public Location? location { get; set; }
 

@@ -28,6 +28,7 @@ namespace Library_project.ViewModels.Employee
         [Required(ErrorMessage = "Please enter their phone number!")]
         [RegularExpression("^\\d{10}$", ErrorMessage = "Must be a 10 digit number(no spaces/hyphens)")]
         public string? phonenumber { get; set; }
+        public bool active { get; set; } = true;
     }
 
 }
