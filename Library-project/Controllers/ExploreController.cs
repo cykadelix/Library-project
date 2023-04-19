@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Library_project.Models;
 using Npgsql;
-using Library_project.ViewModels;
 using Library_project.Data.Enums;
 using Library_project.Data.Objects;
 using Library_project.ViewModels.Book;
@@ -11,8 +9,6 @@ using Library_project.ViewModels.Computer;
 using Library_project.ViewModels.Projector;
 using Library_project.ViewModels.Movie;
 using Library_project.ViewModels.Audiobook;
-
-using Microsoft.AspNetCore.Authorization;
 
 namespace Library_project.Controllers
 {
