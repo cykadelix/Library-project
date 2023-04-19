@@ -15,15 +15,16 @@ namespace Library_project.Controllers
     {
         private readonly IStudentRepository studentRepository;
 
-        StudentController(IStudentRepository _studentRepository)
-        {
-            studentRepository = _studentRepository;
-        }
 
         public async Task<IActionResult> Index()
         {
             IEnumerable<students> students = await studentRepository.GetAll();
             return View(students);
+        }
+
+        public IActionResult StudentCheckouts()
+        {
+            return View();
         }
     }
 }

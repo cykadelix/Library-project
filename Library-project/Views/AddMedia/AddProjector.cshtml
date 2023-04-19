@@ -42,9 +42,9 @@
     </div>
     <div class="media-entry-container">
         <div class="media-form-header">
-            <h1 class="display-1">Choose an entry type</h1>
+            <h1 class="display-1">Entry Form</h1>
+            <h2 class="sub-header">Choose a media type</h2>
             <h2 class="display-2" id="media-form-subheader"></h2>
-            <label for="media-type"></label>
             <select name="media-type" id="media-type">
                 <option><a>Computer</a></option>
                 <option>Camera</option>
@@ -105,7 +105,8 @@
     <div class="media-recent-transactions-panel">
         <div class="media-recent-transactions">
             <div class="recent-transactions-header">
-                <h1 class="display-1">Current Inventory</h1>
+                <h1 class="display-1">Inventory</h1>
+                <h2 class="sub-header-2">Projector(s) currently in stock</h2>
                 <h2 class="display-2" id="recent-transactions-subheader"></h2>
             </div>
             <div class="table-container" style="display:none">
@@ -131,27 +132,21 @@
     let table;
     //Get list of projectors
     $(function () {
-        $.ajax({
-            type: 'GET',
-            url: '/Explore/GetProjectorList',
-            async: false,
-            datatype: 'json',
-            success: function (result) {
-                mediaList = result;
-            },
-        });
         //Creating datatable
         table = $('#transactions-table').DataTable({
-            data: mediaList,
+            "ajax": {
+                "type": "GET",
+                "url": '/Explore/GetProjectorList',
+                "dataSrc": ''
+            },
             columnDefs: [{
                 targets: 2,
                 render: function (data, type, row) {
                     if (data.length > 30) {
                         return data.substr(0, 50) + "...";
-
-                    }
-                    else
+                    } else {
                         return data;
+                    }
                 }
             }],
             "columns": [

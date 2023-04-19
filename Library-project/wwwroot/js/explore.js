@@ -118,7 +118,7 @@ $('#audiobook-explore-btn').on('click', function () {
 });
 
 $(document).on('click', '.media-checkout-btn', function () {
-    let dataToSend = {"studentid": 1, "mediaid": 1};
+    let dataToSend = {"studentid": 13, "mediaid": 53};
     let elementClicked = $(this);
 
     let result;

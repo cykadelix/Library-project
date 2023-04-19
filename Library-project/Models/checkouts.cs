@@ -18,6 +18,9 @@ namespace Library_project.Models
         [ForeignKey("students")]
         public int studentid { get; set; }
         public students? student { get; set; }
+
+        public bool? returned { get; set; }
+        public string? returned_date { get; set; }
       
 
         [ForeignKey("media")]
