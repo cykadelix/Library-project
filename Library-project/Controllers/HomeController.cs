@@ -27,9 +27,10 @@ namespace Library_project.Controllers
 
         public IActionResult Index()
         {
-            if (TempData.Peek("role") == null)
+            string role = (string)TempData.Peek("role");
+            if (string.IsNullOrEmpty(role))
             {
-                string role = "guest";
+                role = "guest";
                 TempData["role"] = role;
             }
             return View();
