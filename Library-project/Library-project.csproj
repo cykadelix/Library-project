@@ -27,7 +27,6 @@
     <None Remove="Interfaces\" />
     <None Remove="Views\Room\" />
     <None Remove="Views\Student\" />
-    <None Remove="Views\Activity\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Repository\" />
@@ -35,7 +34,6 @@
     <Folder Include="ViewModels\Student\" />
     <Folder Include="Views\DashboardSettings\" />
     <Folder Include="Views\Room\" />
-    <Folder Include="Views\Activity\" />
     <Folder Include="wwwroot\images\media\" />
   </ItemGroup>
 </Project>

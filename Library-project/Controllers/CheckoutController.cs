@@ -21,12 +21,12 @@ namespace Library_project.Controllers
 
         public IActionResult CreateCheckout()
         {
-            var newCheckout = new CheckoutViewModel();
+            var newCheckout = new CreateCheckoutViewModel();
             return View(newCheckout);
         }
         
         [HttpPost]
-        public string CreateCheckout(CheckoutViewModel newCheckout)
+        public string CreateCheckout(CreateCheckoutViewModel newCheckout)
         {
             if (ModelState.IsValid)
             {
