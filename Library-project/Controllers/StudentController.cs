@@ -173,7 +173,7 @@ namespace Library_project.Controllers
         }
 
         [HttpPost]
-        public IActionResult PayBalance(int amount)
+        public IActionResult PayBalance(StudentBalanceViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -182,11 +182,11 @@ namespace Library_project.Controllers
                 {
                     conn.Open();
 
-                    using var cmd = new NpgsqlCommand("UPDATE students SET overduefees -= @a WHERE library_card_number = 5", conn)
+                    using var cmd = new NpgsqlCommand("UPDATE students SET overduefees = overduefees - @a WHERE library_card_number = 13", conn)
                     {
                         Parameters =
                         {
-                            new("a", amount),
+                            new("a", model.amount),
 
                         }
                     };
