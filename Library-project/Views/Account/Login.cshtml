@@ -6,7 +6,7 @@
 
 <div class="login-container">
     <div class="login-form-container">
-        <form form action="LoginLandingPage" method="post">
+        <form id="login-form" action="LoginLandingPage" method="post">
             <h1 class="display-4">Welcome back!</h1>
             <h2 class="display-6">Please enter your details.</h2>
             <div class="input-wrapper display-6">
@@ -15,7 +15,7 @@
             </div>
             <div class="input-wrapper display-6">
                 <label asp-for="password">Password</label>
-                <input asp-for="password">
+                <input asp-for="password" type="password">
             </div>
             <input type="submit" placeholder="Login"/>
             <h3 class="display-6">

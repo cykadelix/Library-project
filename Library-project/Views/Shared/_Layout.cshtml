@@ -31,11 +31,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        
-                        
                         @{
                             if((string)TempData.Peek("role")=="guest")
                             {
@@ -58,10 +53,6 @@
                                 <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Explore" asp-action="Index">Explore</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Activity" asp-action="Index">Activities</a>
-                                </li>
-                                
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="StudentProfile">User Profile</a>
                                 </li>
