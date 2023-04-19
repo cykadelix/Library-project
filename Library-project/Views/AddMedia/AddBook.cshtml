@@ -162,18 +162,13 @@
     };
     //Get list of books
     $(function () {
-        $.ajax({
-            type: 'GET',
-            url: '/Explore/GetBookList',
-            async: false,
-            datatype: 'json',
-            success: function (result) {
-                mediaList = result;
-            },
-        });
         //Creating datatable
         table = $('#transactions-table').DataTable({
-            data: mediaList,
+            "ajax": {
+                "type": "GET",
+                "url": '/Explore/GetBookList',
+                "dataSrc": ''
+            },
             "columns": [
                 { "data": "title" },
                 { "data": "author" },

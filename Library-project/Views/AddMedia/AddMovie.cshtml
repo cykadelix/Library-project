@@ -162,18 +162,13 @@
     };
     //Get list of movies
     $(function () {
-        $.ajax({
-            type: 'GET',
-            url: '/Explore/GetMovieList',
-            async: false,
-            datatype: 'json',
-            success: function (result) {
-                mediaList = result;
-            },
-        });
         //Creating datatable
         table = $('#transactions-table').DataTable({
-            data: mediaList,
+            "ajax": {
+                "type": "GET",
+                "url": '/Explore/GetMovieList',
+                "dataSrc": ''
+            },
             "columns": [
                 { "data": "title" },
                 { "data": "rating" },

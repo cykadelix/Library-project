@@ -154,20 +154,15 @@
         9: "Non_Fiction",
         10: "History",
     };
-    //Get list of books
+    //Get list of Audiobooks
     $(function () {
-        $.ajax({
-            type: 'GET',
-            url: '/Explore/GetAudiobookList',
-            async: false,
-            datatype: 'json',
-            success: function (result) {
-                mediaList = result;
-            },
-        });
         //Creating datatable
         table = $('#transactions-table').DataTable({
-            data: mediaList,
+            "ajax": {
+                "type": "GET",
+                "url": '/Explore/GetAudiobookList',
+                "dataSrc": ''
+            },
             "columns": [
                 { "data": "title" },
                 {

@@ -33,7 +33,7 @@
     <div class="user-combined-panel" style="width: 100%;">
         <div class="user-entry-container">
         </div>
-        <div class="user-recent-transactions-panel">
+        <div class="user-recent-transactions-panel" style="height: 100%">
             <div class="user-recent-transactions">
                 <div class="recent-transactions-header">
                     <h1 class="display-1" style="text-align: center">Current Checkouts</h1>
@@ -68,12 +68,8 @@
             "ajax": {
                 "type": "GET",
                 "data" : { "studentid": 13 },
-                "cache": false,
                 "url": '/Checkout/GetStudentsCheckoutList',
-                "dataSrc": function (json) {
-                    console.log(json);
-                    return json;
-                },
+                "dataSrc": ''
             },
             "columns": [
                 { "data": "mediaType" },

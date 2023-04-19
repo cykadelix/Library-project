@@ -161,18 +161,13 @@
     let table;
     //Get list of employees
     $(function () {
-        $.ajax({
-            type: 'GET',
-            url: '/Employee/GetEmployeeList',
-            async: false,
-            datatype: 'json',
-            success: function (result) {
-                employeeList = result;
-            },
-        });
         //Creating datatable
         table = $('#transactions-table').DataTable({
-            data: employeeList,
+            "ajax": {
+                "type": "GET",
+                "url": '/Employee/GetEmployeeList',
+                "dataSrc": ''
+            },
             "columns": [
                 { "data": "fname" },
                 { "data": "mname" },

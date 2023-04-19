@@ -142,18 +142,13 @@
     let table;
     //Get list of journals
     $(function () {
-        $.ajax({
-            type: 'GET',
-            url: '/Explore/GetJournalList',
-            async: false,
-            datatype: 'json',
-            success: function (result) {
-                mediaList = result;
-            },
-        });
         //Creating datatable
         table = $('#transactions-table').DataTable({
-            data: mediaList,
+            "ajax": {
+                "type": "GET",
+                "url": '/Explore/GetJournalList',
+                "dataSrc": ''
+            },
             "columns": [
                 { "data": "title" },
                 { "data": "researchers" },

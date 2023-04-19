@@ -125,18 +125,13 @@
     let table;
     //Get list of computers
     $(document).ready(function () {
-        $.ajax({
-            type: 'GET',
-            url: '/Explore/GetComputerList',
-            async: false,
-            datatype: 'json',
-            success: function (result) {
-                mediaList = result;
-            },
-        });
         //Creating datatable
         table = $('#transactions-table').DataTable({
-            data: mediaList,
+            "ajax": {
+                "type": "GET",
+                "url": '/Explore/GetComputerList',
+                "dataSrc": ''
+            },
             columnDefs: [{
                 targets: 2,
                 render: function (data, type, row) {
