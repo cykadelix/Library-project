@@ -15,5 +15,6 @@ namespace Library_project.ViewModels.Projector
         public bool? availability { get; set; }
         [Required(ErrorMessage = "Please enter an image!")]
         public IFormFile? image { get; set; }
+        public byte[]? imageBytes { get; set; }
     }
 }

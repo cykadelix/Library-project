@@ -1,0 +1,138 @@
+﻿@{
+    ViewBag.Title = "EmployeeIndex";
+}
+
+<div class="account-container">
+    <div class="account-controls-panel">
+        <div class="library-logo">
+            Library Logo
+        </div>
+        <div class="user-info">
+            <div class="user-pfp-container">
+                <img src="~/images/pfp_male.svg" id="user-pfp-img" />
+            </div>
+            <h1 class="display-1">Name</h1>
+        </div>
+        <a class="account-nav" asp-area="" asp-controller="Home" asp-action="UserDashboard">
+            <i class="fa-solid fa-chart-bar"></i>
+            <h2 class="display-2">Dashboard</h2>
+        </a>
+        <a class="account-nav" asp-area="" asp-controller="Checkouts" asp-action="StudentCheckouts">
+            <i class="fa-solid fa-list-check"></i>
+            <h2 class="display-2">Checkouts</h2>
+        </a>
+        <a class="account-nav" asp-area="" asp-controller="Student" asp-action="StudentBalance">
+            <i class="fa-solid fa-money-bill"></i>
+            <h2 class="display-2">Balance</h2>
+        </a>
+        <a class="account-nav" asp-controller="DashboardSettings" asp-action="User" asp-route-id="1">
+            <i class="fa-solid fa-gear"></i>
+            <h2 class="display-2">Settings</h2>
+        </a>
+        <a class="account-nav" id="account-signout-btn">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <h2 class="display-2">Sign out</h2>
+        </a>
+    </div>
+    <div class="user-combined-panel" style="width: 100%;">
+        <div class="user-entry-container">
+        </div>
+        <div class="user-recent-transactions-panel" style="height: 100%">
+            <div class="user-recent-transactions">
+                <div class="recent-transactions-header">
+                    <h1 class="display-1" style="text-align: center">Current Checkouts</h1>
+                    <h2 class="display-2" id="recent-transactions-subheader"></h2>
+                </div>
+                <div class="table-container" style="display:none">
+                    <table id="transactions-table" class="display cell-border" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Item</th>
+                                <th>Checkout Date</th>
+                                <th>Return By Date</th>
+                                <th>Date Returned</th>
+                                <th>Return item</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let checkoutList;
+    let table;
+    //Get list of employees
+    $(function () {
+        //Creating datatable
+        table = $('#transactions-table').DataTable({
+            "ajax": {
+                "type": "GET",
+                "data" : { "studentid": 13 },
+                "url": '/Checkout/GetStudentsCheckoutList',
+                "dataSrc": ''
+            },
+            "columns": [
+                { "data": "mediaType" },
+                {
+                    "data": null,
+                    "render": function (data, type, full, meta) {
+                        if (data.brand == "") {
+                            return data.title;
+                        } else {
+                            return (data.brand + " " + data.serialNo);
+                        }
+                    }
+                },
+                { "data": "checkoutDate" },
+                { "data": "returnDate" },
+                {
+                    "data": null,
+                    "render": function (data, type, full, meta) {
+                        if (data.returned == true) {
+                            return data.returnedDate;
+                        } else {
+                            return "N/A";
+                        }
+                    }
+                }, 
+                {
+                    "data": null,
+                    "render": function(data, type, full, meta) {
+                        if(data.returned) {
+                            return "<i class='fa-regular fa-square-check'></i>";
+                        } else {
+                            return "<a style='cursor:pointer' class='return-item'><i class='fa-regular fa-square'></i></a>";
+                        }
+                    }
+                }
+            ],
+            "createdRow": function (row, data, dataIndex) {
+                if (data['returned'] == true) {
+                    $(row).addClass('light-green');
+                } else if(Date.now() - Date.parse(data.returnDate) > 0) {
+                    $(row).addClass('light-red');
+                } else {
+                    $(row).addClass('light-orange');
+                }
+            }
+        });
+        $('.table-container').show();
+    });
+    //Return
+    $('#transactions-table').on('click', '.return-item', function () {
+        let tr = $(this).closest('tr');
+        let mediaId = table.row(tr).data().mediaId;
+
+        window.location.href = '/Checkout/Checkoutitem?mediaId=' + mediaId;
+    });
+    //Cancel
+    $('.user-entry-form').on('click', '.media-cancel-btn', function () {
+        window.location.href = "/Employee/EmployeeIndex";
+    });
+    //Return item
+</script>

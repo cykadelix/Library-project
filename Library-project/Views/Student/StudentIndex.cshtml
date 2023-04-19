@@ -1,0 +1,208 @@
+﻿@using Library_project.ViewModels.Student;
+@model CreateStudentViewModel;
+@{
+    ViewBag.Title = "StudentIndex";
+}
+<div class="account-container">
+    <div class="account-controls-panel">
+        <div class="library-logo">
+            Library Logo
+        </div>
+        <div class="user-info">
+            <div class="user-pfp-container">
+                <img src="~/images/pfp_male.svg" id="user-pfp-img" />
+            </div>
+            <h1 class="display-1">Name</h1>
+        </div>
+        <a class="account-nav" asp-area="" asp-controller="Home" asp-action="AdminDashboard">
+            <i class="fa-solid fa-chart-bar"></i>
+            <h2 class="display-2">Dashboard</h2>
+        </a>
+        <a class="account-nav" asp-area="" asp-controller="AddMedia" asp-action="AddComputer">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <h2 class="display-2">Inventory</h2>
+        </a>
+        <a class="account-nav" asp-area="" asp-controller="Employee" asp-action="EmployeeIndex">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <h2 class="display-2">Manage Employees</h2>
+        </a>
+        <a class="account-nav active-l" asp-area="" asp-controller="Historian" asp-action="HistorianIndex">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <h2 class="display-2">Manage Historians</h2>
+        </a>
+        <a class="account-nav" asp-area="" asp-controller="Student" asp-action="StudentIndex">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <h2 class="display-2">Manage Students</h2>
+        </a>
+        <a class="account-nav">
+            <i class="fa-solid fa-gear"></i>
+            <h2 class="display-2">Settings</h2>
+        </a>
+        <a class="account-nav" id="account-signout-btn">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <h2 class="display-2">Sign out</h2>
+        </a>
+    </div>
+    <div class="user-combined-panel">
+        <div class="user-entry-container">
+            <div class="media-form-header">
+                <h1 class="display-1">Create or manage a student</h1>
+            </div>
+            <form class="user-entry-form" asp-action="@(Model is null ? "CreateStudent" : "UpdateStudent")" asp-controller="Student" method="post">
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="fname">First name</label>
+                    <input asp-for="fname" value="@(Model is null ? "" : Model.fname)">
+                    <span asp-validation-for="fname" class="text-danger"></span>
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="mname">Middle name</label>
+                    <input asp-for="mname" value="@(Model is null ? "" : Model.mname)">
+                    <span asp-validation-for="mname" class="text-danger"></span>
+
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="lname">Last Name</label>
+                    <input asp-for="lname" value="@(Model is null ? "" : Model.lname)">
+                    <span asp-validation-for="lname" class="text-danger"></span>
+
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="email">Email</label>
+                    <input asp-for="email" value="@(Model is null ? "" : Model.email)">
+                    <span asp-validation-for="email" class="text-danger"></span>
+
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="password">Password</label>
+                    <input asp-for="password" value="@(Model is null ? "" : Model.password)">
+                    <span asp-validation-for="password" class="text-danger"></span>
+
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="age">Age</label>
+                    <input asp-for="age" value="@(Model is null ? "" : Model.age)">
+                    <span asp-validation-for="age" class="text-danger"></span>
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="homeaddress">Address</label>
+                    <input asp-for="homeaddress" value="@(Model is null ? "" : Model.homeaddress)">
+                    <span asp-validation-for="homeaddress" class="text-danger"></span>
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="phonenumber">Phone Number</label>
+                    <input asp-for="phonenumber" value="@(Model is null ? "" : Model.phonenumber)">
+                    <span asp-validation-for="phonenumber" class="text-danger"></span>
+                </div>
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="overdue_fees">Overdue Fees</label>
+                    <input asp-for="overdue_fees" value="@(Model is null ? 0 : Model.overdue_fees)">
+                    <span asp-validation-for="overdue_fees" class="text-danger"></span>
+                </div>
+                <div class="user-form-controls">
+                    @if (Model is null)
+                    {
+                        <button type="submit" class="user-submit-btn" id="student-submit-form">Submit</button>
+                    }
+                    else
+                    {
+                        <input asp-for="library_card_number" type="hidden" class="media-form-serialnumber" value="@Model.library_card_number" />
+                        <div class="user-edit-form-controls">
+                            <button type="reset" class="media-cancel-btn" id="student-cancel-form">Cancel</button>
+                            <button type="submit" class="media-save-btn" id="student-save-form">Save</button>
+                        </div>
+                    }
+                </div>
+            </form>
+        </div>
+        <div class="user-recent-transactions-panel">
+            <div class="user-recent-transactions">
+                <div class="recent-transactions-header">
+                    <h1 class="display-1" style="text-align: center">Current Students</h1>
+                    <h2 class="display-2" id="recent-transactions-subheader"></h2>
+                </div>
+                <div class="table-container" style="display:none">
+                    <table id="transactions-table" class="display cell-border" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Middle Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Password</th>
+                                <th>Age</th>
+                                <th>Address</th>
+                                <th>Phone #</th>
+                                <th>Overdue Fees</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>let studentList;
+    let table;
+    //Get list of students
+    $(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/Student/GetStudentList',
+            async: false,
+            datatype: 'json',
+            success: function (result) {
+                console.log(result);
+                studentList = result;
+            },
+        });
+        //Creating datatable
+        table = $('#transactions-table').DataTable({
+            data: studentList,
+            "columns": [
+                { "data": "fname" },
+                { "data": "mname" },
+                { "data": "lname" },
+                { "data": "email" },
+                { "data": "password" },
+                { "data": "age" },
+                { "data": "homeaddress" },
+                { "data": "phonenumber" },
+                { "data": "overdue_fees" },
+                {
+                    "data": null,
+                    "defaultContent": "<a class='edit-row-btn'><i class='fa-solid fa-pen-to-square'></i></a>" +
+                        "<a class='delete-row-btn'><i class='fa-solid fa-trash'></i></a>"
+                }
+            ],
+            "bLengthChange": false,
+            "pageLength": 5
+        });
+        $('.table-container').show();
+    });
+    //Edit button
+    $('#transactions-table').on('click', '.edit-row-btn', function () {
+        let tr = $(this).closest('tr');
+        let lcn = table.row(tr).data().library_card_number;
+
+        window.location.href = "/Student/EditStudent?lcn=" + lcn;
+    });
+    //Delete
+    $('#transactions-table').on('click', '.delete-row-btn', function () {
+        let tr = $(this).closest('tr');
+        let lcn = table.row(tr).data().library_card_number;
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/Student/DeleteStudent?lcn=' + lcn,
+            async: false,
+            success: function (result) {
+                window.location.href = result.redirectToUrl;
+            },
+        });
+    });
+    //Cancel
+    $('.user-entry-form').on('click', '.media-cancel-btn', function () {
+        window.location.href = "/Student/StudentIndex";
+    });</script>

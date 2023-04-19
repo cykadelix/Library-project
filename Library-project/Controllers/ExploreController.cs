@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Library_project.Models;
 using Npgsql;
-using Library_project.ViewModels;
 using Library_project.Data.Enums;
 using Library_project.Data.Objects;
 using Library_project.ViewModels.Book;
@@ -11,8 +9,6 @@ using Library_project.ViewModels.Computer;
 using Library_project.ViewModels.Projector;
 using Library_project.ViewModels.Movie;
 using Library_project.ViewModels.Audiobook;
-
-using Microsoft.AspNetCore.Authorization;
 
 namespace Library_project.Controllers
 {
@@ -31,9 +27,11 @@ namespace Library_project.Controllers
         }
 
         //Cameras
-        public List<CameraViewModel>? CameraToList()
+        public CameraListViewModel? CameraToList()
         {
+            CameraListViewModel cameraListViewModel = new CameraListViewModel();
             List<CameraViewModel> cameraList = new List<CameraViewModel>();
+            int numAvailable = 0;
             using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
                 conn.Open();
@@ -51,7 +49,9 @@ namespace Library_project.Controllers
                         cam.description = reader.GetString(3);
                         cam.megapixels = reader.GetDouble(4);
                         cam.availability = reader.GetBoolean(5);
+                        cam.imageBytes = reader.GetFieldValue<byte[]>(7);
                         cameraList.Add(cam);
+                        if (cam.availability == true) numAvailable++;
                     }
                     reader.Close();
                     if (cameraList.Count == 0)
@@ -60,7 +60,9 @@ namespace Library_project.Controllers
                     }
                 }
             }
-            return cameraList;
+            cameraListViewModel.Cameras = cameraList;
+            cameraListViewModel.NumAvailable = numAvailable;
+            return cameraListViewModel;
         }
 
         [HttpGet]
@@ -72,13 +74,15 @@ namespace Library_project.Controllers
         [HttpGet]
         public IActionResult GetCameraList()
         {
-            return Json(CameraToList());
+            return Json(CameraToList() is null ? null : CameraToList().Cameras);
         }
 
         //Computers
-        public List<ComputerViewModel>? ComputerToList()
+        public ComputerListViewModel? ComputerToList()
         {
+            ComputerListViewModel computerListViewModel = new ComputerListViewModel();
             List<ComputerViewModel> computerList = new List<ComputerViewModel>();
+            int numAvailable = 0;
             using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
                 conn.Open();
@@ -95,7 +99,9 @@ namespace Library_project.Controllers
                         comp.brand = reader.GetString(2);
                         comp.description = reader.GetString(3);
                         comp.availability = reader.GetBoolean(4);
+                        comp.imageBytes = reader.GetFieldValue<byte[]>(6);
                         computerList.Add(comp);
+                        if (comp.availability == true) numAvailable++;
                     }
                     reader.Close();
                     if (computerList.Count == 0)
@@ -104,7 +110,9 @@ namespace Library_project.Controllers
                     }
                 }
             }
-            return computerList;
+            computerListViewModel.Computers = computerList;
+            computerListViewModel.NumAvailable = numAvailable;
+            return computerListViewModel;
         }
 
         [HttpGet]
@@ -116,13 +124,15 @@ namespace Library_project.Controllers
         [HttpGet]
         public IActionResult GetComputerList()
         {
-            return Json(ComputerToList());
+            return Json(ComputerToList() is null ? null : ComputerToList().Computers);
         }
 
         //Projectors
-        public List<ProjectorViewModel>? ProjectorToList()
+        public ProjectorListViewModel? ProjectorToList()
         {
-            List<ProjectorViewModel> computerList = new List<ProjectorViewModel>();
+            ProjectorListViewModel projectorListViewModel = new ProjectorListViewModel();
+            List<ProjectorViewModel> projectorList = new List<ProjectorViewModel>();
+            int numAvailable = 0;
             using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
                 conn.Open();
@@ -133,23 +143,27 @@ namespace Library_project.Controllers
                     var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-                        ProjectorViewModel comp = new ProjectorViewModel();
-                        comp.projectorid = reader.GetInt32(0);
-                        comp.serialnumber = reader.GetString(1);
-                        comp.brand = reader.GetString(2);
-                        comp.description = reader.GetString(3);
-                        comp.lumens = reader.GetInt32(4);
-                        comp.availability = reader.GetBoolean(5);
-                        computerList.Add(comp);
+                        ProjectorViewModel proj = new ProjectorViewModel();
+                        proj.projectorid = reader.GetInt32(0);
+                        proj.serialnumber = reader.GetString(1);
+                        proj.brand = reader.GetString(2);
+                        proj.description = reader.GetString(3);
+                        proj.lumens = reader.GetInt32(4);
+                        proj.availability = reader.GetBoolean(5);
+                        proj.imageBytes = reader.GetFieldValue<byte[]>(7);
+                        projectorList.Add(proj);
+                        if (proj.availability == true) numAvailable++;
                     }
                     reader.Close();
-                    if (computerList.Count == 0)
+                    if (projectorList.Count == 0)
                     {
                         return null;
                     }
                 }
             }
-            return computerList;
+            projectorListViewModel.Projectors = projectorList;
+            projectorListViewModel.NumAvailable = numAvailable;
+            return projectorListViewModel;
         }
 
         [HttpGet]
@@ -161,14 +175,16 @@ namespace Library_project.Controllers
         [HttpGet]
         public IActionResult GetProjectorList()
         {
-            return Json(ProjectorToList());
+            return Json(ProjectorToList() is null ? null : ProjectorToList().Projectors);
         }
 
-      
+
         //Books
         [HttpGet]
-        public List<EditBookViewModel>? BookToList()
+        public BookListViewModel? BookToList()
         {
+            var bookListViewModel = new BookListViewModel();
+            var numAvailable = 0;
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
             dataSourceBuilder.MapEnum<genres>();
@@ -177,10 +193,10 @@ namespace Library_project.Controllers
             using var command = dataSource.CreateCommand("SELECT * FROM books");
             using var reader = command.ExecuteReader();
 
-            var bookList = new List<EditBookViewModel>();
+            var bookList = new List<BookViewModel>();
             while (reader.Read())
             {
-                bookList.Add(new EditBookViewModel()
+                bookList.Add(new BookViewModel()
                 {
                     bookid = reader.GetInt32(0),
                     title = reader.GetString(1),
@@ -191,13 +207,17 @@ namespace Library_project.Controllers
                     isbn = reader.GetInt64(6),
                     isAvailable = reader.GetBoolean(7),
                     description = reader.GetString(9),
+                    imageBytes = reader.GetFieldValue<byte[]>(10),
                 });
+                if (reader.GetBoolean(7) == true) numAvailable++;
             }
             if (bookList.Count == 0)
             {
                 return null;
             }
-            return bookList;
+            bookListViewModel.Books = bookList;
+            bookListViewModel.NumAvailable = numAvailable;
+            return bookListViewModel;
         }
 
         [HttpGet]
@@ -209,13 +229,15 @@ namespace Library_project.Controllers
         [HttpGet]
         public IActionResult GetBookList()
         {
-            return Json(BookToList());
+            return Json(BookToList() is null ? null : BookToList().Books);
         }
 
         //Journals
         [HttpGet]
-        public List<CreateJournalViewModel>? JournalToList()
+        public JournalListViewModel? JournalToList()
         {
+            var journalListViewModel = new JournalListViewModel();
+            var numAvailable = 0;
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
             dataSourceBuilder.MapComposite<Location>();
@@ -223,11 +245,11 @@ namespace Library_project.Controllers
             using var command = dataSource.CreateCommand("SELECT * FROM journals");
             using var reader = command.ExecuteReader();
 
-            List<CreateJournalViewModel> local_list = new List<CreateJournalViewModel>();
+            List<JournalViewModel> local_list = new List<JournalViewModel>();
 
             while (reader.Read())
             {
-                local_list.Add(new CreateJournalViewModel()
+                local_list.Add(new JournalViewModel()
                 {
                     journalid = reader.GetInt32(0),
                     title = reader.GetFieldValue<string>(2),
@@ -237,13 +259,17 @@ namespace Library_project.Controllers
                     releasedate = reader.GetFieldValue<DateOnly>(6).ToString("yyyy-MM-dd"),
                     isavailable = reader.GetFieldValue<bool>(7),
                     description = reader.GetString(8),
-                }); ;
+                    imageBytes = reader.GetFieldValue<byte[]>(9),
+                });
+                if (reader.GetFieldValue<bool>(7)) numAvailable++;
             }
             if (local_list.Count == 0)
             {
                 return null;
             }
-            return local_list;
+            journalListViewModel.Journals = local_list;
+            journalListViewModel.NumAvailable = numAvailable;
+            return journalListViewModel;
         }
 
         [HttpGet]
@@ -255,13 +281,15 @@ namespace Library_project.Controllers
         [HttpGet]
         public IActionResult GetJournalList()
         {
-            return Json(JournalToList());
+            return Json(JournalToList() is null ? null : JournalToList().Journals);
         }
 
         //Movies
         [HttpGet]
-        public List<MovieViewModel>? MovieToList()
+        public MovieListViewModel? MovieToList()
         {
+            var movieListViewModel = new MovieListViewModel();
+            var numAvailable = 0;
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
             dataSourceBuilder.MapComposite<Location>();
@@ -284,13 +312,17 @@ namespace Library_project.Controllers
                     releasedate = reader.GetFieldValue<DateOnly>(7).ToString("yyyy-MM-dd"),
                     availability = reader.GetFieldValue<bool>(8),
                     description = reader.GetString(9),
-                }); ;
+                    imageBytes = reader.GetFieldValue<byte[]>(10),
+                });
+                if(reader.GetFieldValue<bool>(8)) numAvailable++;
             }
             if (local_list.Count == 0)
             {
                 return null;
             }
-            return local_list;
+            movieListViewModel.Movies = local_list;
+            movieListViewModel.NumAvailable = numAvailable;
+            return movieListViewModel;
         }
 
         [HttpGet]
@@ -302,13 +334,15 @@ namespace Library_project.Controllers
         [HttpGet]
         public IActionResult GetMovieList()
         {
-            return Json(MovieToList());
+            return Json(MovieToList() is null ? null : MovieToList().Movies);
         }
 
         //Audiobooks
         [HttpGet]
-        public List<AudiobookViewModel>? AudiobookToList()
+        public AudiobookListViewModel? AudiobookToList()
         {
+            var audiobookListViewModel = new AudiobookListViewModel();
+            var numAvailable = 0;
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
             dataSourceBuilder.MapComposite<Location>();
@@ -329,7 +363,9 @@ namespace Library_project.Controllers
                 audiobook.length = reader.GetFieldValue<TimeOnly>(6).ToString("hh:mm:ss");
                 audiobook.availability = reader.GetFieldValue<bool>(7);
                 audiobook.description = reader.GetString(8);
+                audiobook.imageBytes = reader.GetFieldValue<byte[]>(9);
                 local_list.Add(audiobook);
+                if(audiobook.availability == true) numAvailable++;
             }
 
             reader.Close();
@@ -337,7 +373,9 @@ namespace Library_project.Controllers
             {
                 return null;
             }
-            return local_list;
+            audiobookListViewModel.Audiobooks = local_list;
+            audiobookListViewModel.NumAvailable = numAvailable;
+            return audiobookListViewModel;
         }
 
         [HttpGet]
@@ -349,7 +387,7 @@ namespace Library_project.Controllers
         [HttpGet]
         public IActionResult GetAudiobookList()
         {
-            return Json(AudiobookToList());
+            return Json(AudiobookToList() is null ? null : AudiobookToList().Audiobooks);
         }
     }
 

@@ -2,7 +2,7 @@
 
 namespace Library_project.ViewModels.Journal
 {
-    public class CreateJournalViewModel
+    public class JournalViewModel
     {
         public int journalid { get; set; }
 
@@ -20,6 +20,7 @@ namespace Library_project.ViewModels.Journal
         public string? description { get; set; }
         [Required(ErrorMessage = "Please enter the image!")]
         public IFormFile? image { get; set; }
+        public byte[]? imageBytes { get; set; }
 
     }
 }

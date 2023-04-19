@@ -131,19 +131,13 @@
     let table;
     //Get list of historians
     $(function () {
-        $.ajax({
-            type: 'GET',
-            url: '/Historian/GetHistorianList',
-            async: false,
-            datatype: 'json',
-            success: function (result) {
-                console.log(result);
-                historianList = result;
-            },
-        });
         //Creating datatable
         table = $('#transactions-table').DataTable({
-            data: historianList,
+            "ajax": {
+                "type": "GET",
+                "url": '/Historian/GetHistorianList',
+                "dataSrc": ''
+            },
             "columns": [
                 { "data": "fname" },
                 { "data": "mname" },

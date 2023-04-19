@@ -31,6 +31,10 @@
             <i class="fa-solid fa-user-group"></i>
             <h2 class="display-2">Manage Historians</h2>
         </a>
+        <a class="account-nav active-l" asp-area="" asp-controller="Student" asp-action="StudentIndex">
+            <i class="fa-solid fa-user-group"></i>
+            <h2 class="display-2">Manage Students</h2>
+        </a>
         <a class="account-nav" asp-controller="DashboardSettings" asp-action="Admin" asp-route-id="1">
             <i class="fa-solid fa-gear"></i>
             <h2 class="display-2">Settings</h2>
@@ -70,7 +74,6 @@
                     <label asp-for="salary">Salary</label>
                     <input asp-for="salary" value="@(Model is null ? "" : Model.salary)">
                     <span asp-validation-for="salary" class="text-danger"></span>
-
                 </div>
                 <div class="input-wrapper-horizontal">
                     <label asp-for="age">Age</label>
@@ -87,7 +90,6 @@
                     <label asp-for="password">Password</label>
                     <input type="password" asp-for="password" value="@(Model is null ? "" : Model.password)">
                     <span asp-validation-for="password" class="text-danger"></span>
-
                 </div>
                 <div class="input-wrapper-horizontal">
                     <label asp-for="confirmpassword">Confirm password</label>
@@ -106,7 +108,7 @@
                     <span asp-validation-for="phonenumber" class="text-danger"></span>
                 </div>
                 <div class="checkbox-wrapper">
-                    <input type="checkbox" value=true id="employee-active" name="active" @(Model is null ? "checked" : (Model.active ? "checked" : "")) />
+                    <input type="checkbox" value=true id="employee-active" name="active" @(Model is null ? "checked" : (Model.active.Value ? "checked" : "")) />
                     <label asp-for="active">Active Employee</label>
                 </div>
                 <div class="user-form-controls">
@@ -146,6 +148,7 @@
                                 <th>Address</th>
                                 <th>Phone #</th>
                                 <th>Edit</th>
+                                <th></th>
                             </tr>
                         </thead>
                     </table>
@@ -161,18 +164,13 @@
     let table;
     //Get list of employees
     $(function () {
-        $.ajax({
-            type: 'GET',
-            url: '/Employee/GetEmployeeList',
-            async: false,
-            datatype: 'json',
-            success: function (result) {
-                employeeList = result;
-            },
-        });
         //Creating datatable
         table = $('#transactions-table').DataTable({
-            data: employeeList,
+            "ajax": {
+                "type": "GET",
+                "url": '/Employee/GetEmployeeList',
+                "dataSrc": ''
+            },
             "columns": [
                 { "data": "fname" },
                 { "data": "mname" },
@@ -188,6 +186,14 @@
                     "data": null,
                     "defaultContent": "<a class='edit-row-btn'><i class='fa-solid fa-pen-to-square'></i></a>" +
                         "<a class='delete-row-btn'><i class='fa-solid fa-trash'></i></a>"
+                },
+                { 
+                    "data": null,
+                    "render": function (data, type, full, meta) {
+                        return data.active ? "current new employee active" : "old ex";
+                    },
+                    "searchable": true,
+                    "visible": false
                 }
             ],
             "createdRow": function (row, data, dataIndex) {

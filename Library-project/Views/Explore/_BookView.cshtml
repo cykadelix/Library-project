@@ -1,22 +1,24 @@
 ﻿@using Library_project.Data.Enums
 @using Library_project.ViewModels.Book
-@model List<EditBookViewModel>
+@model BookListViewModel
 
-@if (Model is null)
+@if (Model is null || Model.NumAvailable == 0)
 {
     <div class="empty-data-container">
         <img src="~/images/empty-data.svg" />
-        <h1 clas="display-1">No items to show.</h1>
+        <h1 clas="display-1">No books available. Check again later.</h1>
     </div>
 }
 else
 {
-    @foreach (var items in Model)
+    @foreach (var items in Model.Books)
     {
         @if (items.isAvailable == true)
         {
+            var base64 = Convert.ToBase64String(items.imageBytes);
+            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
             <div class="media-display-item">
-                <img data-id="@items.bookid" class="media-item-img">
+                <img src="@imgSrc" data-id="@items.bookid" class="media-item-img">
                 <div class="media-display-text">
                     <h1 class="display-1">@items.title</h1>
                     <h2 class="display-2">Author(s): @items.author</h2>
@@ -24,7 +26,15 @@ else
                     <h2 class="display-2">Publishing date: @items.publicDate</h2>
                     <h2 class="display-2">Page count: @items.pageCount</h2>
                     <h2 class="display-2">ISBN: @items.pageCount</h2>
-                    <h3 class="display-3 media-checkout-btn"><a>Checkout<i class="fa-solid fa-arrow-right"></i></a></h3>
+                    <h2 class="display-2 description-placeholder">Click to show description</h2>
+                    <h2 class="display-2 media-description hide">@(items.description == "" ? "No description provided" : items.description)</h2>
+                    <div class="display-3 media-checkout-btn">
+                        <div class="underline-animation">
+                            <a class="checkout-btn-txt">Checkout<i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
+                        <a class="checkout-success-text hide">Checkout successful</a>
+                        <a class="checkout-fail-text hide">Checkout failed</a>
+                    </div>
                 </div>
             </div>
         }

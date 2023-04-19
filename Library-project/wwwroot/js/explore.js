@@ -15,7 +15,7 @@ $('#camera-explore-btn').on('click', function () {
             $('#media-partial-placeholder').html(result);
             mediaType = "camera";
 
-            loadRandomImages();
+            
             resizeExploreContainer();
         }
     });
@@ -31,7 +31,6 @@ $('#computer-explore-btn').on('click', function () {
             $('#media-partial-placeholder').html(result);
             mediaType = "computer";
 
-            loadRandomImages();
             resizeExploreContainer();
         }
     });
@@ -47,7 +46,6 @@ $('#projector-explore-btn').on('click', function () {
             $('#media-partial-placeholder').html(result);
             mediaType = "projector";
 
-            loadRandomImages();
             resizeExploreContainer();
         }
     });
@@ -63,7 +61,7 @@ $('#book-explore-btn').on('click', function () {
             $('#media-partial-placeholder').html(result);
             mediaType = "book";
 
-            loadRandomImages();
+            
             resizeExploreContainer();
         }
     });
@@ -79,7 +77,7 @@ $('#journal-explore-btn').on('click', function () {
             $('#media-partial-placeholder').html(result);
             mediaType = "journal";
 
-            loadRandomImages();
+            
             resizeExploreContainer();
         }
     });
@@ -95,7 +93,7 @@ $('#movie-explore-btn').on('click', function () {
             $('#media-partial-placeholder').html(result);
             mediaType = "movie";
 
-            loadRandomImages();
+            
             resizeExploreContainer();
         }
     });
@@ -111,11 +109,45 @@ $('#audiobook-explore-btn').on('click', function () {
             $('#media-partial-placeholder').html(result);
             mediaType = "audiobook";
 
-            loadRandomImages();
+            
             resizeExploreContainer();
         }
     });
 });
+
+$(document).on('click', '.media-checkout-btn', function () {
+    let dataToSend = {"studentid": 13};
+    let elementClicked = $(this);
+    dataToSend.mediaid = elementClicked.parent().siblings('.media-item-img').data('id');
+
+    let result;
+    $.ajax({
+        type: 'POST',
+        url: '/Checkout/CreateCheckout',
+        asyc: false,
+        data: dataToSend,
+        success: function (data) {
+            result = data;
+            if (result == "") {
+                showSuccess(elementClicked);
+            } else {
+                showError(elementClicked, result);
+            }
+        }
+    });
+});
+
+function showSuccess(element) {
+    element.find('.checkout-success-text').show();
+    element.closest('.media-display-item').delay(3000).slideUp(1000);
+
+}
+
+function showError(element, message) {
+    element.find('.checkout-fail-text').text("Checkout failed" + message.substring(5));
+    element.find('.checkout-fail-text').show();
+    element.find('.checkout-fail-text').effect("shake", { distance: 3 });
+}
 
 function resizeExploreContainer() {
     let $images = $('.media-item-img');
@@ -131,22 +163,12 @@ function resizeExploreContainer() {
     }));
 }
 
-function loadRandomImages() {
-    let i = 0;
-    document.querySelectorAll('.media-item-img').forEach(function (displayItem) {
-        displayItem.src = "images/media/" + mediaType + $(displayItem).data('id') + ".jpg";
-    })
-}
-
 $(document).on('click', '.media-display-item', function (e) {
     if (!$(e.target).is("a") && !$(e.target).is("h3")) {
         clickToExapndCards($(this));
     }
 });
 
-$(document).on('click', 'media-checkout-btn', function (e) {
-
-})
 
 function clickToExapndCards($obj) {
     let clickedElement = $obj;

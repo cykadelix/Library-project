@@ -22,7 +22,7 @@
     }
 
     #login-form h2 {
-        color: #b3b3b3;
+        color: #8f8f8f;
         font-size: 1rem;
         margin-bottom: 2rem;
     }
@@ -55,6 +55,16 @@
         left: 2em;
         background-color: white;
         padding: 0 5px;
+    }
+
+    .input-wrapper textarea {
+        border: 1px solid gray;
+        padding: 1rem;
+        border-radius: 6px;
+        position: relative;
+        width: 100%;
+        margin: 1rem 0;
+        line-height: 1.5rem;
     }
 
 #login-submit-btn {
