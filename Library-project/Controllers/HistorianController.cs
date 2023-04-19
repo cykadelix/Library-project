@@ -42,6 +42,7 @@ namespace Library_project.Controllers
                     expertise = (string)reader["expertise"],
                     education = (string)reader["education"],
                     age = (short)reader["age"],
+                    active = (bool)reader["active"],
                 });
             }
             if(LocalList.Count == 0)
@@ -72,7 +73,7 @@ namespace Library_project.Controllers
                 conn.Open();
 
                 using var command = new NpgsqlCommand("INSERT INTO historians (VALUES(" +
-                    "DEFAULT, @fname, @mname, @lname, @expertise, @education, @age))", conn)
+                    "DEFAULT, @fname, @mname, @lname, @expertise, @education, @age, @active))", conn)
                 {
                     Parameters =
                         {
@@ -81,7 +82,8 @@ namespace Library_project.Controllers
                             new("lname", model.lname),
                             new("expertise", model.expertise),
                             new("education", model.education),
-                            new("age", model.age)
+                            new("age", model.age),
+                            new("active", model.active)
                         }
                 };
                 using var reader = command.ExecuteReader();
@@ -108,6 +110,7 @@ namespace Library_project.Controllers
                 localHistorian.expertise = reader.GetFieldValue<string>(4);
                 localHistorian.education = reader.GetFieldValue<string>(5);
                 localHistorian.age = reader.GetFieldValue<short>(6);
+                localHistorian.active = reader.GetFieldValue<bool>(7);
             }
 
             return View("~/Views/Historian/HistorianIndex.cshtml", localHistorian);
@@ -119,7 +122,7 @@ namespace Library_project.Controllers
             using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
                 conn.Open();
-                string queryParameters = "fname=@f1, mname=@m1, lname=@l1, expertise=@e1, education=@e2, age=@a1 ";
+                string queryParameters = "fname=@f1, mname=@m1, lname=@l1, expertise=@e1, education=@e2, age=@a1, active=@a2 ";
                 string updateCommand = "UPDATE historians SET " + queryParameters + "WHERE historianid='" + model.historianid + "'";
                 using (var command = new NpgsqlCommand(updateCommand, conn))
                 {
@@ -129,6 +132,7 @@ namespace Library_project.Controllers
                     command.Parameters.AddWithValue("e1", model.expertise);
                     command.Parameters.AddWithValue("e2", model.education);
                     command.Parameters.AddWithValue("a1", model.age);
+                    command.Parameters.AddWithValue("a2", model.active);
 
                     int nRows = command.ExecuteNonQuery();
 
@@ -145,7 +149,7 @@ namespace Library_project.Controllers
             {
                 conn.Open();
 
-                var sqlCommand = "DELETE FROM historians WHERE historianid='" + historianId.ToString() + "';";
+                var sqlCommand = "UPDATE historians SET active='false' WHERE historianid='" + historianId.ToString() + "';";
                 using (var command = new NpgsqlCommand(sqlCommand, conn))
                 {
                     int nRows = command.ExecuteNonQuery();

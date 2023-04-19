@@ -45,6 +45,11 @@ namespace Library_project.Controllers
             return View();
         }
 
+        public IActionResult UserDashboard()
+        {
+            return View();
+        }
+
         public IActionResult AddMediaForm()
         {
             return View();

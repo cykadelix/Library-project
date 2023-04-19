@@ -17,6 +17,9 @@ namespace Library_project.ViewModels.Journal
         [Required(ErrorMessage = "Please enter the date!")]
         public string? releasedate { get; set; }
         public bool? isavailable { get; set; }
+        public string? description { get; set; }
+        [Required(ErrorMessage = "Please enter the image!")]
+        public IFormFile? image { get; set; }
 
     }
 }

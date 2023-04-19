@@ -5,12 +5,12 @@ using Npgsql;
 
 namespace Library_project.Controllers
 {
-    public class reviewController : Controller
+    public class ReviewController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IConfiguration _config;
 
-        public reviewController(ILogger<HomeController> logger, IConfiguration config)
+        public ReviewController(ILogger<HomeController> logger, IConfiguration config)
         {
             _logger = logger;
             _config = config;
@@ -31,7 +31,7 @@ namespace Library_project.Controllers
         {
             if (ModelState.IsValid)
             {
-                await using NpgsqlConnection conn = new NpgsqlConnection("Host = 127.0.0.1; Server = localhost; Port = 5432; Database = library_server; UserID = postgres; Password = hatem0199; Pooling = true");
+                await using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
 
                 await conn.OpenAsync();
 
