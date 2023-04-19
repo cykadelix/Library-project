@@ -9,7 +9,6 @@ using System.Security.Policy;
 
 namespace Library_project.Controllers
 {
-    [Authorize(Roles ="Employee")]
     public class employeeController : Controller
     {
         private readonly IConfiguration _config;
