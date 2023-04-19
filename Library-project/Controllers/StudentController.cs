@@ -161,5 +161,44 @@ namespace Library_project.Controllers
             }
             return new JsonResult(new { redirectToUrl = Url.Action("StudentIndex", "Student") });
         }
+
+        public IActionResult StudentCheckouts()
+        {
+            return View();
+        }
+
+        public IActionResult StudentBalance()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult PayBalance(int amount)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
+
+                {
+                    conn.Open();
+
+                    using var cmd = new NpgsqlCommand("UPDATE students SET overduefees -= @a WHERE library_card_number = 5", conn)
+                    {
+                        Parameters =
+                        {
+                            new("a", amount),
+
+                        }
+                    };
+                    using var reader = cmd.ExecuteReader();
+
+                }
+
+            }
+            return View("~/Views/Student/StudentBalance.cshtml");
+
+        }
+    }
+}
     }
 }

@@ -137,7 +137,7 @@ namespace Library_project.Controllers
                 using (var command = new NpgsqlCommand(updateCommand, conn))
                 {
                     command.Parameters.AddWithValue("f1", model.fname);
-                    command.Parameters.AddWithValue("m1", (model.mname == null ? "" : model.mname));
+                    command.Parameters.AddWithValue("m1", model.mname == null ? "" : model.mname);
                     command.Parameters.AddWithValue("l1", model.lname);
                     command.Parameters.AddWithValue("p1", model.position);
                     command.Parameters.AddWithValue("s1", model.salary);
@@ -146,7 +146,7 @@ namespace Library_project.Controllers
                     command.Parameters.AddWithValue("p2", model.password);
                     command.Parameters.AddWithValue("h1", model.homeaddress);
                     command.Parameters.AddWithValue("p3", model.phonenumber);
-                    command.Parameters.AddWithValue("a2", model.active);
+                    command.Parameters.AddWithValue("a2", model.active == null ? false : model.active);
 
                     int nRows = command.ExecuteNonQuery();
 
