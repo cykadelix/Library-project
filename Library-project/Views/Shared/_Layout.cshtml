@@ -25,44 +25,45 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                @if(User.Identity.IsAuthenticated)
+                @if (User.Identity.IsAuthenticated)
                 {
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between" style="height: 100%">
-                    <ul class="navbar-nav flex-grow-1" style="height: 100%">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Explore" asp-action="Index">Explore</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Activity" asp-action="Index">Activities</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AdminDashboard">Admin</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="UserDashboard">User</a>
-                        </li>
-                        @if(User.IsInRole("Employeee"))
+                        <ul class="navbar-nav flex-grow-1" style="height: 100%">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Explore" asp-action="Index">Explore</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Activity" asp-action="Index">Activities</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AdminDashboard">Admin</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="UserDashboard">User</a>
+                            </li>
+                            @if (User.IsInRole("Employeee"))
                             {
-                                 <li class="nav-item">
-                                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AdminDashboard">Admin</a>
-                                     </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AdminDashboard">Admin</a>
+                                </li>
                             }
-                            
-                    </ul>
-                    <ul class="navbar-nav flex-grow-0" style="height: 100%">
-                        <li class="nav-item nav-btn" id="login-list-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
-                        </li>
-                        <li class="nav-item">\
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="UserProfile">Profile</a>
-                        </li>
-                    </ul>
+
+                        </ul>
+                        <ul class="navbar-nav flex-grow-0" style="height: 100%">
+                            <li class="nav-item nav-btn" id="login-list-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+                            </li>
+                            <li class="nav-item">
+                                \
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="UserProfile">Profile</a>
+                            </li>
+                        </ul>
                     </div>
                 }
                 else

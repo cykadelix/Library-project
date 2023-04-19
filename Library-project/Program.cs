@@ -1,6 +1,4 @@
 using Library_project.Data;
-using Library_project.Interfaces;
-using Library_project.Repository;
 using Library_project.Settings;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -40,10 +38,6 @@ internal class Program
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
-        
-       
-        
-        
         
         app.UseRouting();
         app.UseAuthentication();

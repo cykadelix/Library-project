@@ -13,7 +13,9 @@ namespace Library_project.Models
         public DateOnly date { get; set; }
         public string? description { get; set; }
         public TimeOnly length { get; set; }
+        public TimeOnly starttime { get; set; }
         public string? activity_type { get; set; } = null!;
+
 
         [ForeignKey("room")]
         public int room_number { get; set; }

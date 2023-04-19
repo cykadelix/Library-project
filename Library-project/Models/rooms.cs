@@ -14,7 +14,9 @@ namespace Library_project.Models
         //Room Info
         public int capacity { get; set; }
         public string? features { get; set; }
-        public List<DateTime>? availabilty { get; set; }
+        public TimeOnly opens { get; set; }
+        public TimeOnly closes { get; set; }
+        public int day_of_week { get; set; }
         public bool reserved { get; set; }
         public ICollection<activities>? activites { get; } = new List<activities>();
 
