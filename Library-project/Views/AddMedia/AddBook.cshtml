@@ -42,9 +42,9 @@
     </div>
     <div class="media-entry-container">
         <div class="media-form-header">
-            <h1 class="display-1">Choose an entry type</h1>
+            <h1 class="display-1">Entry Form</h1>
+            <h2 class="sub-header">Choose a media type</h2>
             <h2 class="display-2" id="media-form-subheader"></h2>
-            <label for="media-type"></label>
             <select name="media-type" id="media-type">
                 <option><a>Computer</a></option>
                 <option>Camera</option>
@@ -68,10 +68,10 @@
             </div>
             <div class="input-wrapper">
                 <label asp-for="description">Description</label>
-                <input asp-for="description" value="@(Model is null ? "" : Model.description)" />
+                <textarea name="description"> @(Model is null ? "" : Model.description)</textarea>
             </div>
             <label asp-for="genres">Genres</label>
-            <select asp-for="genres" asp-items="Html.GetEnumSelectList<genres>()" style="margin-bottom: 0.5rem;">
+            <select asp-for="genres" asp-items="Html.GetEnumSelectList<genres>()">
                 <option>Select type</option>
             </select>
             <span asp-validation-for="genres"></span>
@@ -120,7 +120,8 @@
     <div class="media-recent-transactions-panel">
         <div class="media-recent-transactions">
             <div class="recent-transactions-header">
-                <h1 class="display-1">Current Inventory</h1>
+                <h1 class="display-1">Inventory</h1>
+                <h2 class="sub-header-2">Book(s) currently in stock</h2>
                 <h2 class="display-2" id="recent-transactions-subheader"></h2>
             </div>
             <div class="table-container" style="display:none">
