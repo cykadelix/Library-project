@@ -1,11 +1,8 @@
-﻿using Library_project.Data.Objects;
-using Library_project.Models;
-
-namespace Library_project.ViewModels.Book
+﻿namespace Library_project.ViewModels.Book
 {
     public class BookListViewModel
     {
-        public List<books> allBooks { get; set; }
-
+        public int NumAvailable { get; set; } = 0;
+        public List<BookViewModel>? Books { get; set; } 
     }
 }

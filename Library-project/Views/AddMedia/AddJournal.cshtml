@@ -1,4 +1,4 @@
-﻿@model Library_project.ViewModels.Journal.CreateJournalViewModel
+﻿@model Library_project.ViewModels.Journal.JournalViewModel
 
 @{
     ViewData["Title"] = "Add journals";
@@ -75,7 +75,7 @@
                 <input type="text" id="journal-subject" name="subject" value="@(Model is null ? "" : Model.subject)" />
             </div>
             <div class="input-wrapper">
-                <label asp-for="length">Length</label>
+                <label asp-for="length">Length(pages)</label>
                 <input type="text" id="journal-length" name="length" value="@(Model is null ? "" : Model.length)" />
                 <span asp-validation-for="length" class="text-danger"></span>
             </div>
@@ -139,7 +139,7 @@
 <script>
     let mediaList;
     let table;
-    //Get list of movies
+    //Get list of journals
     $(function () {
         $.ajax({
             type: 'GET',

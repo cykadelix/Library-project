@@ -454,7 +454,7 @@ namespace Library_project.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddBook(EditBookViewModel model)
+        public IActionResult AddBook(BookViewModel model)
         {
             if (model.title == null)
             {
@@ -500,7 +500,7 @@ namespace Library_project.Controllers
             using var command = dataSource.CreateCommand("SELECT * FROM books WHERE bookid='" + bookId.ToString() + "'");
             using var reader = command.ExecuteReader();
 
-            var book = new EditBookViewModel();
+            var book = new BookViewModel();
             while (reader.Read())
             {
                 book.bookid = reader.GetInt32(0);
@@ -518,7 +518,7 @@ namespace Library_project.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateBook(EditBookViewModel model)
+        public IActionResult UpdateBook(BookViewModel model)
         {
             ModelState.Clear();
             model.image = getDefaultImg();
@@ -578,7 +578,7 @@ namespace Library_project.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddJournal(CreateJournalViewModel model)
+        public IActionResult AddJournal(JournalViewModel model)
         {
             if (model.title == null)
             {
@@ -627,7 +627,7 @@ namespace Library_project.Controllers
             using var command = dataSource.CreateCommand("SELECT * FROM journals WHERE journalid='" + journalId.ToString() + "'");
             using var reader = command.ExecuteReader();
 
-            var journal = new CreateJournalViewModel();
+            var journal = new JournalViewModel();
             while (reader.Read())
             {
                 journal.journalid = reader.GetInt32(0);
@@ -644,7 +644,7 @@ namespace Library_project.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateJournal(CreateJournalViewModel model)
+        public IActionResult UpdateJournal(JournalViewModel model)
         {
             ModelState.Clear();
             model.image = getDefaultImg();

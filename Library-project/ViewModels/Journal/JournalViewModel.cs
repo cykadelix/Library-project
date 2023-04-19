@@ -2,7 +2,7 @@
 
 namespace Library_project.ViewModels.Journal
 {
-    public class CreateJournalViewModel
+    public class JournalViewModel
     {
         public int journalid { get; set; }
 

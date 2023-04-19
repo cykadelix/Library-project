@@ -1,10 +1,8 @@
-﻿using Library_project.Models;
-
-namespace Library_project.ViewModels.Journal
+﻿namespace Library_project.ViewModels.Journal
 {
     public class JournalListViewModel
     {
-        public List<journals>? allJournals { get; set; }
-
+        public int NumAvailable { get; set; } = 0;
+        public List<JournalViewModel>? Journals { get; set; }
     }
 }
