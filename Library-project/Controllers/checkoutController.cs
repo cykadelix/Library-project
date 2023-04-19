@@ -30,6 +30,34 @@ namespace Library_project.Controllers
         }
 
         [HttpPost]
+        public string CreateCheckout(CreateCheckoutViewModel newCheckout)
+        {
+            if (ModelState.IsValid)
+            {
+                using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
+
+                conn.Open();
+
+                try
+                {
+                    using var cmd = new NpgsqlCommand("INSERT INTO checkouts (studentid, mediaid, checkoutdate,returndate, checkoutid, returned) VALUES (@studentid, @mediaid, current_timestamp, current_timestamp + INTERVAL '1 month', DEFAULT, DEFAULT)", conn)
+                    {
+                        Parameters =
+                        {
+                            new("studentid", newCheckout.studentid),
+                            new("mediaid", newCheckout.mediaid)
+                        }
+                    };
+                    using var reader = cmd.ExecuteReader();
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message;
+                }
+
+            }
+            return "";
+        }
 
 
         public async Task<IActionResult> CreateCheckoutLandingPage(CreateCheckoutViewModel newCheckout)
