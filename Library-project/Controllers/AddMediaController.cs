@@ -82,14 +82,20 @@ namespace Library_project.Controllers
             }
             if (ModelState.IsValid)
             {
+                using (var ms = new MemoryStream())
+                {
+                    model.image.CopyTo(ms);
+                    model.imageBytes = ms.ToArray();
+                }
                 using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
                     var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid, timecreated) VALUES (default, CURRENT_TIMESTAMP(0)) RETURNING mediaid)" +
-                        "INSERT INTO cameras (cameraid, serialnumber, brand, description, megapixels, availability, mediaid)";
-                    using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), @s1, @b1, @d1, @m1, @a1, (SELECT mediaid from newid))", conn))
+                        "INSERT INTO cameras (cameraid, serialnumber, brand, description, megapixels, availability, mediaid, image)";
+                    using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), @s1, @b1, @d1, @m1, @a1, (SELECT mediaid from newid), @i1)", conn))
                     {
+                        command.Parameters.AddWithValue("i1", model.imageBytes);
                         command.Parameters.AddWithValue("s1", model.serialnumber);
                         command.Parameters.AddWithValue("b1", model.brand);
                         if (model.description != null)
@@ -105,7 +111,6 @@ namespace Library_project.Controllers
                         int nRows = command.ExecuteNonQuery();
                     }
                 }
-                saveImage(model.image, "camera");
             }
             return View();
         }
@@ -210,14 +215,20 @@ namespace Library_project.Controllers
 
             if (ModelState.IsValid)
             {
+                using (var ms = new MemoryStream())
+                {
+                    model.image.CopyTo(ms);
+                    model.imageBytes = ms.ToArray();
+                }
                 using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
                     var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid, timecreated) VALUES (default, CURRENT_TIMESTAMP(0)) RETURNING mediaid)" +
-                        "INSERT INTO computers (computerid, serialnumber, brand, description, availability, mediaid)";
-                    using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), @s1, @b1, @d1, @a1, (SELECT mediaid from newid))", conn))
+                        "INSERT INTO computers (computerid, serialnumber, brand, description, availability, mediaid, image)";
+                    using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), @s1, @b1, @d1, @a1, (SELECT mediaid from newid), @i1)", conn))
                     {
+                        command.Parameters.AddWithValue("i1", model.imageBytes);
                         command.Parameters.AddWithValue("s1", model.serialnumber);
                         command.Parameters.AddWithValue("b1", model.brand);
                         if (model.description != null)
@@ -232,7 +243,6 @@ namespace Library_project.Controllers
                         int nRows = command.ExecuteNonQuery();
                     }
                 }
-                saveImage(model.image, "computer");
             }
             return View();
         }
@@ -335,14 +345,20 @@ namespace Library_project.Controllers
 
             if (ModelState.IsValid)
             {
+                using (var ms = new MemoryStream())
+                {
+                    model.image.CopyTo(ms);
+                    model.imageBytes = ms.ToArray();
+                }
                 using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
 
                 {
                     conn.Open();
                     var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid, timecreated) VALUES (default, CURRENT_TIMESTAMP(0)) RETURNING mediaid)" +
-                        "INSERT INTO projectors (projectorid, serialnumber, brand, description, lumens, availability, mediaid)";
-                    using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), @s1, @b1, @d1, @l1, @a1, (SELECT mediaid from newid))", conn))
+                        "INSERT INTO projectors (projectorid, serialnumber, brand, description, lumens, availability, mediaid, image)";
+                    using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), @s1, @b1, @d1, @l1, @a1, (SELECT mediaid from newid), @i1)", conn))
                     {
+                        command.Parameters.AddWithValue("i1", model.imageBytes);
                         command.Parameters.AddWithValue("s1", model.serialnumber);
                         command.Parameters.AddWithValue("b1", model.brand);
                         if (model.description != null)
@@ -358,7 +374,6 @@ namespace Library_project.Controllers
                         int nRows = command.ExecuteNonQuery();
                     }
                 }
-                saveImage(model.image, "projector");
             }
             return View();
         }
@@ -462,6 +477,11 @@ namespace Library_project.Controllers
             }
             if (ModelState.IsValid)
             {
+                using (var ms = new MemoryStream())
+                {
+                    model.image.CopyTo(ms);
+                    model.imageBytes = ms.ToArray();
+                }
                 using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
 
                 // Connect to the database
@@ -469,9 +489,9 @@ namespace Library_project.Controllers
 
                 using var command = new NpgsqlCommand("WITH local_id AS (INSERT INTO medias (mediaid, timecreated) VALUES (default, CURRENT_TIMESTAMP(0)) RETURNING mediaid)" +
                     "INSERT INTO books " +
-                    "(bookid, title, author, genres, publicdate, pagecount, isbn, availability, mediaid, description)" +
+                    "(bookid, title, author, genres, publicdate, pagecount, isbn, availability, mediaid, description, image)" +
                     " VALUES((SELECT mediaid from local_id) , @title, @author, @genres, @publicDate, " +
-                    "@pagecount, @isbn, @isavailable,(SELECT mediaid from local_id), @description)", conn)
+                    "@pagecount, @isbn, @isavailable,(SELECT mediaid from local_id), @description, @i1)", conn)
                 {
                     Parameters =
                         {
@@ -483,10 +503,10 @@ namespace Library_project.Controllers
                             new("isbn", model.isbn),
                             new("isavailable", model.isAvailable),
                             new("description", model.description is null ? "" : model.description),
+                            new("i1", model.imageBytes),
                         }
                 };
                 using var reader = command.ExecuteReader();
-                saveImage(model.image, "book");
             }
             return View();
         }
@@ -586,11 +606,16 @@ namespace Library_project.Controllers
             }
             if (ModelState.IsValid)
             {
+                using (var ms = new MemoryStream())
+                {
+                    model.image.CopyTo(ms);
+                    model.imageBytes = ms.ToArray();
+                }
                 using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
                 conn.Open();
 
                 using var command = new NpgsqlCommand("WITH local_id AS (INSERT INTO medias (mediaid, timecreated) VALUES (default, CURRENT_TIMESTAMP(0)) RETURNING mediaid) " +
-                            "INSERT INTO journals (journalid, mediaid, title, researchers, subject, length, releasedate, availability, description) VALUES(" +
+                            "INSERT INTO journals (journalid, mediaid, title, researchers, subject, length, releasedate, availability, description, image) VALUES(" +
                             "(SELECT mediaid from local_id), " +
                             "(SELECT mediaid from local_id), " +
                             "@Title, " +
@@ -598,7 +623,7 @@ namespace Library_project.Controllers
                             "@Subject, " +
                             "@Length, " +
                             "@DateReleased, " +
-                            "@IsAvailable, @description)", conn)
+                            "@IsAvailable, @description, @i1)", conn)
                 {
                     Parameters =
                         {
@@ -608,12 +633,12 @@ namespace Library_project.Controllers
                            new("IsAvailable", model.isavailable),
                            new("DateReleased", DateOnly.Parse(model.releasedate)),
                            new("Length", model.length),
-                           new("description", model.description is null ? "" : model.description)
+                           new("description", model.description is null ? "" : model.description),
+                           new("i1", model.imageBytes),
                         }
 
                 };
                 using var reader = command.ExecuteReader();
-                saveImage(model.image, "journal");
             }
             return View();
         }
@@ -702,7 +727,7 @@ namespace Library_project.Controllers
             return View();
         }
 
-        [HttpPost]  
+        [HttpPost]
         public IActionResult AddMovie(MovieViewModel model)
         {
             if (model.title == null)
@@ -713,12 +738,16 @@ namespace Library_project.Controllers
             if (ModelState.IsValid)
             {
                 using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
-
                 {
+                    using (var ms = new MemoryStream())
+                    {
+                        model.image.CopyTo(ms);
+                        model.imageBytes = ms.ToArray();
+                    }
                     conn.Open();
                     var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid, timecreated) VALUES (default, CURRENT_TIMESTAMP(0)) RETURNING mediaid)" +
-                        "INSERT INTO movies (movieid, mediaid, rating, title, director, genres, length, releasedate, availability, description)";
-                    using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), (SELECT mediaid from newid), @r1, @t1, @d1, @g1, @l1, @r2, @a1, @d2)", conn))
+                        "INSERT INTO movies (movieid, mediaid, rating, title, director, genres, length, releasedate, availability, description, image)";
+                    using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), (SELECT mediaid from newid), @r1, @t1, @d1, @g1, @l1, @r2, @a1, @d2, @i1)", conn))
                     {
                         command.Parameters.AddWithValue("r1", model.rating);
                         command.Parameters.AddWithValue("t1", model.title);
@@ -731,12 +760,11 @@ namespace Library_project.Controllers
                         else
                             command.Parameters.AddWithValue("a1", true);
                         command.Parameters.AddWithValue("d2", model.description is null ? "" : model.description);
+                        command.Parameters.AddWithValue("i1", model.imageBytes);
 
                         int nRows = command.ExecuteNonQuery();
                     }
                 }
-                saveImage(model.image, "movie");
-
             }
             return View();
         }
@@ -837,12 +865,16 @@ namespace Library_project.Controllers
             if (ModelState.IsValid)
             {
                 using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
-
                 {
+                    using (var ms = new MemoryStream())
+                    {
+                        model.image.CopyTo(ms);
+                        model.imageBytes = ms.ToArray();
+                    }
                     conn.Open();
                     var insertCommand = "WITH newid AS (INSERT INTO medias (mediaid, timecreated) VALUES (default, CURRENT_TIMESTAMP(0)) RETURNING mediaid)" +
-                        "INSERT INTO audiobooks (audiobookid, mediaid, genre, title, narrator, author, length, availability, description)";
-                    using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), (SELECT mediaid from newid), @g1, @t1, @n1, @a1, @l1, @a2, @d1)", conn))
+                        "INSERT INTO audiobooks (audiobookid, mediaid, genre, title, narrator, author, length, availability, description, image)";
+                    using (var command = new NpgsqlCommand(insertCommand + " VALUES ((SELECT mediaid from newid), (SELECT mediaid from newid), @g1, @t1, @n1, @a1, @l1, @a2, @d1, @i1)", conn))
                     {
                         command.Parameters.AddWithValue("g1", model.genre);
                         command.Parameters.AddWithValue("t1", model.title);
@@ -854,12 +886,12 @@ namespace Library_project.Controllers
                         else
                             command.Parameters.AddWithValue("a2", true);
                         command.Parameters.AddWithValue("d1", model.description is null ? "" : model.description);
-                        
+                        command.Parameters.AddWithValue("i1", model.imageBytes);
+
+
                         int nRows = command.ExecuteNonQuery();
                     }
                 }
-                saveImage(model.image, "audiobook");
-
             }
             return View();
         }

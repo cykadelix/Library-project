@@ -14,8 +14,10 @@ else
     {
         @if (items.isavailable == true)
         {
+            var base64 = Convert.ToBase64String(items.imageBytes);
+            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
             <div class="media-display-item">
-                <img data-id="@items.journalid" class="media-item-img">
+                <img src="@imgSrc" data-id="@items.journalid" class="media-item-img">
                 <div class="media-display-text">
                     <h1 class="display-1">@items.title</h1>
                     <h2 class="display-2">@items.researchers</h2>

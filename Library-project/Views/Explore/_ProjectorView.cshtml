@@ -14,7 +14,9 @@ else
     {
         @if (items.availability == true)
         {
-            <div class="media-display-item">
+            var base64 = Convert.ToBase64String(items.imageBytes);
+            var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+            <div src="@imgSrc" class="media-display-item">
                 <img data-id="@items.projectorid" class="media-item-img">
                 <div class="media-display-text">
                     <h1 class="display-1">@items.brand</h1>
