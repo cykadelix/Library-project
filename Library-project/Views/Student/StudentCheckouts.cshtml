@@ -72,7 +72,7 @@
         table = $('#transactions-table').DataTable({
             "ajax": {
                 "type": "GET",
-                "data" : { "studentid": 13 },
+                "data" : { "studentid": @(TempData.Peek("libraryCard")) },
                 "url": '/Checkout/GetStudentsCheckoutList',
                 "dataSrc": ''
             },
