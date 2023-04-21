@@ -108,8 +108,8 @@ namespace Library_project.Controllers
                         if (reader.Read())
                         {
                             TempData["libraryCard"] = reader.GetInt32(0);
-                            string role = "employee";
-                            TempData["role"] = role;
+                            TempData["fullName"] = reader.GetString(1) + " " + (reader.GetString(2) == "" ? "" : reader.GetString(2) + " ") + reader.GetString(3);
+                            TempData["role"] = "employee";
                             userFound = true;
 
                         }

@@ -267,3 +267,9 @@ user-submit-btn:hover {
 .delete-row-btn {
     cursor: pointer;
 }
+
+.report-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}

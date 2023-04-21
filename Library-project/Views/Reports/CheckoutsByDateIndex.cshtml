@@ -48,7 +48,7 @@
             <h2 class="display-2">Sign out</h2>
         </a>
     </div>
-    <div class="media-entry-container">
+    <div class="report-container">
         <div class="media-form-header">
             <h1 class="display-1">Choose a report type:</h1>
             <select name="report-type" id="report-type">
@@ -57,42 +57,39 @@
                 <option>Students</option>
                 <option>Overdue Fees</option>
             </select>
-        </div>
-    </div>
-    <div class="user-combined-panel">
-        <div class="user-entry-container">
+
             <div class="media-form-header">
                 <h1 class="display-1">Checkouts within TimeFrame</h1>
             </div>
-            <form class="user-entry-form" asp-action="GetCheckoutsByDateList" asp-controller="Reports" method="post">
+            <form class="report-form">
                 <div class="input-wrapper-horizontal">
                     <label asp-for="q_startDate">Start Date:</label>
-                    <input type="date" name="q_startDate" placeholder="YYYY-MM-DD">
+                    <input id="q_startDate" type="date" name="q_startDate">
                     <span asp-validation-for="q_startDate" class="text-danger"></span>
                 </div>
                 <div class="input-wrapper-horizontal">
                     <label asp-for="q_endDate">End Date:</label>
-                    <input type="date" name="q_endDate" placeholder="YYYY-MM-DD">
+                    <input id="q_endDate" type="date" name="q_endDate">
                     <span asp-validation-for="q_endDate" class="text-danger"></span>
                 </div>
                 <button type="submit">Generate Report</button>
             </form>
         </div>
-    <div class="table-container" style="display:none">
-        <table id="transactions-table" class="display cell-border" style="width:100%">
-            <thead>
-                <tr>
-                    <th>CheckoutID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Checkout Date</th>
-                    <th>Return Date</th>
-                    <th>Return Status</th>
-                </tr>
-            </thead>
-        </table>
+        <div class="table-container" style="display:none">
+            <table id="transactions-table" class="display cell-border" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>CheckoutID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Checkout Date</th>
+                        <th>Return Date</th>
+                        <th>Return Status</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
-    <script></script>
 </div>
 
 <script>
@@ -100,12 +97,24 @@
     let table;
     //Get list of Audiobooks
     $(document).ready(function () {
+        $('#transactions-table').DataTable();
         //Creating datatable
-        $("#getCheckoutReport").on('submit', (function () {
+        $("form").submit(function (e) {
+            e.preventDefault();
+            var formData = {
+                checkoutid: null,
+                studentfname: null,
+                studentlname: null,
+                checkoutdate: null,
+                returndate: null,
+                returnstatus: null,
+                q_startDate: $('#q_startDate').val(),
+                q_endDate: $('#q_endDate').val(),
+            };
             table = $('#transactions-table').DataTable({
                 "ajax": {
                     "type": "GET",
-                    "data": $(this).serialize(),
+                    "data": formData,
                     "url": '/Reports/GetCheckoutsByDateList',
                     "dataSrc": ''
                 },
@@ -120,37 +129,7 @@
                 "bLengthChange": false,
                 "pageLength": 5
             });
-        }))
-        $('.table-container').show();
-    });
-    //Edit button
-    $('#transactions-table').on('click', '.edit-row-btn', function () {
-        let tr = $(this).closest('tr');
-        let audiobookId = table.row(tr).data().audiobookid;
-
-        window.location.href = "/AddMedia/EditAudiobookForm?audiobookId=" + audiobookId;
-    });
-    //Delete
-    $('#transactions-table').on('click', '.delete-row-btn', function () {
-        let tr = $(this).closest('tr');
-        let audiobookId = table.row(tr).data().audiobookid;
-
-        $.ajax({
-            type: 'DELETE',
-            url: '/AddMedia/DeleteAudiobook?audiobookId=' + audiobookId,
-            async: false,
-            success: function (result) {
-                window.location.href = result.redirectToUrl;
-            },
         });
-    });
-    //Cancel
-    $('.media-entry-form').on('click', '.media-cancel-btn', function () {
-        window.location.href = "/AddMedia/AddAudiobook";
-    });
-
-    $("#media-type").val("Audiobook");
-    $('#audiobook-availability').on('change', function () {
-        this.value = this.checked ? val(true) : val(false);
+        $('.table-container').show();
     });
 </script>
