@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Library_project.Data.Enums;
 using Library_project.Data.Objects;
 using Library_project.Models;
@@ -56,7 +57,8 @@ namespace Library_project.Controllers
         [IgnoreAntiforgeryToken]
         public List<checkoutReportViewModel>? CheckoutsByDateToList(checkoutReportViewModel covm)
         {
-
+            covm.q_startDate = DateTime.Parse(covm.q_startDate, CultureInfo.InvariantCulture).ToString();
+            covm.q_endDate = DateTime.Parse(covm.q_endDate, CultureInfo.InvariantCulture).ToString();
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
             using var dataSource = dataSourceBuilder.Build();
             using var command = dataSource.CreateCommand("SELECT checkouts.checkoutid, students.fname, students.lname, checkouts.checkoutdate, checkouts.returndate, checkouts.returned " +
@@ -69,12 +71,12 @@ namespace Library_project.Controllers
             {
                 LocalList.Add(new checkoutReportViewModel()
                 {
-                    checkoutid = (int)reader.GetInt32(0),
+                    checkoutid = reader.GetInt32(0),
                     studentfname = (string)reader.GetValue(1),
                     studentlname = (string)reader.GetValue(2),
-                    checkoutdate = DateOnly.FromDateTime(reader.GetDateTime(3)),
-                    returndate = DateOnly.FromDateTime(reader.GetDateTime(4)),
-                    returnstatus = (bool)reader.GetBoolean(5),
+                    checkoutdate = reader.GetDateTime(3).ToString("MM-dd-yyyy HH:mm"),
+                    returndate = reader.GetDateTime(4).ToString("MM-dd-yyyy HH:mm"),
+                    returnstatus = reader.GetBoolean(5),
                 });
             }
             if (LocalList.Count == 0)
@@ -85,8 +87,7 @@ namespace Library_project.Controllers
 
         }
 
-        [HttpPost]
-        [IgnoreAntiforgeryToken]
+        [HttpGet]
         public IActionResult GetCheckoutsByDateList(checkoutReportViewModel covm)
         {
             return Json(CheckoutsByDateToList(covm));
