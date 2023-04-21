@@ -119,11 +119,11 @@
 }
 
 .checkout-fail-text {
-    color: lightcoral;
+    color: red;
 }
 
     .checkout-fail-text:hover {
-        color: lightcoral;
+        color: red;
     }
 
 .checkout-success-text {

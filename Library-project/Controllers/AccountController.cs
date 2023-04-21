@@ -15,7 +15,7 @@ namespace Library_project.Controllers
         public IActionResult StudentRegistration()
         {
             RegisterStudentVM newStudent = new RegisterStudentVM();
-            
+
             return View(newStudent);
         }
         public IActionResult RegisterStudentLandingPage(RegisterStudentVM student)
@@ -28,7 +28,7 @@ namespace Library_project.Controllers
                     var insertCommand = "INSERT INTO students (library_card_number, fname, mname, lname, homeaddress, email, password, phonenumber,overduefees,age)";
                     using (var command = new NpgsqlCommand(insertCommand + " VALUES(DEFAULT, @fname, @mname, @lname, @homeaddress, @email,@password, @phonenumber,0,@age)", conn))
                     {
-                        
+
                         command.Parameters.AddWithValue("fname", student.fname);
                         command.Parameters.AddWithValue("mname", student.mname);
                         command.Parameters.AddWithValue("lname", student.lname);
@@ -79,7 +79,8 @@ namespace Library_project.Controllers
         }
         public IActionResult LoginLandingPage(LoginStudentVM newStudent, string returnUrl = "/Home")
         {
-            Boolean studentFound=false;
+            LoginStudentVM loginStudentVM = new LoginStudentVM();
+            bool userFound = false;
             using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
                 conn.Open();
@@ -90,45 +91,39 @@ namespace Library_project.Controllers
                     {
                         TempData["libraryCard"] = reader.GetInt32(0);
                         TempData["fullName"] = reader.GetString(1) + " " + (reader.GetString(2) == "" ? "" : reader.GetString(2) + " ") + reader.GetString(3);
-                        
+
                         TempData["role"] = "student".ToString();
-                        studentFound = true;
-                    }
-                    else
-                    {
-                        TempData["libraryCard"] = -1;
-                        TempData["role"] = "invalid";
+                        userFound = true;
                     }
                 }
             }
-                if(!studentFound)
+            if (!userFound)
+            {
+                using (var subConn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
                 {
-                    using (var subConn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
+                    subConn.Open();
+                    using (var command = new NpgsqlCommand("SELECT * FROM employees WHERE email='" + newStudent.email + "' AND password = '" + newStudent.password + "'", subConn))
                     {
-                        subConn.Open();
-                        using (var command = new NpgsqlCommand("SELECT * FROM employees WHERE email='" + newStudent.email + "' AND password = '" + newStudent.password + "'", subConn))
+                        var reader = command.ExecuteReader();
+                        if (reader.Read())
                         {
-                            var reader = command.ExecuteReader();
-                            if (reader.Read())
-                            {
-                                TempData["libraryCard"] = reader.GetInt32(0);
-                                string role = "employee";
-                                TempData["role"] = role;
-                                studentFound = true;
+                            TempData["libraryCard"] = reader.GetInt32(0);
+                            string role = "employee";
+                            TempData["role"] = role;
+                            userFound = true;
 
-                            }
-                            else
-                            {
-                                TempData["libraryCard"] = -1;
-                                TempData["role"] = "invalid";
-
-                            }
                         }
-                    }    
+                    }
                 }
+            }
+            loginStudentVM.errorMessage = "Account not found. Make sure your credentials are correct.";
+            if (!userFound)
+            {
+                return View("~/Views/Account/Login.cshtml", loginStudentVM);
+            }
             return Redirect(returnUrl);
         }
-        
+
         public IActionResult Logout()
         {
             string role = "guest";
@@ -138,7 +133,7 @@ namespace Library_project.Controllers
             return Redirect("/Home");
         }
 
-        
+
         public IActionResult StudentProfile()
         {
             ViewStudentVM myStudent = new ViewStudentVM();
@@ -159,7 +154,7 @@ namespace Library_project.Controllers
                         myStudent.lname = reader.GetString(3);
                         myStudent.homeaddress = reader.GetString(4);
                         myStudent.age = reader.GetInt16(9);
-                        myStudent.email=reader.GetString(5);
+                        myStudent.email = reader.GetString(5);
                         myStudent.password = reader.GetString(6);
 
 

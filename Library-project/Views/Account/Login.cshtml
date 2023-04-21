@@ -9,14 +9,17 @@
         <form id="login-form" action="LoginLandingPage" method="post">
             <h1 class="display-4">Welcome back!</h1>
             <h2 class="display-6">Please enter your details.</h2>
-            <div class="input-wrapper display-6">
+            <div class="input-wrapper">
                 <label asp-for="email">Email</label>
                 <input asp-for="email">
+                <span asp-validation-for="email" class="text-danger"></span>
             </div>
-            <div class="input-wrapper display-6">
+            <div class="input-wrapper">
                 <label asp-for="password">Password</label>
                 <input asp-for="password" type="password">
+                <span asp-validation-for="password" class="text-danger"></span>
             </div>
+            <h3 class="display-6 error-message">@Model.errorMessage</h3>
             <input type="submit" value="Login" class="display-6 main-btn" id="login-submit-btn" />
             <h3 class="display-6">
                 Don't have an account? Sign up <a asp-area="" asp-controller="Account" asp-action="StudentRegistration">here</a>.
