@@ -1,4 +1,5 @@
 ﻿let mediaType = "book";
+let libraryCard;
 
 $('#explore-navbar div ul li a').on('click', function () {
     $('#explore-navbar div ul li').removeClass('active-b');
@@ -116,7 +117,7 @@ $('#audiobook-explore-btn').on('click', function () {
 });
 
 $(document).on('click', '.media-checkout-btn', function () {
-    let dataToSend = {"studentid": 13};
+    let dataToSend = {"studentid": libraryCard };
     let elementClicked = $(this);
     dataToSend.mediaid = elementClicked.parent().siblings('.media-item-img').data('id');
 

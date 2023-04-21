@@ -11,7 +11,7 @@
             <div class="user-pfp-container">
                 <img src="~/images/pfp_male.svg" id="user-pfp-img" />
             </div>
-            <h1 class="display-1">Name</h1>
+            <h1 class="display-1">@(TempData.Peek("fullName"))</h1>
         </div>
         <a class="account-nav active-l" asp-area="" asp-controller="Home" asp-action="UserDashboard">
             <i class="fa-solid fa-chart-bar"></i>

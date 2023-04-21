@@ -33,6 +33,8 @@
         margin-bottom: 2rem;
     }
 
+
+
 .input-wrapper {
     position: relative;
 }
@@ -68,6 +70,15 @@
         line-height: 1.5rem;
     }
 
+    .input-wrapper span {
+        font-size: 1rem;
+    }
+
+.error-message {
+    color: red !important;
+    font-weight: bold;
+}
+
 #login-submit-btn {
     font-size: 1.25rem;
     font-weight: 400;
@@ -88,4 +99,3 @@
 #login-img {
     max-width: 70%;
 }
-
