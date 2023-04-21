@@ -53,11 +53,14 @@ namespace Library_project.Controllers
         {
             return Json(CheckoutsByUserToList(urvm));
         }
+        [IgnoreAntiforgeryToken]
         public List<checkoutReportViewModel>? CheckoutsByDateToList(checkoutReportViewModel covm)
         {
+
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
             using var dataSource = dataSourceBuilder.Build();
-            using var command = dataSource.CreateCommand("SELECT checkouts.checkoutid, students.fname, students.lname, checkouts.checkoutdate, checkouts.returndate, checkouts.returned " + "FROM checkouts, students " +
+            using var command = dataSource.CreateCommand("SELECT checkouts.checkoutid, students.fname, students.lname, checkouts.checkoutdate, checkouts.returndate, checkouts.returned " +
+                                                         "FROM checkouts, students " +
                                                          "WHERE checkouts.checkoutdate >= '" + covm.q_startDate + "' AND checkouts.checkoutdate <= '" + covm.q_endDate + "' AND checkouts.studentid = students.library_card_number");
             using var reader = command.ExecuteReader();
 
@@ -69,8 +72,8 @@ namespace Library_project.Controllers
                     checkoutid = (int)reader.GetInt32(0),
                     studentfname = (string)reader.GetValue(1),
                     studentlname = (string)reader.GetValue(2),
-                    checkoutdate = (DateTime)reader.GetDateTime(3),
-                    returndate = (DateTime)reader.GetDateTime(4),
+                    checkoutdate = DateOnly.FromDateTime(reader.GetDateTime(3)),
+                    returndate = DateOnly.FromDateTime(reader.GetDateTime(4)),
                     returnstatus = (bool)reader.GetBoolean(5),
                 });
             }
@@ -79,10 +82,12 @@ namespace Library_project.Controllers
                 return null;
             }
             return LocalList;
+
         }
 
         [HttpPost]
-        public IActionResult CheckoutsByDateList(checkoutReportViewModel covm)
+        [IgnoreAntiforgeryToken]
+        public IActionResult GetCheckoutsByDateList(checkoutReportViewModel covm)
         {
             return Json(CheckoutsByDateToList(covm));
         }
