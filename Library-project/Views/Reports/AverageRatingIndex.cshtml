@@ -31,6 +31,10 @@
             <i class="fa-solid fa-user-group"></i>
             <h2 class="display-2">Manage Historians</h2>
         </a>
+        <a class="account-nav" asp-area="" asp-controller="Student" asp-action="StudentIndex">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <h2 class="display-2">Manage Students</h2>
+        </a>
         <a class="account-nav active-l" asp-area="" asp-controller="Reports" asp-action="CheckoutsByDateIndex">
             <i class="fa-solid fa-boxes-stacked"></i>
             <h2 class="display-2">Report Generator</h2>
@@ -51,22 +55,24 @@
                 <option>Checkouts</option>
                 <option selected="true">Ratings</option>
                 <option>Students</option>
+                <option>Overdue Fees</option>
             </select>
         </div>
-        <div class="media-form-header">
-            <h2 class="display-6">Reviews of Specified Item</h2>
-        </div>
-        <form class="user-entry-form" asp-action="GetReviewsList" asp-controller="Reports" method="post">
-            <div class="input-wrapper-horizontal">
-                <label asp-for="mediaid">ItemID:</label>
-                <input type="number" name="mediaid" placeholder="ID of item">
-                <span asp-validation-for="mediaid" class="text-danger"></span>
-            </div>
-            <button type="submit">Generate Report</button>
-        </form>
-
     </div>
-    <script>
-
-    </script>
+    <div class="user-combined-panel">
+        <div class="user-entry-container">
+            <div class="media-form-header">
+                <h1 class="display-1">Reviews of Specified Item</h1>
+            </div>
+            <form class="user-entry-form" asp-action="GetReviewsList" asp-controller="Reports" method="post">
+                <div class="input-wrapper-horizontal">
+                    <label asp-for="mediaid">ItemID:</label>
+                    <input type="number" name="mediaid" placeholder="ID of item">
+                    <span asp-validation-for="mediaid" class="text-danger"></span>
+                </div>
+                <button type="submit">Generate Report</button>
+            </form>
+        </div>
+    </div>
+    <script></script>
 </div>

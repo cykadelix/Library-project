@@ -50,7 +50,6 @@ namespace Library_project.Controllers
             }
             return LocalList;
         }
-
         [HttpGet]
         public IActionResult GetStudentList()
         {
@@ -124,7 +123,7 @@ namespace Library_project.Controllers
             using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
                 conn.Open();
-                string queryParameters = "fname=@f1, mname=@m1, lname=@l1, email=@e1, password=@p1, age=@a1, homeaddress=@h1, phonenumber=@p1, overdue_fees=@o1";
+                string queryParameters = "fname=@f1, mname=@m1, lname=@l1, email=@e1, password=@p1, age=@a1, homeaddress=@h1, phonenumber=@p2, overduefees=@o1 ";
                 string updateCommand = "UPDATE students SET " + queryParameters + "WHERE library_card_number='" + model.library_card_number + "'";
                 using (var command = new NpgsqlCommand(updateCommand, conn))
                 {
@@ -135,7 +134,7 @@ namespace Library_project.Controllers
                     command.Parameters.AddWithValue("p1", model.password);
                     command.Parameters.AddWithValue("a1", model.age);
                     command.Parameters.AddWithValue("h1", model.homeaddress);
-                    command.Parameters.AddWithValue("p1", model.phonenumber);
+                    command.Parameters.AddWithValue("p2", model.phonenumber);
                     command.Parameters.AddWithValue("o1", model.overdue_fees);
 
                     int nRows = command.ExecuteNonQuery();

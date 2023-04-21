@@ -1,0 +1,29 @@
+﻿@using Library_project.ViewModels.Student
+@model LoginStudentVM
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="login-container">
+    <div class="login-form-container">
+        <form id="login-form" action="LoginLandingPage" method="post">
+            <h1 class="display-4">Welcome back!</h1>
+            <h2 class="display-6">Please enter your details.</h2>
+            <div class="input-wrapper display-6">
+                <label asp-for="email">Email</label>
+                <input asp-for="email">
+            </div>
+            <div class="input-wrapper display-6">
+                <label asp-for="password">Password</label>
+                <input asp-for="password" type="password">
+            </div>
+            <input type="submit" value="Login" class="display-6 main-btn" id="login-submit-btn" />
+            <h3 class="display-6">
+                Don't have an account? Sign up <a asp-area="" asp-controller="Account" asp-action="StudentRegistration">here</a>.
+            </h3>
+        </form>
+    </div>
+    <div class="login-img-container">
+        <img src="~/images/login-bg.svg" id="login-img" />
+    </div>
+</div>
