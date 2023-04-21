@@ -26,40 +26,39 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between" style="height: 100%">
-                    <ul class="navbar-nav flex-grow-1" style="height: 100%">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        @{
-                            if((string)TempData.Peek("role")=="guest")
-                            {
-                                <ul class="navbar-nav flex-grow-0" style="height: 100%">
-                                    <li>
-                                        <a button type="button" class="btn btn-primary" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
-                                    </li>
-                                    <li>
-                                        <a type="button" class="btn btn-primary" asp-area="" asp-controller="Account" asp-action="StudentRegistration">Register</a>
-                                    </li>
-                                    <li>
-                                    
-                                    </li>
-                                </ul>
-                            }
-                            else{
-                                <li>
-                                
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between" style="height: 100%">
+
+                    @{
+                        if ((string)TempData.Peek("role") == "guest")
+                        {
+                            <ul class="navbar-nav flex-grow-1" style="height: 100%">
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                </li>
+                            </ul>
+                            <ul class="navbar-nav flex-grow-0" style="height: 100%">
+                                <li class="nav-item nav-btn" id="login-list-item">
+                                    <a id="login-btn" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                                </li>
+                                <li class="nav-item nav-btn" id="signup-list-item">
+                                    <a id="signup-btn" asp-area="" asp-controller="Account" asp-action="StudentRegistration">Register</a>
+                                </li>
+                            </ul>
+                        }
+                        else
+                        {
+                            <ul class="navbar-nav flex-grow-1" style="height: 100%">
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Explore" asp-action="Index">Explore</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Explore" asp-action="Index">Explore</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="StudentProfile">User Profile</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
-                                </li>
-                                if((string)TempData.Peek("role")=="employee")
+
+                                @if ((string)TempData.Peek("role") == "employee")
                                 {
                                     <li class="nav-item">
                                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AdminDashboard">Admin</a>
@@ -71,32 +70,15 @@
                                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="UserDashboard">User</a>
                                     </li>
                                 }
-                            }
-                            
+                            </ul>
+                            <ul class="navbar-nav flex-grow-0" style="height: 100%">
+                                <li class="nav-item nav-btn" id="login-list-item">
+                                    <a id="login-btn" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+                                </li>
+                            </ul>
                         }
-                       
-
-                    </ul>
-                    
-                    </div>
-                    <div>
-                        <h3>Welcome @TempData.Peek("role")</h3>
-                        
-                    </div>
-              
-                    @*<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-collapse flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
-                            </li>
-                            <li>
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register"> Register Here</a>
-                            </li>
-                        </ul>
-
-                    </div>*@
-                
-
+                    }
+                </div>
             </div>
         </nav>
     </header>
@@ -108,7 +90,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - Library_project - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -50,7 +50,6 @@ namespace Library_project.Controllers
             TempData["role"] = "student";
             GetLibCard(student.email);
             return Redirect("/Home");
-
         }
         public void GetLibCard(string email)
         {
@@ -63,14 +62,10 @@ namespace Library_project.Controllers
                     if (reader.Read())
                     {
                         TempData["libraryCard"] = reader.GetInt32(0);
-                        
-
                     }
                     else
                     {
                         TempData["libraryCard"] = -1;
-                        
-
                     }
                 }
             }
@@ -94,16 +89,15 @@ namespace Library_project.Controllers
                     if (reader.Read())
                     {
                         TempData["libraryCard"] = reader.GetInt32(0);
+                        TempData["fullName"] = reader.GetString(1) + " " + (reader.GetString(2) == "" ? "" : reader.GetString(2) + " ") + reader.GetString(3);
                         
                         TempData["role"] = "student".ToString();
                         studentFound = true;
-
                     }
                     else
                     {
                         TempData["libraryCard"] = -1;
                         TempData["role"] = "invalid";
-
                     }
                 }
             }
@@ -131,14 +125,9 @@ namespace Library_project.Controllers
                             }
                         }
                     }    
-                    
                 }
-               
-            
             return Redirect(returnUrl);
-
         }
-
         
         public IActionResult Logout()
         {
@@ -152,8 +141,6 @@ namespace Library_project.Controllers
         
         public IActionResult StudentProfile()
         {
-            
-
             ViewStudentVM myStudent = new ViewStudentVM();
             int libCard = (int)TempData.Peek("libraryCard");
             using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
@@ -182,9 +169,5 @@ namespace Library_project.Controllers
             }
             return View(myStudent);
         }
-       
-
     }
-
-
 }
