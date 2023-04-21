@@ -48,7 +48,7 @@
             <h2 class="display-2">Sign out</h2>
         </a>
     </div>
-    <div class="media-entry-container">
+    <div class="report-container">
         <div class="media-form-header">
             <h1 class="display-1">Choose a report type:</h1>
             <select name="report-type" id="report-type">
@@ -57,22 +57,69 @@
                 <option>Students</option>
                 <option>Overdue Fees</option>
             </select>
-        </div>
-    </div>
-    <div class="user-combined-panel">
-        <div class="user-entry-container">
-            <div class="media-form-header">
-                <h1 class="display-1">Reviews of Specified Item</h1>
-            </div>
-            <form class="user-entry-form" asp-action="GetReviewsList" asp-controller="Reports" method="post">
+
+            <h1 class="display-1">Reviews of Specified Item</h1>
+            <form class="report-form"> 
                 <div class="input-wrapper-horizontal">
                     <label asp-for="mediaid">ItemID:</label>
-                    <input type="number" name="mediaid" placeholder="ID of item">
+                    <input type="number" name="mediaid" id="mediaid-input" placeholder="ID of item">
                     <span asp-validation-for="mediaid" class="text-danger"></span>
                 </div>
                 <button type="submit">Generate Report</button>
             </form>
         </div>
+        <div class="table-container" style="display:none">
+            <table id="transactions-table" class="display cell-border" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Review Rating</th>
+                        <th>Evaluation</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
-    <script></script>
 </div>
+
+<script>
+    let mediaList;
+    let table;
+    //Get list of Audiobooks
+    $(document).ready(function () {
+        $('#transactions-table').DataTable({
+            "destroy": true,
+        });
+        $('.table-container').show();
+        //Creating datatable
+        $("form").submit(function (e) {
+            e.preventDefault();
+            var formData = {
+                fname: null,
+                lname: null,
+                mediaid: $('#mediaid-input').val(),
+                reviewRating: null,
+                evaluation: null,
+                averageRating: null,
+            };
+            table = $('#transactions-table').DataTable({
+                "destroy": true,
+                "ajax": {
+                    "type": "GET",
+                    "data": formData,
+                    "url": '/Reports/GetReviewsList',
+                    "dataSrc": ''
+                },
+                "columns": [
+                    { "data": "fname" },
+                    { "data": "lname" },
+                    { "data": "reviewRating" },
+                    { "data": "evaluation" },
+                ],
+                "bLengthChange": false,
+                "pageLength": 5
+            });
+        });
+    });
+</script>

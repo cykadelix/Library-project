@@ -57,6 +57,10 @@ namespace Library_project.Controllers
         [IgnoreAntiforgeryToken]
         public List<checkoutReportViewModel>? CheckoutsByDateToList(checkoutReportViewModel covm)
         {
+            if(covm.q_startDate == null || covm.q_endDate == null)
+            {
+                return null;
+            }
             covm.q_startDate = DateTime.Parse(covm.q_startDate, CultureInfo.InvariantCulture).ToString();
             covm.q_endDate = DateTime.Parse(covm.q_endDate, CultureInfo.InvariantCulture).ToString();
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
@@ -102,7 +106,7 @@ namespace Library_project.Controllers
 
         public List<reviewsReportViewModel>? ReviewsToList(reviewsReportViewModel rrvm)
         {
-
+            if(rrvm.mediaid == null) return null;
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
             using var dataSource = dataSourceBuilder.Build();
             using var command = dataSource.CreateCommand("SELECT students.fname, students.lname, reviews.mediaid, reviews.rating, reviews.evaluation " +
@@ -131,7 +135,7 @@ namespace Library_project.Controllers
 
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult GetReviewsList(reviewsReportViewModel rrvm)
         {
             return Json(ReviewsToList(rrvm));
