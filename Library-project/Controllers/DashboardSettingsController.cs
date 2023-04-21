@@ -1,5 +1,6 @@
 ﻿using Library_project.Models;
 using Library_project.ViewModels.Employee;
+using Library_project.ViewModels.Student;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 
@@ -72,7 +73,67 @@ namespace Library_project.Controllers
         [Route("DashboardSettings/Student/{id:int}")]
         public IActionResult Student(int id)
         {
-            return View();
+            EditStudentVM myStudent = new EditStudentVM();
+            int libCard = (int)TempData.Peek("libraryCard");
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
+            {
+                conn.Open();
+                using (var command = new NpgsqlCommand("SELECT * FROM students WHERE library_card_number='" + id + "'", conn))
+                {
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        myStudent.library_card_number = reader.GetInt16(0);
+                        myStudent.fname = reader.GetString(1);
+                        myStudent.mname = reader.GetString(2);
+                        myStudent.phonenumber = reader.GetString(7);
+                        
+                        myStudent.lname = reader.GetString(3);
+                        myStudent.homeaddress = reader.GetString(4);
+                        myStudent.age = reader.GetInt16(9);
+                        myStudent.email = reader.GetString(5);
+                        myStudent.password = reader.GetString(6);
+
+
+                    }
+                }
+
+            }
+            return View(myStudent);
+        }
+        [HttpPost]
+        public IActionResult UpdateStudent(EditStudentVM newStudent)
+        {
+            using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
+            {
+                conn.Open();
+                string queryParms = "fname=@fname, mname=@mname, lname=@lname, homeaddress=@homeaddress, email=@email, password=@password, phonenumber=@phonenumber, age=@age";
+                string updateCommand = "UPDATE students SET " + queryParms + " WHERE Library_card_number='" + newStudent.library_card_number + "'";
+                using (var command=new NpgsqlCommand(updateCommand, conn))
+                {
+                    command.Parameters.AddWithValue("fname",newStudent.fname);
+                    if(newStudent.mname != null)
+                    {
+                        command.Parameters.AddWithValue("mname", newStudent.mname);
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("mname", "");
+                    }
+                    
+                    command.Parameters.AddWithValue("lname",newStudent.lname);
+                    command.Parameters.AddWithValue("homeaddress",newStudent.homeaddress);
+                    command.Parameters.AddWithValue("email",newStudent.email);
+                    command.Parameters.AddWithValue("password",newStudent.password);
+                    command.Parameters.AddWithValue("phonenumber",newStudent.phonenumber);
+                    command.Parameters.AddWithValue("age",newStudent.age);
+
+                    command.ExecuteNonQuery();
+
+                }
+            }
+
+            return View("~/Views/DashboardSettings/Student.cshtml", newStudent);
         }
     }
 }
