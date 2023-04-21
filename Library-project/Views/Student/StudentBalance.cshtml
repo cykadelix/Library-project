@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Library_project.ViewModels.Student.StudentBalanceViewModel
+@{
     ViewBag.Title = "EmployeeIndex";
 }
 
@@ -34,105 +35,18 @@
             <h2 class="display-2">Sign out</h2>
         </a>
     </div>
-    <div class="user-combined-panel" style="width: 100%;">
-        <div class="user-entry-container">
-        </div>
-        <div class="user-recent-transactions-panel" style="height: 100%">
-            <div class="user-recent-transactions">
-                <div class="recent-transactions-header">
-                    <h1 class="display-1" style="text-align: center">Current Checkouts</h1>
-                    <h2 class="display-2" id="recent-transactions-subheader"></h2>
-                </div>
-                <div class="table-container" style="display:none">
-                    <table id="transactions-table" class="display cell-border" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Item</th>
-                                <th>Checkout Date</th>
-                                <th>Return By Date</th>
-                                <th>Date Returned</th>
-                                <th>Return item</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
+    <div class="media-entry-container">
+        <form class="media-entry-form" id="balance-entry-form" method="post" asp-action="PayBalance">
+            <div class="input-wrapper">
+                <label asp-for="amount">Payment amount</label>
+                <input type="text" id="book-amount" name="amount"/>
+                <span asp-validation-for="amount" class="text-danger"></span>
             </div>
-        </div>
+            <button type="submit" class="media-submit-btn">Submit</button>
+        </form>
+    </div>
+    <div class="media-recent-transactions-panel">
+        <img src="~/images/payment.svg" />
     </div>
 
 </div>
-
-<script>
-    let checkoutList;
-    let table;
-    //Get list of employees
-    $(function () {
-        //Creating datatable
-        table = $('#transactions-table').DataTable({
-            "ajax": {
-                "type": "GET",
-                "data": { "studentid": 13 },
-                "url": '/Checkout/GetStudentsCheckoutList',
-                "dataSrc": ''
-            },
-            "columns": [
-                { "data": "mediaType" },
-                {
-                    "data": null,
-                    "render": function (data, type, full, meta) {
-                        if (data.brand == "") {
-                            return data.title;
-                        } else {
-                            return (data.brand + " " + data.serialNo);
-                        }
-                    }
-                },
-                { "data": "checkoutDate" },
-                { "data": "returnDate" },
-                {
-                    "data": null,
-                    "render": function (data, type, full, meta) {
-                        if (data.returned == true) {
-                            return data.returnedDate;
-                        } else {
-                            return "N/A";
-                        }
-                    }
-                },
-                {
-                    "data": null,
-                    "render": function (data, type, full, meta) {
-                        if (data.returned) {
-                            return "<i class='fa-regular fa-square-check'></i>";
-                        } else {
-                            return "<a style='cursor:pointer' class='return-item'><i class='fa-regular fa-square'></i></a>";
-                        }
-                    }
-                }
-            ],
-            "createdRow": function (row, data, dataIndex) {
-                if (data['returned'] == true) {
-                    $(row).addClass('light-green');
-                } else if (Date.now() - Date.parse(data.returnDate) > 0) {
-                    $(row).addClass('light-red');
-                } else {
-                    $(row).addClass('light-orange');
-                }
-            }
-        });
-        $('.table-container').show();
-    });
-    //Return
-    $('#transactions-table').on('click', '.return-item', function () {
-        let tr = $(this).closest('tr');
-        let mediaId = table.row(tr).data().mediaId;
-
-        window.location.href = '/Checkout/Checkoutitem?mediaId=' + mediaId;
-    });
-    //Cancel
-    $('.user-entry-form').on('click', '.media-cancel-btn', function () {
-        window.location.href = "/Employee/EmployeeIndex";
-    });
-        //Return item
-</script>
