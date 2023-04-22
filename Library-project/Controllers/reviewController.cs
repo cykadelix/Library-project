@@ -15,12 +15,7 @@ namespace Library_project.Controllers
             _config = config;
         }
 
-        public IActionResult Student()
-        {
-            return View();
-        }
-
-        public IActionResult Employee() 
+        public IActionResult CreateReview()
         {
             return View();
         }
@@ -52,11 +47,11 @@ namespace Library_project.Controllers
                 catch (Exception ex) 
                 {
                     newReview.resultmessage = "Review was not submitted. Please check the mediaid.";
-                    return View("~/Views/Review/Employee.cshtml", newReview);
+                    return View(newReview);
                 }
             }
             newReview.resultmessage = "Review submitted successfully";
-            return View("~/Views/Review/Employee.cshtml",newReview);
+            return View(newReview);
         }
     }
 }
