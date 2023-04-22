@@ -130,10 +130,20 @@
                     { "data": "studentlname" },
                     { "data": "checkoutdate" },
                     { "data": "returndate" },
-                    { "data": "returnstatus" },
+                    { 
+                        "data": null,
+                        "render": function (data, type, full, meta) {
+                            return data.returnstatus ? "Returned" : "Not returned";
+                        },
+                    },
                 ],
-                "bLengthChange": false,
-                "pageLength": 5
+                "createdRow": function (row, data, dataIndex) {
+                    if (data['returnstatus'] == true) {
+                        $(row).addClass('light-green');
+                    } else {
+                        $(row).addClass('light-red');
+                    }
+                }
             });
         });
     });

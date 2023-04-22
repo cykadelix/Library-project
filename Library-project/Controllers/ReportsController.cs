@@ -57,7 +57,7 @@ namespace Library_project.Controllers
         [IgnoreAntiforgeryToken]
         public List<checkoutReportViewModel>? CheckoutsByDateToList(checkoutReportViewModel covm)
         {
-            if(covm.q_startDate == null || covm.q_endDate == null)
+            if (covm.q_startDate == null || covm.q_endDate == null)
             {
                 return null;
             }
@@ -67,7 +67,10 @@ namespace Library_project.Controllers
             using var dataSource = dataSourceBuilder.Build();
             using var command = dataSource.CreateCommand("SELECT checkouts.checkoutid, students.fname, students.lname, checkouts.checkoutdate, checkouts.returndate, checkouts.returned " +
                                                          "FROM checkouts, students " +
-                                                         "WHERE checkouts.checkoutdate >= '" + covm.q_startDate + "' AND checkouts.checkoutdate <= '" + covm.q_endDate + "' AND checkouts.studentid = students.library_card_number");
+                                                         "WHERE checkouts.checkoutdate >= '" + covm.q_startDate + "' AND checkouts.checkoutdate <= '" + covm.q_endDate + "' AND checkouts.studentid = students.library_card_number " +
+                                                         "UNION SELECT checkouts.checkoutid, employees.fname, employees.lname, checkouts.checkoutdate, checkouts.returndate, checkouts.returned " +
+                                                         "FROM checkouts, employees " +
+                                                         "WHERE checkouts.checkoutdate >= '" + covm.q_startDate + "' AND checkouts.checkoutdate <= '" + covm.q_endDate + "' AND checkouts.employeeid = employees.employeeid");
             using var reader = command.ExecuteReader();
 
             var LocalList = new List<checkoutReportViewModel>();
@@ -106,7 +109,7 @@ namespace Library_project.Controllers
 
         public List<reviewsReportViewModel>? ReviewsToList(reviewsReportViewModel rrvm)
         {
-            if(rrvm.mediaid == null) return null;
+            if (rrvm.mediaid == null) return null;
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
             using var dataSource = dataSourceBuilder.Build();
             using var command = dataSource.CreateCommand("SELECT students.fname, students.lname, reviews.mediaid, reviews.rating, reviews.evaluation " +

@@ -252,7 +252,10 @@ namespace Library_project.Controllers
                 };
                 using var reader = cmd.ExecuteReader();
             }
-            return View("~/Views/Student/StudentCheckouts.cshtml");
+            if ((string)TempData.Peek("role") == "student")
+                return View("~/Views/Student/StudentCheckouts.cshtml");
+            else
+                return View("~/Views/Employee/EmployeeCheckouts.cshtml");
         }
     }
 }
