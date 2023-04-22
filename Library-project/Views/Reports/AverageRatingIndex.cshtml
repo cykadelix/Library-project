@@ -40,7 +40,7 @@
             <h2 class="display-2">Manage Historians</h2>
         </a>
         <a class="account-nav" asp-area="" asp-controller="Student" asp-action="StudentIndex">
-            <i class="fa-solid fa-boxes-stacked"></i>
+            <i class="fa-solid fa-user-group"></i>
             <h2 class="display-2">Manage Students</h2>
         </a>
         <a class="account-nav active-l" asp-area="" asp-controller="Reports" asp-action="CheckoutsByDateIndex">
@@ -76,30 +76,31 @@
                 <button type="submit">Generate Report</button>
             </form>
         </div>
-        <div class="table-container" style="display:none">
+        <div class="table-container reports-table">
             <table id="transactions-table" class="display cell-border" style="width:100%">
                 <thead>
                     <tr>
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Review Rating</th>
-                        <th>Evaluation</th>
+                        <th>Description</th>
                     </tr>
                 </thead>
             </table>
+            <h2 class="averageRating display-1 light-green"></h2>
         </div>
     </div>
 </div>
 
 <script>
     let mediaList;
+    let averageRating;
     let table;
     //Get list of Audiobooks
     $(document).ready(function () {
         $('#transactions-table').DataTable({
             "destroy": true,
         });
-        $('.table-container').show();
         //Creating datatable
         $("form").submit(function (e) {
             e.preventDefault();
@@ -125,8 +126,13 @@
                     { "data": "reviewRating" },
                     { "data": "evaluation" },
                 ],
-                "bLengthChange": false,
-                "pageLength": 5
+                "rowCallback": function( row, data, index ) {
+                    if (data["fname"] == null) {
+                        averageRating = data["averageRating"];
+                        $('.averageRating').text('Average Rating: ' + averageRating);
+                        $(row).hide();
+                    }
+                },
             });
         });
     });
