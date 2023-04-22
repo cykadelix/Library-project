@@ -4,9 +4,6 @@
 
 <div class="account-container">
     <div class="account-controls-panel">
-        <div class="library-logo">
-            Library Logo
-        </div>
         <div class="user-info">
             <div class="user-pfp-container">
                 <img src="~/images/pfp_male.svg" id="user-pfp-img" />
@@ -16,6 +13,10 @@
         <a class="account-nav active-l" asp-area="" asp-controller="Home" asp-action="AdminDashboard">
             <i class="fa-solid fa-chart-bar"></i>
             <h2 class="display-2">Dashboard</h2>
+        </a>
+        <a class="account-nav" asp-area="" asp-controller="Employee" asp-action="EmployeeCheckouts">
+            <i class="fa-solid fa-list-check"></i>
+            <h2 class="display-2">Checkouts</h2>
         </a>
         <a class="account-nav" asp-area="" asp-controller="AddMedia" asp-action="AddComputer">
             <i class="fa-solid fa-boxes-stacked"></i>
@@ -46,6 +47,7 @@
             <h2 class="display-2">Sign out</h2>
         </a>
     </div>
+
     <div class="events-panel">
         <div class="events-panel-header">
             <h1 class="display-1">Upcoming events</h1>

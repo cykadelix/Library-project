@@ -117,7 +117,7 @@ $('#audiobook-explore-btn').on('click', function () {
 });
 
 $(document).on('click', '.media-checkout-btn', function () {
-    let dataToSend = {"studentid": libraryCard };
+    let dataToSend = {"id": libraryCard };
     let elementClicked = $(this);
     dataToSend.mediaid = elementClicked.parent().siblings('.media-item-img').data('id');
 
