@@ -19,9 +19,12 @@ namespace Library_project.ViewModels.Book
         [Required(ErrorMessage = "Please enter the isbn!")]
         public long? isbn { get; set; }
         public bool? isAvailable { get; set; }
+        public bool? onHold { get; set; } = false;
         public string? description { get; set; }
         [Required(ErrorMessage = "Please enter an image!")]
         public IFormFile? image { get; set; }
         public byte[]? imageBytes { get; set; }
+
+        
     }
 }

@@ -190,7 +190,7 @@ namespace Library_project.Controllers
             dataSourceBuilder.MapEnum<genres>();
             dataSourceBuilder.MapComposite<Location>();
             using var dataSource = dataSourceBuilder.Build();
-            using var command = dataSource.CreateCommand("SELECT * FROM books");
+            using var command = dataSource.CreateCommand("SELECT * FROM books,medias WHERE medias.mediaid=books.mediaid");
             using var reader = command.ExecuteReader();
 
             var bookList = new List<BookViewModel>();
@@ -208,6 +208,7 @@ namespace Library_project.Controllers
                     isAvailable = reader.GetBoolean(7),
                     description = reader.GetString(9),
                     imageBytes = reader.GetFieldValue<byte[]>(10),
+                    onHold=reader.GetBoolean(14)
                 });
                 if (reader.GetBoolean(7) == true) numAvailable++;
             }
