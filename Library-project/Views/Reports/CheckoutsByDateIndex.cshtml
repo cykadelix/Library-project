@@ -19,6 +19,10 @@
             <i class="fa-solid fa-chart-bar"></i>
             <h2 class="display-2">Dashboard</h2>
         </a>
+        <a class="account-nav" asp-area="" asp-controller="Employee" asp-action="EmployeeCheckouts">
+            <i class="fa-solid fa-list-check"></i>
+            <h2 class="display-2">Checkouts</h2>
+        </a>
         <a class="account-nav" asp-area="" asp-controller="AddMedia" asp-action="AddComputer">
             <i class="fa-solid fa-boxes-stacked"></i>
             <h2 class="display-2">Inventory</h2>
@@ -43,7 +47,7 @@
             <i class="fa-solid fa-gear"></i>
             <h2 class="display-2">Settings</h2>
         </a>
-        <a class="account-nav" id="account-signout-btn">
+        <a class="account-nav" id="account-signout-btn" asp-controller="Account" asp-action="Logout">
             <i class="fa-solid fa-arrow-right-from-bracket"></i>
             <h2 class="display-2">Sign out</h2>
         </a>
@@ -58,9 +62,7 @@
                 <option>Overdue Fees</option>
             </select>
 
-            <div class="media-form-header">
-                <h1 class="display-1">Checkouts within TimeFrame</h1>
-            </div>
+            <h1 class="display-1">Checkouts within TimeFrame</h1>
             <form class="report-form">
                 <div class="input-wrapper-horizontal">
                     <label asp-for="q_startDate">Start Date:</label>
@@ -97,7 +99,10 @@
     let table;
     //Get list of Audiobooks
     $(document).ready(function () {
-        $('#transactions-table').DataTable();
+        $('#transactions-table').DataTable({
+            "destroy": true,
+        });
+        $('.table-container').show();
         //Creating datatable
         $("form").submit(function (e) {
             e.preventDefault();
@@ -112,6 +117,7 @@
                 q_endDate: $('#q_endDate').val(),
             };
             table = $('#transactions-table').DataTable({
+                "destroy": true,
                 "ajax": {
                     "type": "GET",
                     "data": formData,
@@ -124,12 +130,21 @@
                     { "data": "studentlname" },
                     { "data": "checkoutdate" },
                     { "data": "returndate" },
-                    { "data": "returnstatus" },
+                    { 
+                        "data": null,
+                        "render": function (data, type, full, meta) {
+                            return data.returnstatus ? "Returned" : "Not returned";
+                        },
+                    },
                 ],
-                "bLengthChange": false,
-                "pageLength": 5
+                "createdRow": function (row, data, dataIndex) {
+                    if (data['returnstatus'] == true) {
+                        $(row).addClass('light-green');
+                    } else {
+                        $(row).addClass('light-red');
+                    }
+                }
             });
         });
-        $('.table-container').show();
     });
 </script>

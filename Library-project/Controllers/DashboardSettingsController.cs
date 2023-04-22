@@ -70,7 +70,7 @@ namespace Library_project.Controllers
             return View("~/Views/DashboardSettings/Admin.cshtml", model);
         }
 
-        [Route("DashboardSettings/Student/{id:int}")]
+        [Route("DashboardSettings/User/{id:int}")]
         public IActionResult Student(int id)
         {
             EditStudentVM myStudent = new EditStudentVM();

@@ -1,11 +1,5 @@
-using Library_project.Data.Enums;
-using Library_project.Data.Objects;
-using Library_project.Models;
 using Library_project.ViewModels.Employee;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Npgsql;
-using System.Security.Policy;
 
 namespace Library_project.Controllers
 {
@@ -19,6 +13,11 @@ namespace Library_project.Controllers
 
 
         public IActionResult EmployeeIndex()
+        {
+            return View();
+        }
+
+        public IActionResult EmployeeCheckouts()
         {
             return View();
         }

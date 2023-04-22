@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Library_project.ViewModels.Student;
+﻿using Library_project.ViewModels.Student;
 using Npgsql;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860

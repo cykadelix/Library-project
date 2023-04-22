@@ -40,15 +40,30 @@ namespace Library_project.Controllers
 
                 try
                 {
-                    using var cmd = new NpgsqlCommand("INSERT INTO checkouts (studentid, mediaid, checkoutdate,returndate, checkoutid, returned) VALUES (@studentid, @mediaid, current_timestamp, current_timestamp + INTERVAL '1 month', DEFAULT, DEFAULT)", conn)
+                    if (TempData.Peek("role") == "student")
                     {
-                        Parameters =
+                        using var cmd = new NpgsqlCommand("INSERT INTO checkouts (studentid, mediaid, checkoutdate,returndate, checkoutid, returned, employeeid) VALUES (@id, @mediaid, current_timestamp, current_timestamp + INTERVAL '1 month', DEFAULT, DEFAULT, -1)", conn)
                         {
-                            new("studentid", newCheckout.studentid),
-                            new("mediaid", newCheckout.mediaid)
-                        }
-                    };
-                    using var reader = cmd.ExecuteReader();
+                            Parameters =
+                            {
+                                new("id",newCheckout.id),
+                                new("mediaid", newCheckout.mediaid)
+                            }
+                        };
+                        using var reader = cmd.ExecuteReader();
+                    }
+                    else
+                    {
+                        using var cmd = new NpgsqlCommand("INSERT INTO checkouts (studentid, mediaid, checkoutdate,returndate, checkoutid, returned,employeeid) VALUES (-1, @mediaid, current_timestamp, current_timestamp + INTERVAL '1 month', DEFAULT, DEFAULT, @id)", conn)
+                        {
+                            Parameters =
+                            {
+                                new("id",newCheckout.id),
+                                new("mediaid", newCheckout.mediaid)
+                            }
+                        };
+                        using var reader = cmd.ExecuteReader();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -59,74 +74,38 @@ namespace Library_project.Controllers
             return "";
         }
 
-
-        public async Task<IActionResult> CreateCheckoutLandingPage(CreateCheckoutViewModel newCheckout)
+        public async Task<IActionResult> CheckoutList()
         {
-            await using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
-            var newCheckout2 = new CreateCheckoutViewModel();
-            if (ModelState.IsValid)
-            {
 
-                await conn.OpenAsync();
-                try
-                {
-                    await using var cmd = new NpgsqlCommand("INSERT INTO checkouts (studentid, mediaid, checkoutdate,returndate, checkoutid, returned) VALUES (@studentid, @mediaid, current_timestamp, current_timestamp + INTERVAL '1 month', DEFAULT, DEFAULT)", conn)
-                    {
-                        Parameters =
-                        {
-                            new("studentid",newCheckout.studentid),
-                            new("mediaid", newCheckout.mediaid)
-                        }
-                    };
-                    await using var reader = await cmd.ExecuteReaderAsync();
-                }
-                catch(Exception ex)
-                {
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
 
-                    TempData["AlertMessage"] = ex.Message;
-                    return View(newCheckout2);
-                }
-            }   
-            else
+            await using var dataSource = dataSourceBuilder.Build();
+            await using var command = dataSource.CreateCommand("SELECT * FROM checkouts");
+            await using var reader = await command.ExecuteReaderAsync();
+
+            var checkoutList = new CheckoutListViewModel();
+            var LocalList = new List<checkouts>();
+            while (await reader.ReadAsync())
             {
-                newCheckout.studentid = -1;
+                LocalList.Add(new checkouts()
+                {
+                    checkoutid = (int)reader["checkoutid"],
+                    studentid = (int)reader["studentid"],
+                    mediaid = (int)reader["mediaid"],
+                    checkoutdate = (DateTime)reader["checkoutdate"],
+                    returndate = (DateTime)reader["returndate"]
+                });
+
+                checkoutList.allCheckouts = LocalList;
             }
-			
-			return View(newCheckout2);
+            return View(checkoutList);
         }
 
-		public async Task<IActionResult> CheckoutList()
-		{
-
-			var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
-
-			await using var dataSource = dataSourceBuilder.Build();
-			await using var command = dataSource.CreateCommand("SELECT * FROM checkouts");
-			await using var reader = await command.ExecuteReaderAsync();
-
-			var checkoutList = new CheckoutListViewModel();
-			var LocalList = new List<checkouts>();
-			while (await reader.ReadAsync())
-			{
-				LocalList.Add(new checkouts()
-				{
-					checkoutid = (int)reader["checkoutid"],
-					studentid = (int)reader["studentid"] ,
-					mediaid = (int)reader["mediaid"],
-					checkoutdate = (DateTime)reader["checkoutdate"],
-					returndate = (DateTime)reader["returndate"]
-				
-					//publicdate = reader.GetFieldValue<DateOnly>(3),
-				
-				});
-
-				checkoutList.allCheckouts = LocalList;
-			}
-
-
-			return View(checkoutList);
-
-		}
+        [HttpGet]
+        public IActionResult GetCheckoutList()
+        {
+            return Json(CheckoutList());
+        }
         public List<StudentCheckoutsViewModel>? StudentCheckoutList(int studentid)
         {
 
@@ -191,10 +170,68 @@ namespace Library_project.Controllers
             return Json(StudentCheckoutList(studentid));
         }
 
-        [HttpGet]
-        public IActionResult GetCheckoutList()
+        public List<StudentCheckoutsViewModel>? EmployeeCheckoutList(int employeeid)
         {
-            return Json(CheckoutList());
+
+            var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
+
+            using var dataSource = dataSourceBuilder.Build();
+            string comm = "SELECT null as brand, null as serialnumber, title, checkoutdate, returndate, returned, returned_date, 'Book' as mediatype, checkouts.mediaid " +
+                "FROM checkouts, books " +
+                "WHERE ( checkouts.employeeid = '" + employeeid + "' AND checkouts.mediaid = books.mediaid) UNION " +
+
+                "SELECT brand, serialnumber, null as title, checkoutdate, returndate, returned, returned_date, 'Camera' as mediatype, checkouts.mediaid " +
+                "FROM checkouts, cameras " +
+                "WHERE ( checkouts.employeeid = '" + employeeid + "' AND checkouts.mediaid = cameras.mediaid) UNION " +
+
+                "SELECT brand, serialnumber, null as title, checkoutdate, returndate, returned, returned_date, 'Computer' as mediatype, checkouts.mediaid " +
+                "FROM checkouts, computers " +
+                "WHERE ( checkouts.employeeid = '" + employeeid + "' AND checkouts.mediaid = computers.mediaid) UNION " +
+
+                "SELECT null as brand, null as serialnumber, title, checkoutdate, returndate, returned, returned_date, 'Audiobook' as mediatype, checkouts.mediaid " +
+                "FROM checkouts, audiobooks " +
+                "WHERE ( checkouts.employeeid = '" + employeeid + "' AND checkouts.mediaid = audiobooks.mediaid) UNION " +
+
+                "SELECT null as brand, null as serialnumber, title, checkoutdate, returndate, returned, returned_date, 'Journal' as mediatype, checkouts.mediaid " +
+                "FROM checkouts, journals " +
+                "WHERE ( checkouts.employeeid = '" + employeeid + "' AND checkouts.mediaid = journals.mediaid) UNION " +
+
+                "SELECT null as brand, null as serialnumber, title, checkoutdate, returndate, returned, returned_date, 'Movie' as mediatype, checkouts.mediaid " +
+                "FROM checkouts, movies " +
+                "WHERE ( checkouts.employeeid = '" + employeeid + "' AND checkouts.mediaid = movies.mediaid) UNION " +
+
+                "SELECT brand, serialnumber, null as title, checkoutdate, returndate, returned, returned_date, 'Projector' as mediatype, checkouts.mediaid " +
+                "FROM checkouts, projectors " +
+                "WHERE ( checkouts.employeeid = '" + employeeid + "' AND checkouts.mediaid = projectors.mediaid)";
+
+            using var command = dataSource.CreateCommand(comm);
+            using var reader = command.ExecuteReader();
+
+            var LocalList = new List<StudentCheckoutsViewModel>();
+            while (reader.Read())
+            {
+                LocalList.Add(new StudentCheckoutsViewModel()
+                {
+                    Brand = reader.IsDBNull(0) ? "" : reader.GetString(0),
+                    SerialNo = reader.IsDBNull(1) ? "" : reader.GetString(1),
+                    Title = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                    CheckoutDate = reader.GetDateTime(3).ToString("MM-dd-yyyy HH:mm"),
+                    ReturnDate = reader.GetDateTime(4).ToString("MM-dd-yyyy HH:mm"),
+                    Returned = reader.IsDBNull(5) ? false : reader.GetBoolean(5),
+                    ReturnedDate = reader.IsDBNull(6) ? "" : reader.GetDateTime(6).ToString(),
+                    MediaType = reader.GetString(7),
+                    mediaId = reader.GetInt32(8),
+                });
+            }
+            if (LocalList.Count == 0) return null;
+
+            return LocalList;
+        }
+
+        [HttpGet]
+        public IActionResult GetEmployeesCheckoutList(int employeeid)
+        {
+            return Json(EmployeeCheckoutList(employeeid));
         }
 
         [HttpGet]
@@ -215,7 +252,10 @@ namespace Library_project.Controllers
                 };
                 using var reader = cmd.ExecuteReader();
             }
-            return View("~/Views/Student/StudentCheckouts.cshtml");
+            if ((string)TempData.Peek("role") == "student")
+                return View("~/Views/Student/StudentCheckouts.cshtml");
+            else
+                return View("~/Views/Employee/EmployeeCheckouts.cshtml");
         }
     }
 }
