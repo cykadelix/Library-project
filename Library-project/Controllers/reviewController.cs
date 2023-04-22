@@ -15,42 +15,48 @@ namespace Library_project.Controllers
             _config = config;
         }
 
-        public IActionResult Index()
+        public IActionResult Student()
         {
             return View();
         }
-        public IActionResult createReview()
+
+        public IActionResult Employee() 
         {
-            var newReview = new ReviewViewModel();
-            return View(newReview);
+            return View();
         }
 
-
-        public async Task<IActionResult> CreateReviewLandingPage(ReviewViewModel newReview)
+        [HttpPost]
+        public IActionResult CreateReview(ReviewViewModel newReview)
         {
             if (ModelState.IsValid)
             {
-                await using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
+                using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
 
-                await conn.OpenAsync();
+                conn.Open();
 
-                await using var cmd = new NpgsqlCommand("INSERT INTO reviews (evaluation, mediaid, rating) VALUES (@evaluation, @mediaid, @rating)", conn)
+                using var cmd = new NpgsqlCommand("INSERT INTO reviews (reviewid, description, rating, mediaid, studentid, employeeid) VALUES (DEFAULT, @d1, @r1, @m1, @s1, @e1)", conn)
                 {
                     Parameters =
                     {
-                        new("evaluation",newReview.evaluation),
-                        new("mediaid", newReview.mediaid),
-                        new("rating",newReview.rating )
+                        new("d1",newReview.description),
+                        new("r1", newReview.mediaid),
+                        new("m1",newReview.mediaid ),
+                        new("s1",newReview.studentid ),
+                        new("e1",newReview.employeeid ),
                     }
                 };
-                await using var reader = await cmd.ExecuteReaderAsync();
-
+                try
+                {
+                    using var reader = cmd.ExecuteReader();
+                }
+                catch (Exception ex) 
+                {
+                    newReview.resultmessage = "Review was not submitted. Please check the mediaid.";
+                    return View("~/Views/Review/Employee.cshtml", newReview);
+                }
             }
-            else
-            {
-                newReview.mediaid = 99;
-            }
-            return View(newReview);
+            newReview.resultmessage = "Review submitted successfully";
+            return View("~/Views/Review/Employee.cshtml",newReview);
         }
     }
 }

@@ -1,7 +1,6 @@
-﻿@using Library_project.Data.Enums
-@model Library_project.ViewModels.Reports.checkoutReportViewModel
+﻿@model Library_project.ViewModels.Review.ReviewViewModel
 @{
-    ViewBag.Title = "OverduefeesByUserIndex";
+    ViewData["Title"] = "Employee Review";
 }
 
 <div class="account-container">
@@ -27,7 +26,7 @@
             <i class="fa-solid fa-star-half-stroke"></i>
             <h2 class="display-2">Create a review</h2>
         </a>
-        <a class="account-nav" asp-area="" asp-controller="AddMedia" asp-action="AddComputer">
+        <a class="account-nav active-l" asp-area="" asp-controller="AddMedia" asp-action="AddComputer">
             <i class="fa-solid fa-boxes-stacked"></i>
             <h2 class="display-2">Inventory</h2>
         </a>
@@ -43,7 +42,8 @@
             <i class="fa-solid fa-user-group"></i>
             <h2 class="display-2">Manage Students</h2>
         </a>
-        <a class="account-nav active-l" asp-area="" asp-controller="Reports" asp-action="CheckoutsByDateIndex">
+
+        <a class="account-nav" asp-area="" asp-controller="Reports" asp-action="CheckoutsByDateIndex">
             <i class="fa-solid fa-boxes-stacked"></i>
             <h2 class="display-2">Report Generator</h2>
         </a>
@@ -58,35 +58,37 @@
     </div>
     <div class="media-entry-container">
         <div class="media-form-header">
-            <h1 class="display-1">Choose a report type:</h1>
-            <select name="report-type" id="report-type">
-                <option selected="true">Checkouts</option>
-                <option>Ratings</option>
-                <option>Students</option>
-                <option>Checkouts</option>
-                <option>Overdue Fees</option>
-            </select>
+            <h1 class="display-1">Entry Form</h1>
+            <h2 class="sub-header">Leave a review on an item</h2>
         </div>
-    </div>
-    <div class="user-combined-panel">
-        <div class="user-entry-container">
-            <div class="media-form-header">
-                <h1 class="display-1">Checkouts within TimeFrame</h1>
+        <form class="media-entry-form" id="review-entry-form" method="post" asp-action="CreateReview" asp-controller="Review">
+            <div class="input-wrapper">
+                <label asp-for="mediaid">Media ID</label>
+                <input asp-for="mediaid"/>
+                <span asp-validation-for="mediaid" class="text-danger"></span>
             </div>
-            <form class="user-entry-form" asp-action="GetCheckoutsByDateList" asp-controller="Reports" method="post">
-                <div class="input-wrapper-horizontal">
-                    <label asp-for="q_startDate">Start Date:</label>
-                    <input type="date" name="q_startDate" placeholder="YYYY-MM-DD">
-                    <span asp-validation-for="q_startDate" class="text-danger"></span>
-                </div>
-                <div class="input-wrapper-horizontal">
-                    <label asp-for="q_endDate">End Date:</label>
-                    <input type="date" name="q_endDate" placeholder="YYYY-MM-DD">
-                    <span asp-validation-for="q_endDate" class="text-danger"></span>
-                </div>
-                <button type="submit">Generate Report</button>
-            </form>
-        </div>
+            <div class="input-wrapper">
+                <label asp-for="rating">Rating</label>
+                <input asp-for="rating" placeholder="1-10"/>
+                <span asp-validation-for="rating" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="description">Description</label>
+                <input asp-for="description" />
+                <span asp-validation-for="description" class="text-danger"></span>
+            </div>
+            <input asp-for="studentid" type="hidden" value="@((string)TempData.Peek("role") == "student" ? TempData.Peek("libraryCard") : -1)" />
+            <input asp-for="employeeid" type="hidden" value="@((string)TempData.Peek("role") == "employee" ? TempData.Peek("libraryCard") : -1)" />
+            <div class="edit-form-controls">
+                <button type="submit" class="media-save-btn" id="movie-save-form">Submit</button>
+            </div>
+            @if(Model != null)
+            {
+                <h2 class="sub-header" style="color:@((Model.resultmessage.Contains("not")) ? "red": "green"); align-self: flex-end; font-weight: bold">@Model.resultmessage</h2>
+            }
+        </form>
     </div>
-    <script></script>
+    <div class="media-recent-transactions-panel" style="width: 50vw">
+        <img src="/images/review.svg" />
+    </div>
 </div>
