@@ -68,7 +68,7 @@
                 <i class="fa-solid fa-list-check"></i>
                 <h2 class="display-2">Checkouts</h2>
             </a>
-            <a class="account-nav active-l" asp-area="" asp-controller="Review" asp-action="CreateReview">
+                <a class="account-nav active-l" asp-area="" asp-controller="Review" asp-action="CreateReview">
                 <i class="fa-solid fa-star-half-stroke"></i>
                 <h2 class="display-2">Create a review</h2>
             </a>
@@ -93,7 +93,7 @@
         </div>
         <form class="media-entry-form" id="review-entry-form" method="post" asp-action="CreateReview" asp-controller="Review">
             <div class="input-wrapper">
-                <label asp-for="mediaid">Media ID</label>
+                <label asp-for="mediaid">Item ID</label>
                 <input asp-for="mediaid"/>
                 <span asp-validation-for="mediaid" class="text-danger"></span>
             </div>
