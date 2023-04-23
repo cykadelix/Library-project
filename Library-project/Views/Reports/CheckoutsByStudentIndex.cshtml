@@ -19,6 +19,14 @@
             <i class="fa-solid fa-chart-bar"></i>
             <h2 class="display-2">Dashboard</h2>
         </a>
+        <a class="account-nav" asp-area="" asp-controller="Employee" asp-action="EmployeeCheckouts">
+            <i class="fa-solid fa-list-check"></i>
+            <h2 class="display-2">Checkouts</h2>
+        </a>
+        <a class="account-nav" asp-area="" asp-controller="Review" asp-action="Employee">
+            <i class="fa-solid fa-star-half-stroke"></i>
+            <h2 class="display-2">Create a review</h2>
+        </a>
         <a class="account-nav" asp-area="" asp-controller="AddMedia" asp-action="AddComputer">
             <i class="fa-solid fa-boxes-stacked"></i>
             <h2 class="display-2">Inventory</h2>
@@ -42,7 +50,7 @@
             <i class="fa-solid fa-gear"></i>
             <h2 class="display-2">Settings</h2>
         </a>
-        <a class="account-nav" id="account-signout-btn">
+        <a class="account-nav" id="account-signout-btn" asp-controller="Account" asp-action="Logout">
             <i class="fa-solid fa-arrow-right-from-bracket"></i>
             <h2 class="display-2">Sign out</h2>
         </a>
@@ -54,7 +62,6 @@
                 <option>Checkouts</option>
                 <option>Ratings</option>
                 <option selected="true">Student Checkouts</option>
-                <option>Overdue Fees</option>
             </select>
 
             <h1 class="display-1">Checkouts by Student</h1>
@@ -67,7 +74,7 @@
                 <button type="submit">Generate Report</button>
             </form>
         </div>
-        <div class="table-container" style="display:none">
+        <div class="table-container">
             <table id="transactions-table" class="display cell-border" style="width:100%">
                 <thead>
                     <tr>
@@ -77,9 +84,9 @@
                         <th>Type</th>
                         <th>Item</th>
                         <th>Checkout Date</th>
-                        <th>Return Date</th>
-                        <th>Return Status</th>
-                        <th>Return Item</th>
+                        <th>Return By Date</th>
+                        <th>Date Returned</th>
+                        <th>Return item</th>
                     </tr>
                 </thead>
             </table>
@@ -98,78 +105,16 @@
         //Creating datatable
         $("form").submit(function (e) {
             e.preventDefault();
-            var formData = {
-                libraryCardNumber: $('#librarycardnumber-input').val(),
-                fname: null,
-                lname: null,
-                mediaType: null,
-                item: null,
-                checkoutDate: null,
-                returnDate: null,
-                returnStatus: null,
-                returnItem: null,
-                };
             table = $('#transactions-table').DataTable({
                 "destroy": true,
                 "ajax": {
                     "type": "GET",
-                    "data": formData,
+                    "data": { "library_card_number": $('#librarycardnumber-input').val() },
                     "url": '/Reports/GetCheckoutsByStudentList',
                     "dataSrc": ''
                 },
                 "columns": [
-                    { "data": "libraryCardNumber" },//1
-                    { "data": "fname" },//2
-                    { "data": "lname" },//3
-                    { "data": "mediaType" },//4
-                    { "data": "item" },//5
-                    { "data": "checkoutDate" },//6
-                    { "data": "returnDate" },//7
-                    { "data": "returnStatus" },//8
-                    { "data": "returnItem" }//9
-
-                ],
-            });
-        });
-    });</script>
-
-
-<!----
-<script>
-    let checkoutList;
-    let table;
-    //Get list of checkouts by a specific student
-    $(document).ready(function () {
-        if ($.fn.DataTable.isDataTable('#transactions-table'))
-        {
-            $('#transactions-table').DataTable().destroy();
-        }
-        //Creating data for datatable
-        $("form").submit(function (e) {
-            e.preventDefault();
-            var formData = {
-                libraryCardNumber: $('#librarycardnumber-input').val(),
-                fname: null,
-                lname: null,
-                mediaType: null,
-                item: null,
-                checkoutDate: null,
-                returnDate: null,
-                averageRating: null,
-                returnStatus: null,
-                returnItem: null,
-            };
-            //Creating datatable
-            table = $('#transactions-table').DataTable({
-                "destroy": true,
-                "ajax": {
-                    "type": "GET",
-                    "data": formData,
-                    "url": '/Report/GetCheckoutsByStudentList',
-                    "dataSrc": ''
-                },
-                "columns": [
-                    { "data": "libraryCardNumber" },//1
+                    { "data": "library_card_number" },//1
                     { "data": "fname" },//2
                     { "data": "lname" },//3
                     { "data": "mediaType" },//4
@@ -182,7 +127,7 @@
                                 return (data.brand + " " + data.serialNo);
                             }
                         }
-                    },//5
+                    },
                     { "data": "checkoutDate" },//6
                     { "data": "returnDate" },//7
                     {
@@ -194,7 +139,7 @@
                                 return "N/A";
                             }
                         }
-                    },//8
+                    },
                     {
                         "data": null,
                         "render": function (data, type, full, meta) {
@@ -204,7 +149,7 @@
                                 return "<a style='cursor:pointer' class='return-item'><i class='fa-regular fa-square'></i></a>";
                             }
                         }
-                    }//9
+                    },
                 ],
                 "createdRow": function (row, data, dataIndex) {
                     if (data['returned'] == true) {
@@ -216,19 +161,13 @@
                     }
                 }
             });
-            $('.table-container').show();
-        });
-        //Return
-        $('#transactions-table').on('click', '.return-item', function () {
-            let tr = $(this).closest('tr');
-            let mediaId = table.row(tr).data().mediaId;
-
-            window.location.href = '/Checkout/Checkoutitem?mediaId=' + mediaId;
-        });
-        //Cancel
-        $('.user-entry-form').on('click', '.media-cancel-btn', function () {
-            window.location.href = "/Reports/CheckoutsByStudentIndex";
         });
     });
+    //Return
+    $('#transactions-table').on('click', '.return-item', function () {
+        let tr = $(this).closest('tr');
+        let mediaId = table.row(tr).data().mediaId;
+
+        window.location.href = '/Checkout/Checkoutitem?mediaId=' + mediaId;
+    });
 </script>
-    -->
