@@ -22,9 +22,15 @@ namespace Library_project.Controllers
         [HttpGet]
         public IActionResult GetUserHoldList(int userid,string role)
         {
-            return Json(userHolds(userid, role));
+            return Json(userHoldsList(userid, role));
         }
-        public List<CreateHoldVM> userHolds(int userid, string role)
+
+        public IActionResult userHolds()
+        {
+            return View();
+        }
+
+        public List<CreateHoldVM> userHoldsList(int userid, string role)
         {
             
             List<CreateHoldVM> localList = new List<CreateHoldVM>();

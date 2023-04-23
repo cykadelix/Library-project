@@ -20,7 +20,7 @@
             <i class="fa-solid fa-list-check"></i>
             <h2 class="display-2">My Checkouts</h2>
         </a>
-         <a class="account-nav" asp-area="" asp-controller="Hold" asp-action="userHolds">
+        <a class="account-nav" asp-area="" asp-controller="Hold" asp-action="userHolds">
             <i class="fa-solid fa-list-check"></i>
             <h2 class="display-2">My Holds</h2>
         </a>
@@ -60,7 +60,7 @@
                                 <th>Hold Date</th>
                             </tr>
                         </thead>
-                        
+
                     </table>
                 </div>
             </div>
@@ -68,26 +68,26 @@
     </div>
 </div>
 <script>
-$(function() {
-    table = $('#transactions-table').DataTable({
-        "ajax": {
-            "type": "GET",
-            "data": { "studentid": @(TempData.Peek("libraryCard")), "role": @(TempData.Peek("role"))},
-            "url": "/Holds/GetUserHoldList",
-            "dataSrc": ''
-        },
-        "columns":
-            [
-                {"data": "userid" },
-                {"data":"title"},
-                { "data": "mediaid" },
-                { "data": "date" }
-            ],
-        "createdRow": function(row, data, dataIndex) {
-            $row.addClass('light-green');
+    $(function () {
+        table = $('#transactions-table').DataTable({
+            "ajax": {
+                "type": "GET",
+                "data": { "userid": "@(TempData.Peek("libraryCard"))", "role": "@TempData.Peek("role")"},
+                "url": "/Hold/GetUserHoldList",
+                "dataSrc": ''
+            },
+            "columns":
+                [
+                    { "data": "userid" },
+                    { "data": "title" },
+                    { "data": "mediaid" },
+                    { "data": "date" }
+                ],
+            "createdRow": function (row, data, dataIndex) {
+                $row.addClass('light-green');
 
-        }
+            }
+        });
+        $('.table-container').show();
     });
-    $('.table-container').show();
-});
 </script>
