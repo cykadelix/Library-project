@@ -84,6 +84,14 @@
         font-size: 1rem;
     }
 
+    .media-display-item .media-hold-btn {
+        padding: 0.5rem;
+        align-self: flex-end;
+        color: #2550d2;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+
 .media-checkout-btn {
     display: flex;
     flex-direction: column;
@@ -92,6 +100,16 @@
     .media-checkout-btn a {
         text-decoration: none;
     }
+
+.media-hold-btn {
+    display: flex;
+    flex-direction: column;
+}
+
+    .media-hold-btn a {
+        text-decoration: none;
+    }
+
 
 .underline-animation:after {
     display: block;
