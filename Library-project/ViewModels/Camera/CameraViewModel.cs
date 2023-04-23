@@ -17,5 +17,6 @@ namespace Library_project.ViewModels.Camera
         [Required(ErrorMessage = "Please enter an image!")]
         public IFormFile? image { get; set; }
         public byte[]? imageBytes { get; set; }
+        public bool? onHold { get; set; }
     }
 }
