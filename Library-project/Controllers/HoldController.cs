@@ -39,7 +39,7 @@ namespace Library_project.Controllers
             string cmdString = "";
             if (role == "student")
             {
-                 cmdString = "SELECT * FROM holds WHERE studentid="+ userid.ToString();
+                 cmdString = "SELECT * FROM holds WHERE studentid="+ userid;
             }
             else
             {
@@ -88,7 +88,7 @@ namespace Library_project.Controllers
                     if (TempData.Peek("role").ToString() == "student")
                     {
 
-                        commandOne = "INSERT INTO holds (holdid, studentid, mediaid, hold_date, employeeid, title) VALUES (DEFAULT, @userid, @mediaid, current_timestamp, -1, @title";
+                        commandOne = "INSERT INTO holds (holdid, studentid, mediaid, hold_date, employeeid, title) VALUES (DEFAULT, @userid, @mediaid, current_timestamp, -1, @title)";
                     }
                     else
                     {
