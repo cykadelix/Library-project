@@ -13,12 +13,12 @@ else
 {
     @foreach (var items in Model.Audiobooks)
     {
-        @if (items.availability == true)
+        @if (items.onHold == false)
         {
             var base64 = Convert.ToBase64String(items.imageBytes);
             var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
             <div class="media-display-item">
-                <img src="@imgSrc" data-id="@items.audiobookid" class="media-item-img">
+                <img src="@imgSrc" data-id="@items.audiobookid" data-title="@items.title" class="media-item-img">
                 <div class="media-display-text">
                     <h1 class="display-1">@items.title</h1>
                     <h2 class="display-2">Item ID: @items.audiobookid</h2>
@@ -28,13 +28,26 @@ else
                     <h2 class="display-2">Length(hh:mm:ss): (@items.length)</h2>
                     <h2 class="display-2 description-placeholder">Click to show description</h2>
                     <h2 class="display-2 media-description hide">@(items.description == "" ? "No description provided" : items.description)</h2>
-                    <div class="display-3 media-checkout-btn">
-                        <div class="underline-animation">
-                            <a class="checkout-btn-txt">Checkout<i class="fa-solid fa-arrow-right"></i></a>
+                     @if (items.availability == true)
+                    {
+                        <div class="display-3 media-checkout-btn">
+                            <div class="underline-animation">
+                                <a class="checkout-btn-txt">Checkout<i class="fa-solid fa-arrow-right"></i></a>
+                            </div>
+                            <a class="checkout-success-text hide">Checkout successful</a>
+                            <a class="checkout-fail-text hide">Checkout failed</a>
                         </div>
-                        <a class="checkout-success-text hide">Checkout successful</a>
-                        <a class="checkout-fail-text hide">Checkout failed</a>
-                    </div>
+                    }
+                    else
+                    {
+                        <div class="display-3 media-hold-btn">
+                            <div class="underline-animation">
+                                <a class="hold-btn-txt">Hold Item<i class="fa-solid fa-arrow-right"></i></a>
+                            </div>
+                            <a class="checkout-success-text hide">Hold successful</a>
+                            <a class="checkout-fail-text hide">Hold failed</a>
+                        </div>
+                    }
                 </div>
             </div>
         }

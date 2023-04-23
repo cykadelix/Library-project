@@ -36,7 +36,7 @@ namespace Library_project.Controllers
             {
                 conn.Open();
 
-                using (var command = new NpgsqlCommand("SELECT * FROM cameras", conn))
+                using (var command = new NpgsqlCommand("SELECT * FROM cameras, medias WHERE medias.mediaid=cameras.mediaid", conn))
                 {
 
                     var reader = command.ExecuteReader();
@@ -50,6 +50,7 @@ namespace Library_project.Controllers
                         cam.megapixels = reader.GetDouble(4);
                         cam.availability = reader.GetBoolean(5);
                         cam.imageBytes = reader.GetFieldValue<byte[]>(7);
+                        cam.onHold=reader.GetFieldValue<bool>(11);
                         cameraList.Add(cam);
                         if (cam.availability == true) numAvailable++;
                     }
@@ -87,7 +88,7 @@ namespace Library_project.Controllers
             {
                 conn.Open();
 
-                using (var command = new NpgsqlCommand("SELECT * FROM computers", conn))
+                using (var command = new NpgsqlCommand("SELECT * FROM computers, medias WHERE medias.mediaid=computers.mediaid", conn))
                 {
 
                     var reader = command.ExecuteReader();
@@ -100,6 +101,7 @@ namespace Library_project.Controllers
                         comp.description = reader.GetString(3);
                         comp.availability = reader.GetBoolean(4);
                         comp.imageBytes = reader.GetFieldValue<byte[]>(6);
+                        comp.onHold = reader.GetFieldValue<bool>(10);
                         computerList.Add(comp);
                         if (comp.availability == true) numAvailable++;
                     }
@@ -137,7 +139,7 @@ namespace Library_project.Controllers
             {
                 conn.Open();
 
-                using (var command = new NpgsqlCommand("SELECT * FROM projectors", conn))
+                using (var command = new NpgsqlCommand("SELECT * FROM projectors, medias WHERE medias.mediaid=projectors.mediaid", conn))
                 {
 
                     var reader = command.ExecuteReader();
@@ -151,6 +153,7 @@ namespace Library_project.Controllers
                         proj.lumens = reader.GetInt32(4);
                         proj.availability = reader.GetBoolean(5);
                         proj.imageBytes = reader.GetFieldValue<byte[]>(7);
+                        proj.onHold = reader.GetFieldValue<bool>(11);
                         projectorList.Add(proj);
                         if (proj.availability == true) numAvailable++;
                     }
@@ -243,7 +246,7 @@ namespace Library_project.Controllers
 
             dataSourceBuilder.MapComposite<Location>();
             using var dataSource = dataSourceBuilder.Build();
-            using var command = dataSource.CreateCommand("SELECT * FROM journals");
+            using var command = dataSource.CreateCommand("SELECT * FROM journals, medias WHERE medias.mediaid=journals.mediaid");
             using var reader = command.ExecuteReader();
 
             List<JournalViewModel> local_list = new List<JournalViewModel>();
@@ -261,6 +264,7 @@ namespace Library_project.Controllers
                     isavailable = reader.GetFieldValue<bool>(7),
                     description = reader.GetString(8),
                     imageBytes = reader.GetFieldValue<byte[]>(9),
+                    onHold = reader.GetFieldValue<bool>(13),
                 });
                 if (reader.GetFieldValue<bool>(7)) numAvailable++;
             }
@@ -295,7 +299,7 @@ namespace Library_project.Controllers
 
             dataSourceBuilder.MapComposite<Location>();
             using var dataSource = dataSourceBuilder.Build();
-            using var command = dataSource.CreateCommand("SELECT * FROM movies");
+            using var command = dataSource.CreateCommand("SELECT * FROM movies, medias WHERE medias.mediaid=movies.mediaid");
             using var reader = command.ExecuteReader();
 
             List<MovieViewModel> local_list = new List<MovieViewModel>();
@@ -314,6 +318,7 @@ namespace Library_project.Controllers
                     availability = reader.GetFieldValue<bool>(8),
                     description = reader.GetString(9),
                     imageBytes = reader.GetFieldValue<byte[]>(10),
+                    onHold = reader.GetFieldValue<bool>(14),
                 });
                 if(reader.GetFieldValue<bool>(8)) numAvailable++;
             }
@@ -348,7 +353,7 @@ namespace Library_project.Controllers
 
             dataSourceBuilder.MapComposite<Location>();
             using var dataSource = dataSourceBuilder.Build();
-            using var command = dataSource.CreateCommand("SELECT * FROM audiobooks");
+            using var command = dataSource.CreateCommand("SELECT * FROM audiobooks, medias WHERE medias.mediaid=audiobooks.mediaid");
             using var reader = command.ExecuteReader();
 
             List<AudiobookViewModel> local_list = new List<AudiobookViewModel>();
@@ -365,6 +370,7 @@ namespace Library_project.Controllers
                 audiobook.availability = reader.GetFieldValue<bool>(7);
                 audiobook.description = reader.GetString(8);
                 audiobook.imageBytes = reader.GetFieldValue<byte[]>(9);
+                audiobook.onHold=reader.GetFieldValue<bool>(13);
                 local_list.Add(audiobook);
                 if(audiobook.availability == true) numAvailable++;
             }

@@ -23,5 +23,7 @@ namespace Library_project.ViewModels.Audiobook
         [Required(ErrorMessage = "Please enter an image!")]
         public IFormFile? image { get; set; }
         public byte[]? imageBytes { get; set; }
+
+        public bool? onHold { get; set; }
     }
 }
