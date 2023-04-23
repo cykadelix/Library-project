@@ -5,8 +5,8 @@
         window.location.href = '../Reports/CheckoutsByDateIndex';
     } else if (selectedType == "Ratings") {
         window.location.href = '../Reports/AverageRatingIndex';
-    } else if (selectedType == "Students") {
-        window.location.href = '../Reports/StudentsByDateIndex';
+    } else if (selectedType == "Student Checkouts") {
+        window.location.href = '../Reports/CheckoutsByStudentIndex';
     }
 });
 
