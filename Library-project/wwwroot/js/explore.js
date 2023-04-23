@@ -122,6 +122,7 @@ $(document).on('click', '.media-hold-btn', function () {
     let dataToSend = { "userid": libraryCard };
     let elementClicked = $(this);
     dataToSend.mediaid = elementClicked.parent().siblings('.media-item-img').data('id');
+    dataToSend.mediaid = elementClicked.parent().siblings('.media-item-img').data('title');
    
     let result;
     $.ajax({

@@ -71,7 +71,8 @@
     let checkoutList;
     let table;
     //Get list of employees
-    $(function () {
+    $(function () 
+    {
         //Creating datatable
         table = $('#transactions-table').DataTable({
             "ajax": {
@@ -80,7 +81,8 @@
                 "url": '/Checkout/GetStudentsCheckoutList',
                 "dataSrc": ''
             },
-            "columns": [
+            "columns":
+            [
                 { "data": "mediaType" },
                 {
                     "data": null,
