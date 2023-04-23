@@ -84,6 +84,7 @@ namespace Library_project.Controllers
                     string commandOne = "";
                     string commandTwo= "UPDATE medias SET onhold=true WHERE mediaid="+newHold.mediaid+"";
                     
+                    
                     if (TempData.Peek("role").ToString() == "student")
                     {
 
@@ -91,7 +92,7 @@ namespace Library_project.Controllers
                     }
                     else
                     {
-                        commandOne = "INSERT INTO holds (holdid, studentid, mediaid, hold_date, employeeid) VALUES (DEFAULT, -1, @mediaid, current_timestamp, @userid, @title)";
+                        commandOne = "INSERT INTO holds (holdid, studentid, mediaid, hold_date, employeeid, title) VALUES (DEFAULT, -1, @mediaid, current_timestamp, @userid, @title)";
                     }
                     
                     using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
@@ -103,12 +104,13 @@ namespace Library_project.Controllers
                             {
                                 new("userid",newHold.userid),
                                 new("mediaid",newHold.mediaid),
-                                new("title", newHold.title)
+                                new("title",newHold.title)
                             }
                     };
                     cmd.ExecuteNonQuery();
                     using var cmd2 = new NpgsqlCommand(commandTwo, conn);
                     cmd2.ExecuteNonQuery();
+                    
 
                 }
                 catch (Exception e)
@@ -118,6 +120,10 @@ namespace Library_project.Controllers
                
                 
                 
+            }
+            else
+            {
+                return "failure";
             }
             return "";
         }
