@@ -1,4 +1,6 @@
-﻿let mediaType = "book";
+﻿//const { data } = require("jquery");
+
+let mediaType = "book";
 let libraryCard;
 
 $('#explore-navbar div ul li a').on('click', function () {
@@ -63,7 +65,7 @@ $('#book-explore-btn').on('click', function () {
             mediaType = "book";
 
             
-            resizeExploreContainer();
+            resizeExploreContainer();       
         }
     });
 });
@@ -112,6 +114,28 @@ $('#audiobook-explore-btn').on('click', function () {
 
             
             resizeExploreContainer();
+        }
+    });
+});
+
+$(document).on('click', '.media-hold-btn', function () {
+    let dataToSend = { "userid": libraryCard };
+    let elementClicked = $(this);
+    dataToSend.mediaid = elementClicked.parent().siblings('.media-item-img').data('id');
+   
+    let result;
+    $.ajax({
+        type: 'POST',
+        url: '/Hold/HoldItem',
+        asyc: false,
+        data: dataToSend,
+        success: function (data) {
+            result = data;
+            if (result == "") {
+                showSuccess(elementClicked);
+            } else {
+                showError(elementClicked, result);
+            }
         }
     });
 });

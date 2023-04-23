@@ -13,7 +13,7 @@ else
 {
     @foreach (var items in Model.Books)
     {
-        @if (items.isAvailable == true)
+        @if(items.onHold==false)
         {
             var base64 = Convert.ToBase64String(items.imageBytes);
             var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
@@ -29,16 +29,33 @@ else
                     <h2 class="display-2">ISBN: @items.pageCount</h2>
                     <h2 class="display-2 description-placeholder">Click to show description</h2>
                     <h2 class="display-2 media-description hide">@(items.description == "" ? "No description provided" : items.description)</h2>
-                    <div class="display-3 media-checkout-btn">
-                        <div class="underline-animation">
-                            <a class="checkout-btn-txt">Checkout<i class="fa-solid fa-arrow-right"></i></a>
+                    @if(items.isAvailable == true)
+                    {
+                        <div class="display-3 media-checkout-btn">
+                            <div class="underline-animation">
+                                <a class="checkout-btn-txt">Checkout<i class="fa-solid fa-arrow-right"></i></a>
+                            </div>
+                            <a class="checkout-success-text hide">Checkout successful</a>
+                            <a class="checkout-fail-text hide">Checkout failed</a>
                         </div>
-                        <a class="checkout-success-text hide">Checkout successful</a>
-                        <a class="checkout-fail-text hide">Checkout failed</a>
-                    </div>
+                    }
+                        else
+                        {
+                            <div class="display-3 media-hold-btn">
+                                <div class="underline-animation">
+                                    <a class="hold-btn-txt">Hold Item<i class="fa-solid fa-arrow-right"></i></a>
+                                </div>
+                                <a class="checkout-success-text hide">Hold successful</a>
+                                <a class="checkout-fail-text hide">Hold failed</a>
+                            </div>
+                        }
+           
+                      
                 </div>
             </div>
-        }
+          }   
+            
+        
     }
 }
 
