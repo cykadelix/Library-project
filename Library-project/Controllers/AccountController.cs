@@ -136,7 +136,9 @@ namespace Library_project.Controllers
                             {
                                 TempData["libraryCard"] = reader.GetInt32(0);
                                 TempData["fullName"] = reader.GetString(1) + " " + (reader.GetString(2) == "" ? "" : reader.GetString(2) + " ") + reader.GetString(3);
-                                TempData["role"] = "employee";
+
+                                bool manager = reader.GetBoolean(12);
+                                TempData["role"] = manager ? "manager" : "employee";
                             }
                         }
                     }
