@@ -2,38 +2,63 @@
 @model RegisterStudentVM
 
 @{
-    ViewData["Title"]="StudentRegistration";
+    ViewData["Title"] = "StudentRegistration";
 }
-<form action="RegisterStudentLandingPage" method="post">
-    <div class="input-wrapper">
-        <label asp-for="fname">first name:</label>
-        <input asp-for="fname" />
+<div class="login-container">
+    <div class="login-img-container">
+        <img src="~/images/register-bg.svg" id="register-img" />
     </div>
-    <div class="input-wrapper">
-        <label asp-for="lname">last name:</label>
-        <input asp-for="lname" />
+    <div class="login-form-container">
+        <form id="register-form" asp-controller="account" asp-action="RegisterStudentLandingPage" method="post">
+            <h1 class="display-4">Welcome!</h1>
+            <h2 class="display-6">Get started on your journey today</h2>
+            <div class="input-wrapper">
+                <label asp-for="fname">First Name</label>
+                <input asp-for="fname" />
+                <span asp-validation-for="fname" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="lname">Last Name</label>
+                <input asp-for="lname" />
+                <span asp-validation-for="lname" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="homeaddress">Home Address</label>
+                <input asp-for="homeaddress" />
+                <span asp-validation-for="homeaddress" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="age">Age</label>
+                <input name="age" type="text"/>
+                <span asp-validation-for="age" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="email">Email</label>
+                <input asp-for="email" />
+                <span asp-validation-for="email" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="password">Password</label>
+                <input asp-for="password" type="password"/>
+                <span asp-validation-for="password" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="confirmpassword">Confirm Password</label>
+                <input asp-for="confirmpassword" type="password"/>
+                <span asp-validation-for="confirmpassword" class="text-danger"></span>
+            </div>
+            <div class="input-wrapper">
+                <label asp-for="phonenumber">Phone Number</label>
+                <input asp-for="phonenumber" placeholder="No spaces/hyphens"/>
+                <span asp-validation-for="phonenumber" class="text-danger"></span>
+            </div>
+            <button type="submit" class="display-6 main-btn" id="register-submit-btn">
+                Sign-up
+            </button>
+            <h2 class="display-6 text-danger fw-bold">@Model.errorMessage</h2>
+            <h3 class="display-6">
+                Already have an account? Sign in <a asp-area="" asp-controller="Account" asp-action="Login">here</a>.
+            </h3>
+        </form>
     </div>
-    <div class="input-wrapper">
-        <label asp-for="homeaddress">Home Address:</label>
-        <input asp-for="homeaddress" />
-    </div>
-   <div class="input-wrapper">
-        <label asp-for="age">age:</label>
-        <input asp-for="age" />
-    </div>
-    <div class="input-wrapper">
-        <label asp-for="email" readonly="@true">email:</label>
-        <input asp-for="email" />
-    </div>
-    <div class="input-wrapper">
-        <label asp-for="password">password:</label>
-        <input asp-for="password" />
-    </div>
-    <div class="input-wrapper">
-        <label asp-for="phonenumber">phonenumber:</label>
-        <input asp-for="phonenumber" />
-    </div>
-    <div class="input-wrapper">
-        <input type="submit" />
-    </div>
-</form>
+</div>

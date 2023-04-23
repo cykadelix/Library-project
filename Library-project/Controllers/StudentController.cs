@@ -1,4 +1,5 @@
-﻿using Library_project.ViewModels.Student;
+﻿using Library_project.Models;
+using Library_project.ViewModels.Student;
 using Npgsql;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -67,6 +68,24 @@ namespace Library_project.Controllers
                 using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
                 // Connect to the database
                 conn.Open();
+
+                var checkDuplicate = "SELECT COUNT(library_card_number) FROM students WHERE email='" + model.email + "'";
+                using (var com = new NpgsqlCommand(checkDuplicate, conn))
+                {
+                    int duplicate = 0;
+                    var read = com.ExecuteReader();
+                    if (read.Read())
+                    {
+                        duplicate = read.GetInt32(0);
+                    }
+                    if (duplicate != 0)
+                    {
+                        model.errorMessage = "Duplicate email found. Please use a different email.";
+                        return View("~/Views/Student/StudentIndex.cshtml", model);
+                    }
+                    read.Close();
+                }
+
 
                 using var command = new NpgsqlCommand("INSERT INTO students (VALUES(" +
                     "DEFAULT, @fname, @mname, @lname, @homeaddress, @email, @password, @phonenumber, @overdue_fees, @age))", conn)

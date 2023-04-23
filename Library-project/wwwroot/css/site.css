@@ -45,3 +45,15 @@ body {
 .light-orange {
     background-color: rgb(255, 165, 0, 0.4) !important;
 }
+
+*::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    opacity: .6; /* Firefox */
+}
+
+*:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    opacity: .6;
+}
+
+*::-ms-input-placeholder { /* Microsoft Edge */
+    opacity: .6;
+}

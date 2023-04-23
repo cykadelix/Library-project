@@ -123,6 +123,10 @@
                     <input type="checkbox" value=true id="employee-active" name="active" @(Model is null ? "checked" : (Model.active.Value ? "checked" : "")) />
                     <label asp-for="active">Active Employee</label>
                 </div>
+                @if(Model != null)
+                {
+                    <h2 class="display-6 text-danger fw-bold" style="font-size: 1rem">@Model.errorMessage</h2>
+                }
                 <div class="user-form-controls">
                     @if (Model is null)
                     {

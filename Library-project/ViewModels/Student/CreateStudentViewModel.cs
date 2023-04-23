@@ -19,5 +19,7 @@ namespace Library_project.ViewModels.Student
         public string? phonenumber { get; set; }
         public int age { get; set; }
         public int overdue_fees { get; set; }
+        public string? errorMessage { get; set; }
+
     }
 }
