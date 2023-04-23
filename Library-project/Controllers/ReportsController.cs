@@ -59,7 +59,7 @@ namespace Library_project.Controllers
 
                 "SELECT library_card_number, fname, lname, brand, serialnumber, null as title, checkoutdate, returndate, returned, returned_date, 'Projector' as mediatype, checkouts.mediaid " +
                 "FROM students, checkouts, projectors " +
-                "WHERE ( checkouts.studentid = '" + lcn + "' AND checkouts.mediaid = projectors.mediaid students.library_card_number = '" + lcn + "')";
+                "WHERE ( checkouts.studentid = '" + lcn + "' AND checkouts.mediaid = projectors.mediaid AND students.library_card_number = '" + lcn + "')";
 
             using var command = dataSource.CreateCommand(comm);
             using var reader = command.ExecuteReader();
@@ -69,19 +69,18 @@ namespace Library_project.Controllers
             {
                 LocalList.Add(new checkoutsByStudentReportViewModel()
                 {
-                    Brand = reader.IsDBNull(0) ? "" : reader.GetString(0),
-                    SerialNo = reader.IsDBNull(1) ? "" : reader.GetString(1),
-                    Title = reader.IsDBNull(2) ? "" : reader.GetString(2),
-                    CheckoutDate = reader.GetDateTime(3).ToString("MM-dd-yyyy HH:mm"),
-                    ReturnDate = reader.GetDateTime(4).ToString("MM-dd-yyyy HH:mm"),
-                    Returned = reader.IsDBNull(5) ? false : reader.GetBoolean(5),
-                    ReturnedDate = reader.IsDBNull(6) ? "" : reader.GetDateTime(6).ToString(),
-                    MediaType = reader.GetString(7),
-                    mediaId = reader.GetInt32(8),
-                    fname = reader.IsDBNull(9) ? "" : reader.GetString(9),
-                    lname = reader.IsDBNull(10) ? "" : reader.GetString(10),
-                    library_card_number = reader.IsDBNull(11) ? -1 : reader.GetInt32(11),
-                    checkoutId = reader.GetInt32(12),
+                    library_card_number = reader.GetInt32(0),
+                    fname = reader.GetString(1),
+                    lname = reader.GetString(2),
+                    Brand = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                    SerialNo = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                    Title = reader.IsDBNull(5) ? "" : reader.GetString(5),
+                    CheckoutDate = reader.GetDateTime(6).ToString("MM-dd-yyyy HH:mm"),
+                    ReturnDate = reader.GetDateTime(7).ToString("MM-dd-yyyy HH:mm"),
+                    Returned = reader.IsDBNull(8) ? false : reader.GetBoolean(8),
+                    ReturnedDate = reader.IsDBNull(9) ? "" : reader.GetDateTime(9).ToString(),
+                    MediaType = reader.GetString(10),
+                    mediaId = reader.GetInt32(11),
                 });
             }
             if (LocalList.Count == 0)
