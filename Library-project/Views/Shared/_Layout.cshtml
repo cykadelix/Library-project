@@ -54,20 +54,16 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Explore" asp-action="Index">Explore</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="StudentProfile">User Profile</a>
-                                </li>
-
-                                @if ((string)TempData.Peek("role") == "employee")
+                                @if ((string)TempData.Peek("role") == "employee" || (string)TempData.Peek("role") == "manager")
                                 {
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AdminDashboard">Admin</a>
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AdminDashboard">Dashboard</a>
                                     </li>
                                 }
                                 else
                                 {
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="UserDashboard">User</a>
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="UserDashboard">Dashboard</a>
                                     </li>
                                 }
                             </ul>
