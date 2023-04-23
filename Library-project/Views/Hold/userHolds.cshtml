@@ -1,7 +1,6 @@
 ﻿@{
-    ViewData["Title"] = "Admin account";
+    ViewBag.Title = "userholds";
 }
-
 <div class="account-container">
     <div class="account-controls-panel">
         <div class="library-logo">
@@ -42,57 +41,53 @@
             <h2 class="display-2">Sign out</h2>
         </a>
     </div>
-    <div class="events-panel">
-        <div class="events-panel-header">
-            <h1 class="display-1">Upcoming events</h1>
-            <h2 class="display-2" id="current-date"></h2>
+    <div class="user-combined-panel" style="width: 100%;">
+        <div class="user-entry-container">
         </div>
-        <div class="events-gallery">
-            <div class="event-container gradient-bg-2" style="margin-left: 5vw">
-                <div class="event-header">
-                    <h1>Mindful meditation</h1>
-                    <h2 class="display-2">Mar 28</h2>
+        <div class="user-recent-transactions-panel" style="height: 100%">
+            <div class="user-recent-transactions">
+                <div class="recent-transactions-header">
+                    <h1 class="display-1" style="text-align: center">Current Checkouts</h1>
+                    <h2 class="display-2" id="recent-transactions-subheader"></h2>
                 </div>
-                <img src="~/images/meditation.svg" id="meditation-img" />
-                <a>Explore</a>
-            </div>
-            <div class="event-container gradient-bg-2">
-                <div class="event-header">
-                    <h1>Book Diving</h1>
-                    <h2 class="display-2">Mar 30</h2>
+                <div class="table-container" style="display:none">
+                    <table id="transactions-table" class="display cell-border" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Title</th>
+                                <th>Media ID</th>
+                                <th>Hold Date</th>
+                            </tr>
+                        </thead>
+                        
+                    </table>
                 </div>
-                <img src="~/images/classroom.svg" id="classroom-img" />
-                <a>Explore</a>
             </div>
-            <div class="event-container gradient-bg-2">
-                <div class="event-header">
-                    <h1>Kids' Storytime</h1>
-                    <h2>Mar 31</h2>
-                </div>
-                <img src="~/images/kid_with_car.svg" id="classroom-img" />
-                <a>Explore</a>
-            </div>
-        </div>
-        <div class="transactions-container">
-            <div class="transactions-header">
-                <h1></h1>
-            </div>
-        </div>
-    </div>
-    <div class="agenda-panel">
-        <div class="agenda-panel-header">
-            <h1 class="display-1">Calendar</h1>
-            <h2 class="display-2">What's on the agenda today?</h2>
-        </div>
-        <div class="meeting-list">
-        </div>
-        <div class="reminder-list">
         </div>
     </div>
 </div>
-
 <script>
-    let date = new Date();
-    let options = { month: 'long', day: 'numeric', year: 'numeric' };
-    document.getElementById("current-date").innerHTML = date.toLocaleDateString('en-us', options);
+$(function() {
+    table = $('#transactions-table').DataTable({
+        "ajax": {
+            "type": "GET",
+            "data": { "studentid": @(TempData.Peek("libraryCard")), "role": @(TempData.Peek("role"))},
+            "url": "/Holds/GetUserHoldList",
+            "dataSrc": ''
+        },
+        "columns":
+            [
+                {"data": "userid" },
+                {"data":"title"},
+                { "data": "mediaid" },
+                { "data": "date" }
+            ],
+        "createdRow": function(row, data, dataIndex) {
+            $row.addClass('light-green');
+
+        }
+    });
+    $('.table-container').show();
+});
 </script>
