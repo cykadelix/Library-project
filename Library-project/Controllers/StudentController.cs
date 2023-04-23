@@ -199,7 +199,7 @@ namespace Library_project.Controllers
                 {
                     conn.Open();
 
-                    using var cmd = new NpgsqlCommand("UPDATE students SET overduefees = overduefees - @a WHERE library_card_number = 13", conn)
+                    using var cmd = new NpgsqlCommand("UPDATE students SET overduefees = overduefees - @a WHERE library_card_number = " + TempData.Peek("libraryCard"), conn)
                     {
                         Parameters =
                         {

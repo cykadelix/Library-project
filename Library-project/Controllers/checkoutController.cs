@@ -54,7 +54,7 @@ namespace Library_project.Controllers
                     }
                     else
                     {
-                        using var cmd = new NpgsqlCommand("INSERT INTO checkouts (studentid, mediaid, checkoutdate,returndate, checkoutid, returned,employeeid) VALUES (-1, @mediaid, current_timestamp, current_timestamp + INTERVAL '1 month', DEFAULT, DEFAULT, @id)", conn)
+                        using var cmd = new NpgsqlCommand("INSERT INTO checkouts (studentid, mediaid, checkoutdate,returndate, checkoutid, returned,employeeid) VALUES (-1, @mediaid, current_timestamp, current_timestamp + INTERVAL '2 month', DEFAULT, DEFAULT, @id)", conn)
                         {
                             Parameters =
                             {
