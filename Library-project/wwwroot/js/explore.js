@@ -1,4 +1,4 @@
-﻿//const { data } = require("jquery");
+﻿
 
 let mediaType = "book";
 let libraryCard;
@@ -119,10 +119,11 @@ $('#audiobook-explore-btn').on('click', function () {
 });
 
 $(document).on('click', '.media-hold-btn', function () {
-    let dataToSend = { "userid": libraryCard };
+    let dataToSend = { "userid": libraryCard};
     let elementClicked = $(this);
     dataToSend.mediaid = elementClicked.parent().siblings('.media-item-img').data('id');
-    dataToSend.mediaid = elementClicked.parent().siblings('.media-item-img').data('title');
+    dataToSend.title = elementClicked.parent().siblings('.media-item-img').data('title');
+
    
     let result;
     $.ajax({
