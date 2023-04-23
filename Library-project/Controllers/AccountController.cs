@@ -18,6 +18,7 @@ namespace Library_project.Controllers
 
             return View(newStudent);
         }
+        [HttpPost]
         public IActionResult RegisterStudentLandingPage(RegisterStudentVM student)
         {
             if (ModelState.IsValid)
@@ -25,6 +26,24 @@ namespace Library_project.Controllers
                 using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
                 {
                     conn.Open();
+
+                    var checkDuplicate = "SELECT COUNT(library_card_number) FROM students WHERE email='" + student.email + "'";
+                    using (var command = new NpgsqlCommand(checkDuplicate, conn))
+                    {
+                        int duplicate = 0;
+                        var reader = command.ExecuteReader();
+                        if (reader.Read())
+                        {
+                            duplicate = reader.GetInt32(0);
+                        }
+                        if(duplicate != 0)
+                        {
+                            student.errorMessage = "Duplicate email found. Please use a different email.";
+                            return View("~/Views/Account/StudentRegistration.cshtml", student);
+                        }
+                        reader.Close();
+                    }
+
                     var insertCommand = "INSERT INTO students (library_card_number, fname, mname, lname, homeaddress, email, password, phonenumber,overduefees,age)";
                     using (var command = new NpgsqlCommand(insertCommand + " VALUES(DEFAULT, @fname, @mname, @lname, @homeaddress, @email,@password, @phonenumber,0,@age)", conn))
                     {
@@ -81,6 +100,7 @@ namespace Library_project.Controllers
         {
             LoginStudentVM loginStudentVM = new LoginStudentVM();
             bool userFound = false;
+            bool activeAccount = false;
             using (var conn = new NpgsqlConnection(_config.GetConnectionString("local_lib")))
             {
                 conn.Open();
@@ -91,9 +111,9 @@ namespace Library_project.Controllers
                     {
                         TempData["libraryCard"] = reader.GetInt32(0);
                         TempData["fullName"] = reader.GetString(1) + " " + (reader.GetString(2) == "" ? "" : reader.GetString(2) + " ") + reader.GetString(3);
-
                         TempData["role"] = "student".ToString();
                         userFound = true;
+                        activeAccount = reader.GetBoolean(10);
                     }
                 }
             }
@@ -111,14 +131,19 @@ namespace Library_project.Controllers
                             TempData["fullName"] = reader.GetString(1) + " " + (reader.GetString(2) == "" ? "" : reader.GetString(2) + " ") + reader.GetString(3);
                             TempData["role"] = "employee";
                             userFound = true;
-
+                            activeAccount = reader.GetBoolean(11);
                         }
                     }
                 }
             }
-            loginStudentVM.errorMessage = "Account not found. Make sure your credentials are correct.";
             if (!userFound)
             {
+                loginStudentVM.errorMessage = "Account not found. Make sure your credentials are correct.";
+                return View("~/Views/Account/Login.cshtml", loginStudentVM);
+            }
+            if (!activeAccount)
+            {
+                loginStudentVM.errorMessage = "Account has been deactived. Please contact your manager if this is an error.";
                 return View("~/Views/Account/Login.cshtml", loginStudentVM);
             }
             return Redirect(returnUrl);
