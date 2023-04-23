@@ -40,7 +40,7 @@ namespace Library_project.Controllers
 
                 try
                 {
-                    if (TempData.Peek("role") == "student")
+                    if ((string)TempData.Peek("role") == "student")
                     {
                         using var cmd = new NpgsqlCommand("INSERT INTO checkouts (studentid, mediaid, checkoutdate,returndate, checkoutid, returned, employeeid) VALUES (@id, @mediaid, current_timestamp, current_timestamp + INTERVAL '1 month', DEFAULT, DEFAULT, -1)", conn)
                         {
