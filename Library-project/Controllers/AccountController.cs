@@ -109,11 +109,14 @@ namespace Library_project.Controllers
                     var reader = command.ExecuteReader();
                     if (reader.Read())
                     {
-                        TempData["libraryCard"] = reader.GetInt32(0);
-                        TempData["fullName"] = reader.GetString(1) + " " + (reader.GetString(2) == "" ? "" : reader.GetString(2) + " ") + reader.GetString(3);
-                        TempData["role"] = "student".ToString();
                         userFound = true;
                         activeAccount = reader.GetBoolean(10);
+                        if(activeAccount)
+                        {
+                            TempData["libraryCard"] = reader.GetInt32(0);
+                            TempData["fullName"] = reader.GetString(1) + " " + (reader.GetString(2) == "" ? "" : reader.GetString(2) + " ") + reader.GetString(3);
+                            TempData["role"] = "student".ToString();
+                        }
                     }
                 }
             }
@@ -127,11 +130,16 @@ namespace Library_project.Controllers
                         var reader = command.ExecuteReader();
                         if (reader.Read())
                         {
-                            TempData["libraryCard"] = reader.GetInt32(0);
-                            TempData["fullName"] = reader.GetString(1) + " " + (reader.GetString(2) == "" ? "" : reader.GetString(2) + " ") + reader.GetString(3);
-                            TempData["role"] = "employee";
                             userFound = true;
                             activeAccount = reader.GetBoolean(11);
+                            if(activeAccount)
+                            {
+                                TempData["libraryCard"] = reader.GetInt32(0);
+                                TempData["fullName"] = reader.GetString(1) + " " + (reader.GetString(2) == "" ? "" : reader.GetString(2) + " ") + reader.GetString(3);
+
+                                bool manager = reader.GetBoolean(12);
+                                TempData["role"] = manager ? "manager" : "employee";
+                            }
                         }
                     }
                 }
