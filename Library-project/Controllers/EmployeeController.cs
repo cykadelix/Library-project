@@ -1,3 +1,4 @@
+using Library_project.Models;
 using Library_project.ViewModels.Employee;
 using Npgsql;
 
@@ -72,6 +73,23 @@ namespace Library_project.Controllers
             using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
             // Connect to the database
             conn.Open();
+
+            var checkDuplicate = "SELECT COUNT(employeeid) FROM employees WHERE email='" + model.email + "'";
+            using (var com = new NpgsqlCommand(checkDuplicate, conn))
+            {
+                int duplicate = 0;
+                var read = com.ExecuteReader();
+                if (read.Read())
+                {
+                    duplicate = read.GetInt32(0);
+                }
+                if (duplicate != 0)
+                {
+                    model.errorMessage = "Duplicate email found. Please use a different email.";
+                    return View("~/Views/Employee/EmployeeIndex.cshtml", model);
+                }
+                read.Close();
+            }
 
             using var command = new NpgsqlCommand("INSERT INTO employees (VALUES(" +
                 "DEFAULT, @fname, @mname, @lname, @position, @salary, @email, @password, @homeaddress, @phonenumber, @age, @active))", conn)

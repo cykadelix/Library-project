@@ -24,23 +24,64 @@ namespace Library_project.Controllers
         {
             return View();
         }
-        public List<checkoutUserReportViewModel>? CheckoutsByUserToList(checkoutUserReportViewModel model)
+
+        public IActionResult CheckoutsByStudentIndex()
+        {
+            return View();
+        }
+
+        public List<checkoutsByStudentReportViewModel>? CheckoutsByStudentToList(int lcn)
         {
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(_config.GetConnectionString("local_lib"));
             using var dataSource = dataSourceBuilder.Build();
-            using var command = dataSource.CreateCommand("SELECT students.library_card_number, students.fname, students.lname" + "FROM students, medias, checkouts " + "WHERE students.library_card_number=checkouts.studentid" + "AND checkouts.mediaid=medias.mediaid");
+            string comm = "SELECT library_card_number, fname, lname, null as brand, null as serialnumber, title, checkoutdate, returndate, returned, returned_date, 'Book' as mediatype, checkouts.mediaid " +
+                "FROM students, checkouts, books " +
+                "WHERE ( checkouts.studentid = '" + lcn + "' AND checkouts.mediaid = books.mediaid AND students.library_card_number = '" + lcn + "') UNION " +
+                "SELECT library_card_number, fname, lname, brand, serialnumber, null as title, checkoutdate, returndate, returned, returned_date, 'Camera' as mediatype, checkouts.mediaid " +
+                "FROM students, checkouts, cameras " +
+                "WHERE ( checkouts.studentid = '" + lcn + "' AND checkouts.mediaid = cameras.mediaid AND students.library_card_number = '" + lcn + "') UNION " +
+
+                "SELECT library_card_number, fname, lname, brand, serialnumber, null as title, checkoutdate, returndate, returned, returned_date, 'Computer' as mediatype, checkouts.mediaid " +
+                "FROM students, checkouts, computers " +
+                "WHERE ( checkouts.studentid = '" + lcn + "' AND checkouts.mediaid = computers.mediaid AND students.library_card_number = '" + lcn + "') UNION " +
+
+                "SELECT library_card_number, fname, lname, null as brand, null as serialnumber, title, checkoutdate, returndate, returned, returned_date, 'Audiobook' as mediatype, checkouts.mediaid " +
+                "FROM students, checkouts, audiobooks " +
+                "WHERE ( checkouts.studentid = '" + lcn + "' AND checkouts.mediaid = audiobooks.mediaid AND students.library_card_number = '" + lcn + "') UNION " +
+
+                "SELECT library_card_number, fname, lname, null as brand, null as serialnumber, title, checkoutdate, returndate, returned, returned_date, 'Journal' as mediatype, checkouts.mediaid " +
+                "FROM students, checkouts, journals " +
+                "WHERE ( checkouts.studentid = '" + lcn + "' AND checkouts.mediaid = journals.mediaid AND students.library_card_number = '" + lcn + "') UNION " +
+
+                "SELECT library_card_number, fname, lname, null as brand, null as serialnumber, title, checkoutdate, returndate, returned, returned_date, 'Movie' as mediatype, checkouts.mediaid " +
+                "FROM students, checkouts, movies " +
+                "WHERE ( checkouts.studentid = '" + lcn + "' AND checkouts.mediaid = movies.mediaid AND students.library_card_number = '" + lcn + "') UNION " +
+
+                "SELECT library_card_number, fname, lname, brand, serialnumber, null as title, checkoutdate, returndate, returned, returned_date, 'Projector' as mediatype, checkouts.mediaid " +
+                "FROM students, checkouts, projectors " +
+                "WHERE ( checkouts.studentid = '" + lcn + "' AND checkouts.mediaid = projectors.mediaid students.library_card_number = '" + lcn + "')";
+
+            using var command = dataSource.CreateCommand(comm);
             using var reader = command.ExecuteReader();
 
-            var LocalList = new List<checkoutUserReportViewModel>();
+            var LocalList = new List<checkoutsByStudentReportViewModel>();
             while (reader.Read())
             {
-                LocalList.Add(new checkoutUserReportViewModel()
+                LocalList.Add(new checkoutsByStudentReportViewModel()
                 {
-                    checkoutid = (int)reader.GetInt32(0),
-                    fname = (string)reader.GetValue(1),
-                    lname = (string)reader.GetValue(2),
-                    lcn = (int)reader.GetInt32(3),
-                    mediaid = (int)reader.GetInt32(4)
+                    Brand = reader.IsDBNull(0) ? "" : reader.GetString(0),
+                    SerialNo = reader.IsDBNull(1) ? "" : reader.GetString(1),
+                    Title = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                    CheckoutDate = reader.GetDateTime(3).ToString("MM-dd-yyyy HH:mm"),
+                    ReturnDate = reader.GetDateTime(4).ToString("MM-dd-yyyy HH:mm"),
+                    Returned = reader.IsDBNull(5) ? false : reader.GetBoolean(5),
+                    ReturnedDate = reader.IsDBNull(6) ? "" : reader.GetDateTime(6).ToString(),
+                    MediaType = reader.GetString(7),
+                    mediaId = reader.GetInt32(8),
+                    fname = reader.IsDBNull(9) ? "" : reader.GetString(9),
+                    lname = reader.IsDBNull(10) ? "" : reader.GetString(10),
+                    library_card_number = reader.IsDBNull(11) ? -1 : reader.GetInt32(11),
+                    checkoutId = reader.GetInt32(12),
                 });
             }
             if (LocalList.Count == 0)
@@ -49,11 +90,12 @@ namespace Library_project.Controllers
             }
             return LocalList;
         }
-        [HttpPost]
-        public IActionResult GetCheckoutsByUserList(checkoutUserReportViewModel urvm)
+        [HttpGet]
+        public IActionResult GetCheckoutsByStudentList(int library_card_number)
         {
-            return Json(CheckoutsByUserToList(urvm));
+            return Json(CheckoutsByStudentToList(library_card_number));
         }
+
         [IgnoreAntiforgeryToken]
         public List<checkoutReportViewModel>? CheckoutsByDateToList(checkoutReportViewModel covm)
         {

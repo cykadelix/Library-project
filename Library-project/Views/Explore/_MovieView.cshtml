@@ -2,7 +2,7 @@
 @using Library_project.ViewModels.Movie
 @model MovieListViewModel
 
-@if (Model is null || Model.NumAvailable == 0)
+@if (Model is null)
 {
     <div class="empty-data-container">
         <img src="~/images/empty-data.svg" />
