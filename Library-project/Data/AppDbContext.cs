@@ -24,8 +24,6 @@ namespace Library_project.Data
         public DbSet<computers> computers { get; set; }
         public DbSet<checkouts> checkouts { get; set; }
         public DbSet<reviews> reviews { get; set; }
-        public DbSet<activities> activities { get; set; }
-        public DbSet<rooms> rooms { get; set; }
         public DbSet<user> user { get; set; }
         public DbSet<userdto> userdtos { get; set; }
 
