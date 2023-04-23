@@ -141,7 +141,7 @@ $(document).on('click', '.media-hold-btn', function () {
 });
 
 $(document).on('click', '.media-checkout-btn', function () {
-    let dataToSend = {"studentid": libraryCard };
+    let dataToSend = {"id": libraryCard };
     let elementClicked = $(this);
     dataToSend.mediaid = elementClicked.parent().siblings('.media-item-img').data('id');
 

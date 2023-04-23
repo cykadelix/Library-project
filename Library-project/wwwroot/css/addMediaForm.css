@@ -260,6 +260,14 @@ user-submit-btn:hover {
         margin: 0 0.4rem;
     }
 
+.reports-table {
+    flex-direction: column;
+}
+
+.reports-table h2 {
+    font-size: 2rem;
+}
+
 .edit-row-btn {
     cursor: pointer;
 }

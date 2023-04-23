@@ -19,6 +19,14 @@
             <i class="fa-solid fa-chart-bar"></i>
             <h2 class="display-2">Dashboard</h2>
         </a>
+        <a class="account-nav" asp-area="" asp-controller="Employee" asp-action="EmployeeCheckouts">
+            <i class="fa-solid fa-list-check"></i>
+            <h2 class="display-2">Checkouts</h2>
+        </a>
+        <a class="account-nav" asp-area="" asp-controller="Review" asp-action="Employee">
+            <i class="fa-solid fa-star-half-stroke"></i>
+            <h2 class="display-2">Create a review</h2>
+        </a>
         <a class="account-nav" asp-area="" asp-controller="AddMedia" asp-action="AddComputer">
             <i class="fa-solid fa-boxes-stacked"></i>
             <h2 class="display-2">Inventory</h2>
@@ -32,7 +40,7 @@
             <h2 class="display-2">Manage Historians</h2>
         </a>
         <a class="account-nav" asp-area="" asp-controller="Student" asp-action="StudentIndex">
-            <i class="fa-solid fa-boxes-stacked"></i>
+            <i class="fa-solid fa-user-group"></i>
             <h2 class="display-2">Manage Students</h2>
         </a>
         <a class="account-nav active-l" asp-area="" asp-controller="Reports" asp-action="CheckoutsByDateIndex">
@@ -43,12 +51,12 @@
             <i class="fa-solid fa-gear"></i>
             <h2 class="display-2">Settings</h2>
         </a>
-        <a class="account-nav" id="account-signout-btn">
+        <a class="account-nav" id="account-signout-btn" asp-controller="Account" asp-action="Logout">
             <i class="fa-solid fa-arrow-right-from-bracket"></i>
             <h2 class="display-2">Sign out</h2>
         </a>
     </div>
-    <div class="media-entry-container">
+    <div class="report-container">
         <div class="media-form-header">
             <h1 class="display-1">Choose a report type:</h1>
             <select name="report-type" id="report-type">
@@ -57,22 +65,75 @@
                 <option>Students</option>
                 <option>Overdue Fees</option>
             </select>
-        </div>
-    </div>
-    <div class="user-combined-panel">
-        <div class="user-entry-container">
-            <div class="media-form-header">
-                <h1 class="display-1">Reviews of Specified Item</h1>
-            </div>
-            <form class="user-entry-form" asp-action="GetReviewsList" asp-controller="Reports" method="post">
+
+            <h1 class="display-1">Reviews of Specified Item</h1>
+            <form class="report-form"> 
                 <div class="input-wrapper-horizontal">
                     <label asp-for="mediaid">ItemID:</label>
-                    <input type="number" name="mediaid" placeholder="ID of item">
+                    <input type="number" name="mediaid" id="mediaid-input" placeholder="ID of item">
                     <span asp-validation-for="mediaid" class="text-danger"></span>
                 </div>
                 <button type="submit">Generate Report</button>
             </form>
         </div>
+        <div class="table-container reports-table">
+            <table id="transactions-table" class="display cell-border" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Review Rating</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+            </table>
+            <h2 class="averageRating display-1 light-green"></h2>
+        </div>
     </div>
-    <script></script>
 </div>
+
+<script>
+    let mediaList;
+    let averageRating;
+    let table;
+    //Get list of Audiobooks
+    $(document).ready(function () {
+        $('#transactions-table').DataTable({
+            "destroy": true,
+        });
+        //Creating datatable
+        $("form").submit(function (e) {
+            e.preventDefault();
+            var formData = {
+                fname: null,
+                lname: null,
+                mediaid: $('#mediaid-input').val(),
+                reviewRating: null,
+                evaluation: null,
+                averageRating: null,
+            };
+            table = $('#transactions-table').DataTable({
+                "destroy": true,
+                "ajax": {
+                    "type": "GET",
+                    "data": formData,
+                    "url": '/Reports/GetReviewsList',
+                    "dataSrc": ''
+                },
+                "columns": [
+                    { "data": "fname" },
+                    { "data": "lname" },
+                    { "data": "reviewRating" },
+                    { "data": "evaluation" },
+                ],
+                "rowCallback": function( row, data, index ) {
+                    if (data["fname"] == null) {
+                        averageRating = data["averageRating"];
+                        $('.averageRating').text('Average Rating: ' + averageRating);
+                        $(row).hide();
+                    }
+                },
+            });
+        });
+    });
+</script>

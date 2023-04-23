@@ -19,6 +19,14 @@
             <i class="fa-solid fa-chart-bar"></i>
             <h2 class="display-2">Dashboard</h2>
         </a>
+        <a class="account-nav active-l" asp-area="" asp-controller="Employee" asp-action="EmployeeCheckouts">
+            <i class="fa-solid fa-list-check"></i>
+            <h2 class="display-2">Checkouts</h2>
+        </a>
+        <a class="account-nav" asp-area="" asp-controller="Review" asp-action="CreateReview">
+            <i class="fa-solid fa-star-half-stroke"></i>
+            <h2 class="display-2">Create a review</h2>
+        </a>
         <a class="account-nav active-l" asp-area="" asp-controller="AddMedia" asp-action="AddComputer">
             <i class="fa-solid fa-boxes-stacked"></i>
             <h2 class="display-2">Inventory</h2>
@@ -43,7 +51,7 @@
             <i class="fa-solid fa-gear"></i>
             <h2 class="display-2">Settings</h2>
         </a>
-        <a class="account-nav" id="account-signout-btn">
+        <a class="account-nav" id="account-signout-btn" asp-controller="Account" asp-action="Logout">
             <i class="fa-solid fa-arrow-right-from-bracket"></i>
             <h2 class="display-2">Sign out</h2>
         </a>

@@ -20,7 +20,8 @@ else
                 <img src="@imgSrc" data-id="@items.cameraid" class="media-item-img">
                 <div class="media-display-text">
                     <h1 class="display-1">@items.brand</h1>
-                    <h2 class="display-2">@items.serialnumber</h2>
+                    <h2 class="display-2">Item ID: @items.cameraid</h2>
+                    <h2 class="display-2">Serial No: @items.serialnumber</h2>
                     <h2 class="display-2">Megapixels: @items.megapixels</h2>
                     <h2 class="display-2 description-placeholder">Click to show description</h2>
                     <h2 class="display-2 media-description hide">@(items.description == "" ? "No description provided" : items.description)</h2>
