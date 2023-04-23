@@ -20,7 +20,7 @@ namespace Library_project.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetUserHoldList(int userid,string role)
+        public IActionResult GetUserHoldList(int userid, string role)
         {
             return Json(userHoldsList(userid, role));
         }
@@ -32,59 +32,55 @@ namespace Library_project.Controllers
 
         public List<CreateHoldVM> userHoldsList(int userid, string role)
         {
-            
+
             List<CreateHoldVM> localList = new List<CreateHoldVM>();
             using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
             conn.Open();
             string cmdString = "";
             if (role == "student")
             {
-                 cmdString = "SELECT * FROM holds WHERE studentid="+ userid.ToString();
+                cmdString = "SELECT * FROM holds WHERE studentid=" + userid.ToString();
             }
             else
             {
                 cmdString = "SELECT * FROM holds WHERE employeeid=" + userid.ToString();
             }
-            
-            using var cmd = new NpgsqlCommand(cmdString,conn);
+
+            using var cmd = new NpgsqlCommand(cmdString, conn);
 
             var reader = cmd.ExecuteReader();
-            if(reader.Read())
+            while (reader.Read())
             {
-                while (reader.Read())
+                CreateHoldVM localHold = new CreateHoldVM();
+                if (TempData.Peek("role").ToString() == "student")
                 {
-                    CreateHoldVM localHold = new CreateHoldVM();
-                    if(TempData.Peek("role").ToString()=="student")
-                    {
-                        localHold.userid = reader.GetInt16(1);
-                    }
-                    else
-                    {
-                        localHold.userid=reader.GetInt32(4);
-                    }
-                    localHold.mediaid = reader.GetInt16(2);
-                    localHold.date = reader.GetDateTime(3).ToString();
-                    localHold.title = reader.GetString(5);
-                    localList.Add(localHold);
+                    localHold.userid = reader.GetInt16(1);
                 }
-                
+                else
+                {
+                    localHold.userid = reader.GetInt32(4);
+                }
+                localHold.mediaid = reader.GetInt16(2);
+                localHold.date = reader.GetDateTime(3).ToString();
+                localHold.title = reader.GetString(5);
+                localList.Add(localHold);
             }
-                
+
             return localList;
         }
 
         public async Task<string> HoldItem(CreateHoldVM newHold)
         {
 
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
-                    
+
                     string commandOne = "";
-                    string commandTwo= "UPDATE medias SET onhold=true WHERE mediaid="+newHold.mediaid+"";
-                    
-                    
+                    string commandTwo = "UPDATE medias SET onhold=true WHERE mediaid=" + newHold.mediaid + "";
+
+
                     if (TempData.Peek("role").ToString() == "student")
                     {
 
@@ -94,7 +90,7 @@ namespace Library_project.Controllers
                     {
                         commandOne = "INSERT INTO holds (holdid, studentid, mediaid, hold_date, employeeid, title) VALUES (DEFAULT, -1, @mediaid, current_timestamp, @userid, @title)";
                     }
-                    
+
                     using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
                     conn.Open();
 
@@ -110,16 +106,16 @@ namespace Library_project.Controllers
                     cmd.ExecuteNonQuery();
                     using var cmd2 = new NpgsqlCommand(commandTwo, conn);
                     cmd2.ExecuteNonQuery();
-                    
+
 
                 }
                 catch (Exception e)
                 {
                     return e.Message;
                 }
-               
-                
-                
+
+
+
             }
             else
             {
