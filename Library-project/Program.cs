@@ -1,6 +1,4 @@
 using Library_project.Data;
-using Library_project.Interfaces;
-using Library_project.Repository;
 using Library_project.Settings;
 using Microsoft.AspNet.Identity.EntityFramework;
 
