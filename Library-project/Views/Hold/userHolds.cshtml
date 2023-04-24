@@ -93,11 +93,11 @@
                     {
                         "data":null,
                         "render": function(data, type, full, meta) {
-                            if (data.available) {
-                                 return "<a style='cursor:pointer' class='check-item'><i class='fa-regular fa-square'></i></a>";
-                            } else {
-                                return "<a style='cursor:pointer' class='return-item'><i class='fa-regular fa-square'></i></a>";
-                            }
+                           if(data.available) {
+                            return "<a style='cursor:pointer' class='return-item'><i class='fa-regular fa-square'></i></a>";
+                        } else {
+                               return "<i class='fa-regular fa-square-check'></i>";
+                        }
                            
                         }
                     }
@@ -127,7 +127,7 @@
             }
             }
         })
-        window.location.href = '/Hold/CheckoutHeldItem?mediaId=' + mediaid;
+        
     })
     function showSuccess(element) {
     element.find('.checkout-success-text').show();
