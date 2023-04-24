@@ -30,7 +30,14 @@
         <a class="account-nav active-l" asp-area="" asp-controller="AddMedia" asp-action="AddComputer">
             <i class="fa-solid fa-boxes-stacked"></i>
             <h2 class="display-2">Inventory</h2>
+        </a><a class="account-nav" asp-area="" asp-controller="Hold" asp-action="userHolds">
+            <i class="fa-solid fa-list-check"></i>
+            <h2 class="display-2">My Holds</h2>
         </a>
+         <a class="account-nav" asp-area="" asp-controller="Hold" asp-action="allHolds">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <h2 class="display-2">all holds</h2>
+         </a>
         @if ((string)TempData.Peek("role") == "manager")
         {
             <a class="account-nav" asp-area="" asp-controller="Employee" asp-action="EmployeeIndex">

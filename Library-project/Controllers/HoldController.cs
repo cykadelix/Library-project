@@ -18,7 +18,42 @@ namespace Library_project.Controllers
         {
             return View();
         }
+        [HttpGet]
+        public IActionResult GetAllHolds(int userid)
+        {
+            return Json(GetAllHoldsList(userid));
+        }
+        public IActionResult allHolds()
+        {
+            return View();
+        }
+        public List<CreateHoldVM> GetAllHoldsList(int userid)
+        {
+            List<CreateHoldVM> localList = new List<CreateHoldVM>();
+            using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
+            conn.Open();
+            string cmdString = "SELECT * FROM holds;";
+            using var cmd = new NpgsqlCommand(cmdString, conn);
 
+            var reader = cmd.ExecuteReader();
+            while(reader.Read())
+            {
+                CreateHoldVM localHold = new CreateHoldVM();
+                if(reader.GetInt16(1)==-1)
+                {
+                    localHold.userid = reader.GetInt16(4);
+                }
+                else
+                {
+                    localHold.userid = reader.GetInt16(1);
+                }
+                localHold.mediaid = reader.GetInt16(2);
+                localHold.date = reader.GetDateTime(3).ToString();
+                localHold.title = reader.GetString(5);
+                localList.Add(localHold);
+            }
+            return localList;
+        }
         [HttpGet]
         public IActionResult GetUserHoldList(int userid, string role)
         {

@@ -1,26 +1,23 @@
 ﻿@{
-    ViewBag.Title = "userholds";
+    ViewBag.Title = "All Holds";
 }
 <div class="account-container">
     <div class="account-controls-panel">
-        <div class="library-logo">
-            Library Logo
-        </div>
         <div class="user-info">
             <div class="user-pfp-container">
                 <img src="~/images/pfp_male.svg" id="user-pfp-img" />
             </div>
             <h1 class="display-1">@(TempData.Peek("fullName"))</h1>
         </div>
-        <a class="account-nav active-l" asp-area="" asp-controller="Home" asp-action="UserDashboard">
+        <a class="account-nav active-l" asp-area="" asp-controller="Home" asp-action="AdminDashboard">
             <i class="fa-solid fa-chart-bar"></i>
             <h2 class="display-2">Dashboard</h2>
         </a>
-        <a class="account-nav" asp-area="" asp-controller="Student" asp-action="StudentCheckouts">
+        <a class="account-nav" asp-area="" asp-controller="Employee" asp-action="EmployeeCheckouts">
             <i class="fa-solid fa-list-check"></i>
-            <h2 class="display-2">My Checkouts</h2>
+            <h2 class="display-2">Checkouts</h2>
         </a>
-        <a class="account-nav" asp-area="" asp-controller="Hold" asp-action="userHolds">
+         <a class="account-nav" asp-area="" asp-controller="Hold" asp-action="userHolds">
             <i class="fa-solid fa-list-check"></i>
             <h2 class="display-2">My Holds</h2>
         </a>
@@ -28,11 +25,26 @@
             <i class="fa-solid fa-star-half-stroke"></i>
             <h2 class="display-2">Create a review</h2>
         </a>
-        <a class="account-nav" asp-area="" asp-controller="Student" asp-action="StudentBalance">
-            <i class="fa-solid fa-money-bill"></i>
-            <h2 class="display-2">Balance</h2>
+        <a class="account-nav" asp-area="" asp-controller="AddMedia" asp-action="AddComputer">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <h2 class="display-2">Inventory</h2>
         </a>
-        <a class="account-nav" asp-controller="DashboardSettings" asp-action="Student" asp-route-id="@TempData.Peek("libraryCard")">
+        @if ((string)TempData.Peek("role") == "manager")
+        {
+            <a class="account-nav" asp-area="" asp-controller="Employee" asp-action="EmployeeIndex">
+                <i class="fa-solid fa-user-group"></i>
+                <h2 class="display-2">Manage Employees</h2>
+            </a>
+        }
+        <a class="account-nav" asp-area="" asp-controller="Student" asp-action="StudentIndex">
+            <i class="fa-solid fa-user-group"></i>
+            <h2 class="display-2">Manage Students</h2>
+        </a>
+        <a class="account-nav " asp-area="" asp-controller="Reports" asp-action="CheckoutsByDateIndex">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <h2 class="display-2">Report Generator</h2>
+        </a>
+        <a class="account-nav" asp-controller="DashboardSettings" asp-action="Admin" asp-route-id="@(TempData.Peek("libraryCard"))">
             <i class="fa-solid fa-gear"></i>
             <h2 class="display-2">Settings</h2>
         </a>
@@ -40,13 +52,6 @@
             <i class="fa-solid fa-arrow-right-from-bracket"></i>
             <h2 class="display-2">Sign out</h2>
         </a>
-        @if ((string)TempData.Peek("role") == "manager" || (string)TempData.Peek("role")=="employee")
-        {
-             <a class="account-nav" asp-area="" asp-controller="Hold" asp-action="allHolds">
-                <i class="fa-solid fa-list-check"></i>
-                <h2 class="display-2">All Holds</h2>
-            </a>
-        }
     </div>
     <div class="user-combined-panel" style="width: 100%;">
         <div class="user-entry-container">
@@ -79,8 +84,8 @@
         table = $('#transactions-table').DataTable({
             "ajax": {
                 "type": "GET",
-                "data": { "userid": "@(TempData.Peek("libraryCard"))", "role": "@TempData.Peek("role")"},
-                "url": "/Hold/GetUserHoldList",
+                "data": { "userid": "@(TempData.Peek("libraryCard"))"},
+                "url": "/Hold/GetAllHolds",
                 "dataSrc": ''
             },
             "columns":
