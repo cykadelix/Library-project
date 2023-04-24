@@ -26,9 +26,20 @@ Press the “checkout” button
       // You can try to check out more than 5 items to test the trigger.
 
 How to return items:
+<ul>
+<li>
 go to Dashboard
+</li>
+<li>
 Go to checkouts
+</li>
+<li>
 Press the unchecked box next to red items to return them
+</li>
+</ul>
+
+
+
 
 How to put items on hold:
 Login as a user
