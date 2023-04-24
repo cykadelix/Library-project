@@ -42,17 +42,28 @@ Press the unchecked box next to red items to return them
 
 
 How to put items on hold:
-Login as a user
-Go to the explore page
-Find an item that has the “hold item” button
-Press that button
-
+<ul>
+	<li>Login as a user</li>
+	<li>Go to the explore page</li>
+	<li>Find an item that has the “hold item” button</li>
+	<li>Press that button</li>
+</ul>
 
 
 How to checkout from hold:
-Login as user
-Go to my holds in the dashboard
-Press the unchecked box . If the box is checked then that item is unavailable
+<ul>
+	<li>Login as a user</li>
+	<li>Go to my holds in the dashboard</li>
+	<li>Press the unchecked box . If the box is checked then that item is unavailable</li>
+</ul>
+
+
+
+
+
+
+
+
 
 How to add an employee:
 Login as a manager
