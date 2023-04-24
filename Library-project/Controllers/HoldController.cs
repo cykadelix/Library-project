@@ -50,6 +50,7 @@ namespace Library_project.Controllers
                 localHold.mediaid = reader.GetInt16(2);
                 localHold.date = reader.GetDateTime(3).ToString();
                 localHold.title = reader.GetString(5);
+                localHold.available = reader.GetBoolean(6);
                 localList.Add(localHold);
             }
             return localList;

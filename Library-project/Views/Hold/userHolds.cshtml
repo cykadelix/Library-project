@@ -65,6 +65,7 @@
                                 <th>Title</th>
                                 <th>Media ID</th>
                                 <th>Hold Date</th>
+                                <th>checkout Item</th>
                             </tr>
                         </thead>
 
@@ -88,7 +89,18 @@
                     { "data": "userid" },
                     { "data": "title" },
                     { "data": "mediaid" },
-                    { "data": "date" }
+                    { "data": "date" },
+                    {
+                        "data":null,
+                        "render": function(data, type, full, meta) {
+                            if (data.available) {
+                                 return "<a style='cursor:pointer' class='return-item'><i class='fa-regular fa-square'></i></a>";
+                            } else {
+                                return "<a style='cursor:pointer' class='return-item'><i class='fa-regular fa-square'></i></a>";
+                            }
+                           
+                        }
+                    }
                 ],
             "createdRow": function (row, data, dataIndex) {
                 $(row).addClass('light-green');
@@ -97,4 +109,10 @@
         });
         $('.table-container').show();
     });
+    $('#transactions-table').on('click', '.return-item', function () {
+        let tr = $(this).closest('tr');
+        let mediaId = table.row(tr).data().mediaId;
+
+        window.location.href = '/Checkout/CheckoutItem?mediaId=' + mediaId;
+    })
 </script>
