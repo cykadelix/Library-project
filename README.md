@@ -83,3 +83,32 @@ Note: If the box is checked then that item is unavailable.
 
 ## How to add media:
 1. Login as employee
+2. Login as employee
+3. Go to inventory tab in the dashboard
+4. Select the type you would like to create from the box
+5. Fill out the form and hit submit
+
+##How to add reviews
+1. Login as a user
+2. Go to the dashboard
+3. Go to add review
+4. Fill out the form and hit submit
+
+##How to edit admin information:
+1. Login as admin
+2. Go to dashboard
+3. Go to settings
+
+##How to pay balance:
+1. Login as user
+2. Go to dashboard
+3. Click on balance
+4. Enter amount to pay and click submit
+Note: This page does not show how much the overdue balance is, so the overdue balance is defaulted to 5. Therefore, enter 5 and click submit, then you should be able to check out items. Test the trigger first before paying the overdue balance
+
+
+##Installation Steps:
+1. Clone the repository into Visual Studio or any other IDE that supports .sln files
+2. Navigate to the master-2 branch and build the project.
+3. Browse the master-2 branch to view our project. 
+
