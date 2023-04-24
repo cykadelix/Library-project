@@ -14,6 +14,51 @@ namespace Library_project.Controllers
             _logger = logger;
             _config = config;
         }
+        public string CheckoutHeldItem(int mediaId)
+        {
+
+            if (ModelState.IsValid)
+            {
+                using NpgsqlConnection conn = new NpgsqlConnection(_config.GetConnectionString("local_lib"));
+
+                conn.Open();
+
+                try
+                {
+                    if ((string)TempData.Peek("role") == "student")
+                    {
+                        using var cmd = new NpgsqlCommand("INSERT INTO checkouts (studentid, mediaid, checkoutdate,returndate, checkoutid, returned, employeeid) VALUES (@id, @mediaid, current_timestamp, current_timestamp + INTERVAL '1 month', DEFAULT, DEFAULT, -1)", conn)
+                        {
+                            Parameters =
+                            {
+                                new("id",(int)TempData.Peek("libraryCard")),
+                                new("mediaid",mediaId)
+                            }
+                        };
+                        using var reader = cmd.ExecuteReader();
+                    }
+                    else
+                    {
+                        using var cmd = new NpgsqlCommand("INSERT INTO checkouts (studentid, mediaid, checkoutdate,returndate, checkoutid, returned,employeeid) VALUES (-1, @mediaid, current_timestamp, current_timestamp + INTERVAL '2 month', DEFAULT, DEFAULT, @id)", conn)
+                        {
+                            Parameters =
+                            {
+                                new("id",(int)TempData.Peek("libraryCard")),
+                                new("mediaid",mediaId)
+                            }
+                        };
+                        using var reader = cmd.ExecuteReader();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message;
+                }
+
+            }
+            return "";
+        }
+    
         public IActionResult Index()
         {
             return View();

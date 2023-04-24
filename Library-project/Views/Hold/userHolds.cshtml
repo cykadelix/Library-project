@@ -94,7 +94,7 @@
                         "data":null,
                         "render": function(data, type, full, meta) {
                             if (data.available) {
-                                 return "<a style='cursor:pointer' class='return-item'><i class='fa-regular fa-square'></i></a>";
+                                 return "<a style='cursor:pointer' class='check-item'><i class='fa-regular fa-square'></i></a>";
                             } else {
                                 return "<a style='cursor:pointer' class='return-item'><i class='fa-regular fa-square'></i></a>";
                             }
@@ -111,8 +111,33 @@
     });
     $('#transactions-table').on('click', '.return-item', function () {
         let tr = $(this).closest('tr');
-        let mediaId = table.row(tr).data().mediaId;
-
-        window.location.href = '/Checkout/CheckoutItem?mediaId=' + mediaId;
+        let mediaid = table.row(tr).data().mediaid;
+        let result;
+        $.ajax({
+            type:"POST",
+            url: "/Hold/CheckoutHeldItem?mediaId="+mediaid,
+            async: false,
+            data: {},
+            success: function(data) {
+                result = data;
+                if (result == "") {
+                showSuccess(elementClicked);
+            } else {
+                showError(elementClicked, result);
+            }
+            }
+        })
+        window.location.href = '/Hold/CheckoutHeldItem?mediaId=' + mediaid;
     })
+    function showSuccess(element) {
+    element.find('.checkout-success-text').show();
+    element.closest('.media-display-item').delay(3000).slideUp(1000);
+
+    }
+
+    function showError(element, message) {
+        element.find('.checkout-fail-text').text("Checkout failed" + message.substring(5));
+        element.find('.checkout-fail-text').show();
+        element.find('.checkout-fail-text').effect("shake", { distance: 3 });
+    }
 </script>
