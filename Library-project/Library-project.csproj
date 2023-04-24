@@ -23,16 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Repository\" />
-    <None Remove="Interfaces\" />
-    <None Remove="Views\Room\" />
     <None Remove="Views\Student\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Repository\" />
-    <Folder Include="Interfaces\" />
     <Folder Include="Views\DashboardSettings\" />
-    <Folder Include="Views\Room\" />
     <Folder Include="wwwroot\images\media\" />
   </ItemGroup>
 </Project>
