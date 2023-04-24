@@ -76,12 +76,6 @@ Note: If the box is checked then that item is unavailable.
    - To edit a current student, navigate to the student’s record in the data table below the create student form and click the pen icon at the end of the student’s record. Edit the student’s information and click save to save the changes to the student.
    - To delete a current student, navigate to the student’s record in the data table below the create student form and click the trash can icon to delete the student.
 
-## How to manage an employee:
-1. Login as admin
-2. Go to dashboard
-3. Click Manage employees
-4. From this page you can create, edit or delete employees.
-
 ## How to add media:
 1. Login as employee
 2. Login as employee
