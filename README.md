@@ -78,10 +78,9 @@ Note: If the box is checked then that item is unavailable.
 
 ## How to add media:
 1. Login as employee
-2. Login as employee
-3. Go to inventory tab in the dashboard
-4. Select the type you would like to create from the box
-5. Fill out the form and hit submit
+2. Go to inventory tab in the dashboard
+3. Select the type you would like to create from the box
+4. Fill out the form and hit submit
 
 ##How to add reviews
 1. Login as a user
