@@ -50,11 +50,12 @@ Note: If the box is checked then that item is unavailable.
 3. Go to Manage employees
 4. Fill out the form at the top and hit submit
 
-## How to edit an employee:
-1. Login as manager and go to dashboard > manage employees
-2. Press the edit button in the table of employees
+## How to edit/delete an employee:
+1. Login as manager and go to dashboard. Click manage employees
+2. Press the edit button in the table of employees represented as a pen icon
 3. The form will fill out their user info
 4. Change the information and hit submit
+5. To delete an employee, click the trash icon instead of the pen icon and they will become inactive. 
 
 ## How to generate reports:
 1. Login as an admin
